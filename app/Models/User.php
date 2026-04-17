@@ -22,7 +22,20 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'city_id',
+        'role',
+        'status',
     ];
+
+    public function hotels()
+    {
+        return $this->hasMany(Hotel::class, 'admin_id');
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

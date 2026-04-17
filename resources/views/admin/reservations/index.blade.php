@@ -7,8 +7,8 @@
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h5 class="mb-0 fw-bold">Recent Reservations</h5>
         <div class="d-flex gap-2">
-            <a href="{{ route('admin.reservations.export') }}" class="btn btn-outline-danger btn-sm">
-                <i class="bi bi-file-earmark-pdf me-1"></i> Export PDF
+            <a href="{{ route('admin.reservations.export') }}" class="btn-export">
+                <i class="bi bi-file-earmark-pdf"></i> Export PDF
             </a>
         </div>
     </div>

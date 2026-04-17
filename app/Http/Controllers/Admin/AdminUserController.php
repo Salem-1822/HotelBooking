@@ -12,8 +12,23 @@ class AdminUserController extends Controller
 {
     public function index()
     {
-        $admins = User::latest()->paginate(10);
+        $admins = User::withCount(['hotels', 'city'])->latest()->paginate(10);
         return view('admin.admins.index', compact('admins'));
+    }
+
+    public function show($id)
+    {
+        $admin = User::with(['hotels.reservations', 'city'])->findOrFail($id);
+        
+        // Calculate basic stats
+        $stats = [
+            'total_hotels' => $admin->hotels->count(),
+            'total_reservations' => $admin->hotels->sum(fn($h) => $h->reservations->count()),
+            'confirmed_res' => $admin->hotels->sum(fn($h) => $h->reservations->where('status', 'confirmed')->count()),
+            'cancelled_res' => $admin->hotels->sum(fn($h) => $h->reservations->where('status', 'cancelled')->count()),
+        ];
+
+        return view('admin.admins.show', compact('admin', 'stats'));
     }
 
     public function store(Request $request)
@@ -35,12 +50,12 @@ class AdminUserController extends Controller
 
     public function update(Request $request, User $admin)
     {
-        $admin->update($request->only('name', 'email'));
+        $admin->update($request->only('name', 'email', 'status'));
         if ($request->password) {
             $admin->update(['password' => Hash::make($request->password)]);
         }
 
-        return redirect()->route('admin.admins.index')->with('success', 'Admin updated successfully.');
+        return redirect()->back()->with('success', 'Admin updated successfully.');
     }
 
     public function destroy(User $admin)

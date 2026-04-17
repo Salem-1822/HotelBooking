@@ -7,8 +7,8 @@
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h5 class="mb-0 fw-bold text-dark">All Hotels</h5>
         <div class="d-flex gap-2">
-            <a href="{{ route('admin.hotels.export') }}" class="btn btn-outline-danger btn-sm">
-                <i class="bi bi-file-pdf me-1"></i> Export PDF
+            <a href="{{ route('admin.hotels.export') }}" class="btn-export">
+                <i class="bi bi-file-pdf"></i> Export PDF
             </a>
             <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addHotelModal">
                 <i class="bi bi-plus-lg me-1"></i> Add Hotel

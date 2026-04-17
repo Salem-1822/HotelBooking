@@ -11,11 +11,11 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-muted">Platform Name</label>
-                        <input type="text" class="form-control" value="Salem Hotel Reservation">
+                        <input type="text" class="form-control" value="Hotelia Reservation System">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-muted">Contact Email</label>
-                        <input type="email" class="form-control" value="support@salem.com">
+                        <input type="email" class="form-control" value="support@hotelia.com">
                     </div>
                     <div class="col-md-12 mt-4">
                         <label class="form-label small fw-bold text-muted">Platform Logo</label>

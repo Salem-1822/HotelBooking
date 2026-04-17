@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class CityController extends Controller
@@ -16,17 +17,31 @@ class CityController extends Controller
         return view('admin.cities.index', compact('cities'));
     }
 
+    public function show($id)
+    {
+        $city = City::with(['hotels.reservations'])->findOrFail($id);
+        return view('admin.cities.show', compact('city'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:cities,name',
-            'image' => 'nullable|string'
+            'image_file' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image_url' => 'nullable|url'
         ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image_file')) {
+            $imagePath = $request->file('image_file')->store('cities', 'public');
+        } elseif ($request->filled('image_url')) {
+            $imagePath = $request->image_url;
+        }
 
         City::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-            'image' => $request->image
+            'image' => $imagePath
         ]);
 
         return redirect()->route('admin.cities.index')->with('success', 'City created successfully.');
@@ -36,13 +51,30 @@ class CityController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:cities,name,' . $city->id,
-            'image' => 'nullable|string'
+            'image_file' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image_url' => 'nullable|url'
         ]);
+
+        $imagePath = $city->image;
+
+        if ($request->hasFile('image_file')) {
+            // Delete old file if it's local
+            if ($city->image && !Str::startsWith($city->image, ['http://', 'https://'])) {
+                Storage::disk('public')->delete($city->image);
+            }
+            $imagePath = $request->file('image_file')->store('cities', 'public');
+        } elseif ($request->filled('image_url')) {
+            // Delete old file if switching to URL
+            if ($city->image && !Str::startsWith($city->image, ['http://', 'https://'])) {
+                Storage::disk('public')->delete($city->image);
+            }
+            $imagePath = $request->image_url;
+        }
 
         $city->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-            'image' => $request->image
+            'image' => $imagePath
         ]);
 
         return redirect()->route('admin.cities.index')->with('success', 'City updated successfully.');
