@@ -51,7 +51,7 @@
                 </div>
                 <div>
                     <h6 class="text-muted mb-1 small text-uppercase fw-bold">Revenue</h6>
-                    <h4 class="fw-bold mb-0">${{ number_format($stats['revenue'], 2) }}</h4>
+                    <h4 class="fw-bold mb-0">{{ number_format($stats['revenue'], 0) }} <small class="fw-normal text-muted" style="font-size: 0.75rem;">MAD</small></h4>
                 </div>
             </div>
         </div>

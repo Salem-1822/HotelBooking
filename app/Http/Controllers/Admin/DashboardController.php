@@ -6,18 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\Hotel;
 use App\Models\Reservation;
-use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        // Debugging as requested
+        // dd(Auth::guard('admin')->user());
+        
         $stats = [
             'hotels' => Hotel::count(),
             'cities' => City::count(),
             'reservations' => Reservation::count(),
-            'admins' => User::count(),
+            'admins' => Admin::count(),
             'revenue' => Reservation::where('status', 'completed')->sum('total_price'),
         ];
         

@@ -9,11 +9,11 @@
     </a>
     <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <img src="https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=f97316&color=fff" class="rounded-circle border border-4 border-white shadow-sm me-3" width="80">
+            <img src="https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background={{ $admin->role === 'super_admin' ? 'ef4444' : '3b82f6' }}&color=fff" class="rounded-circle border border-4 border-white shadow-sm me-3" width="80">
             <div>
                 <h3 class="fw-bold mb-0 text-dark">{{ $admin->name }}</h3>
                 <div class="d-flex gap-2 align-items-center">
-                    <span class="badge bg-primary rounded-pill px-3">{{ ucfirst($admin->role ?? 'Admin') }}</span>
+                    <span class="badge {{ $admin->role === 'super_admin' ? 'bg-danger' : 'bg-primary' }} rounded-pill px-3 text-capitalize">{{ str_replace('_', ' ', $admin->role) }}</span>
                     <span class="text-muted small"><i class="bi bi-envelope me-1"></i> {{ $admin->email }}</span>
                 </div>
             </div>
@@ -120,10 +120,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($admin->hotels as $hotel)
+                            @forelse($admin->city->hotels ?? [] as $hotel)
                             <tr>
                                 <td class="ps-4 fw-bold text-dark">{{ $hotel->name }}</td>
-                                <td><span class="badge bg-light text-dark fw-normal border">{{ $hotel->city->name }}</span></td>
+                                <td><span class="badge bg-light text-dark fw-normal border">{{ $admin->city->name }}</span></td>
                                 <td class="fw-bold text-primary">{{ $hotel->reservations->count() }}</td>
                                 <td>
                                     <span class="badge {{ $hotel->status == 'active' ? 'bg-success' : 'bg-warning text-dark' }} rounded-pill px-3">
@@ -135,7 +135,10 @@
                                 </td>
                             </tr>
                             @empty
-                            <tr><td colspan="5" class="text-center py-4 text-muted">No hotels managed by this admin yet.</td></tr>
+                            <tr><td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-building-dash fs-2 d-block mb-2 opacity-25"></i>
+                                No hotels available in this admin's assigned city.
+                            </td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -156,7 +159,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($admin->hotels->flatMap->reservations->sortByDesc('created_at')->take(10) as $res)
+                            @forelse(optional($admin->city)->hotels?->flatMap->reservations->sortByDesc('created_at')->take(10) ?? [] as $res)
                             <tr>
                                 <td class="ps-4 fw-bold text-dark">{{ $res->guest_name }}</td>
                                 <td>{{ $res->hotel->name }}</td>
@@ -169,7 +172,10 @@
                                 <td class="pe-4 text-end text-muted small">{{ $res->created_at->format('M d, Y') }}</td>
                             </tr>
                             @empty
-                            <tr><td colspan="5" class="text-center py-4 text-muted">No reservation activity recorded.</td></tr>
+                            <tr><td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-calendar-x fs-2 d-block mb-2 opacity-25"></i>
+                                No recent reservations found for this city.
+                            </td></tr>
                             @endforelse
                         </tbody>
                     </table>

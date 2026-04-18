@@ -15,4 +15,9 @@ class City extends Model
     {
         return $this->hasMany(Hotel::class);
     }
+
+    public function admins()
+    {
+        return $this->hasMany(Admin::class);
+    }
 }

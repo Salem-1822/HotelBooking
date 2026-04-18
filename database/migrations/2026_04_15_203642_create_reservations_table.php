@@ -12,6 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('hotel_id')->constrained()->onDelete('cascade');
             $table->string('guest_name');
+            $table->string('guest_phone')->nullable();
+            $table->integer('guests_count')->default(1);
             $table->date('check_in');
             $table->date('check_out');
             $table->decimal('total_price', 10, 2);

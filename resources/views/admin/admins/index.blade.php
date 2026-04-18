@@ -12,57 +12,73 @@
         <a href="{{ route('admin.admins.export') }}" class="btn-export">
             <i class="bi bi-file-pdf"></i> Export Data
         </a>
-        <button class="btn btn-primary btn-sm px-4" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+        <a href="{{ route('admin.admins.create') }}" class="btn btn-primary btn-sm px-4 d-flex align-items-center">
             <i class="bi bi-person-plus-fill me-2"></i>Create New Admin
-        </button>
+        </a>
     </div>
 </div>
 
 <div class="row g-4">
     @forelse($admins as $admin)
     <div class="col-md-6 col-xl-4">
-        <!-- Dashboard Style Admin Card -->
         <div class="card h-100 border-0 shadow-sm admin-card hover-lift" onclick="window.location='{{ route('admin.admins.show', $admin->id) }}'" style="cursor: pointer;">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div class="d-flex align-items-center">
                         <div class="position-relative">
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=f97316&color=fff" class="rounded-circle border border-3 border-white shadow-sm" width="60">
-                            <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-2 border-white rounded-circle"></span>
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background={{ $admin->role === 'super_admin' ? 'ef4444' : '3b82f6' }}&color=fff" class="rounded-circle border border-3 border-white shadow-sm" width="60">
+                            <span class="position-absolute bottom-0 end-0 p-1 {{ $admin->status == 'blocked' ? 'bg-danger' : 'bg-success' }} border border-2 border-white rounded-circle"></span>
                         </div>
                         <div class="ms-3">
                             <h6 class="fw-bold mb-0">{{ $admin->name }}</h6>
                             <small class="text-muted">{{ $admin->email }}</small>
                         </div>
                     </div>
-                    <span class="badge {{ $admin->status == 'blocked' ? 'bg-danger text-white' : 'bg-primary' }} rounded-pill px-3">
-                        {{ ucfirst($admin->status ?? 'Active') }}
+                    <span class="badge {{ $admin->role === 'super_admin' ? 'bg-danger' : 'bg-primary' }} rounded-pill px-3 text-capitalize">
+                        {{ str_replace('_', ' ', $admin->role) }}
                     </span>
                 </div>
 
                 <div class="row g-2 mt-3">
                     <div class="col-6">
-                        <div class="bg-light p-3 rounded-3 text-center">
-                            <h5 class="fw-bold mb-0 text-dark">{{ $admin->hotels_count }}</h5>
-                            <small class="text-muted opacity-75 text-uppercase fw-bold" style="font-size: 0.6rem;">Hotels</small>
+                        <div class="bg-light p-3 rounded-3 text-center h-100">
+                            <h5 class="fw-bold mb-0 text-dark">{{ $admin->city ? $admin->city->hotels->count() : 0 }}</h5>
+                            <small class="text-muted opacity-75 text-uppercase fw-bold" style="font-size: 0.6rem;">City Hotels</small>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="bg-light p-3 rounded-3 text-center">
-                            <h5 class="fw-bold mb-0 text-dark">{{ $admin->city ? 1 : 0 }}</h5>
-                            <small class="text-muted opacity-75 text-uppercase fw-bold" style="font-size: 0.6rem;">Regions</small>
+                        <div class="bg-light p-3 rounded-3 text-center h-100">
+                            <h5 class="fw-bold mb-0 text-dark text-truncate" style="font-size: 0.8rem;">{{ $admin->city->name ?? 'N/A' }}</h5>
+                            <small class="text-muted opacity-75 text-uppercase fw-bold" style="font-size: 0.6rem;">Assigned City</small>
                         </div>
                     </div>
                 </div>
 
+                <div class="mt-3">
+                    <small class="text-muted text-uppercase fw-bold mb-2 d-block" style="font-size: 0.65rem; letter-spacing: 0.5px;">Managing Hotels:</small>
+                    @if($admin->city && $admin->city->hotels->count() > 0)
+                        <div class="d-flex flex-wrap gap-1">
+                            @foreach($admin->city->hotels->take(3) as $hotel)
+                                <span class="badge bg-white text-dark border fw-normal">{{ $hotel->name }}</span>
+                            @endforeach
+                            @if($admin->city->hotels->count() > 3)
+                                <span class="badge bg-light text-muted fw-normal">+{{ $admin->city->hotels->count() - 3 }} more</span>
+                            @endif
+                        </div>
+                    @else
+                        <span class="text-muted small italic">No hotels in this city</span>
+                    @endif
+                </div>
+
                 <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
                     <div class="small text-muted">
-                        <i class="bi bi-clock me-1"></i> Added {{ $admin->created_at->format('M Y') }}
+                        <i class="bi bi-calendar-event me-1"></i> Added {{ $admin->created_at->format('M Y') }}
                     </div>
                     <div class="d-flex gap-2" onclick="event.stopPropagation()">
                         <button class="btn btn-sm btn-light border-0" data-bs-toggle="modal" data-bs-target="#editAdminModal{{ $admin->id }}">
                             <i class="bi bi-pencil-fill text-muted"></i>
                         </button>
+                        @if($admin->id !== Auth::guard('admin')->id())
                         <form action="{{ route('admin.admins.destroy', $admin) }}" method="POST" onsubmit="return confirm('Delete this admin?')">
                             @csrf
                             @method('DELETE')
@@ -70,6 +86,7 @@
                                 <i class="bi bi-trash-fill text-danger"></i>
                             </button>
                         </form>
+                        @endif
                     </div>
                 </div>
             </div>

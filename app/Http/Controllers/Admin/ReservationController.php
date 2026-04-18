@@ -11,29 +11,60 @@ class ReservationController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Reservation::with('hotel')->latest();
-        if ($request->status) {
+        // 1. Initialize query with eager loading
+        $query = Reservation::with(['hotel.city']);
+
+        // 2. Apply Dynamic Filters
+        // Search by name or phone
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('guest_name', 'like', "%{$search}%")
+                  ->orWhere('guest_phone', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by Status
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        $reservations = $query->paginate(10);
-        return view('admin.reservations.index', compact('reservations'));
+
+        // Filter by City (via Hotel bridge)
+        if ($request->filled('city_id')) {
+            $query->whereHas('hotel', function ($q) use ($request) {
+                $q->where('city_id', $request->city_id);
+            });
+        }
+
+        // Filter by Hotel
+        if ($request->filled('hotel_id')) {
+            $query->where('hotel_id', $request->hotel_id);
+        }
+
+        // 3. Finalize with sorting and pagination
+        $reservations = $query->latest()->paginate(12)->withQueryString();
+        
+        $cities = \App\Models\City::orderBy('name')->get();
+        $hotels = \App\Models\Hotel::orderBy('name')->get();
+
+        return view('admin.reservations.index', compact('reservations', 'cities', 'hotels'));
     }
 
     public function exportPDF()
     {
         $reservations = Reservation::with('hotel')->get();
-        $headers = ['ID', 'Guest', 'Hotel', 'Price', 'Status', 'Date'];
+        $headers = ['ID', 'Guest', 'Hotel', 'Total Amount', 'Status', 'Booking Dates'];
         $data = $reservations->map(fn($r) => [
-            $r->id, 
+            '#MOR-' . $r->id, 
             $r->guest_name, 
             $r->hotel->name, 
-            $r->total_price, 
-            $r->status, 
-            $r->check_in . ' / ' . $r->check_out
+            number_format($r->total_price, 0) . ' MAD', 
+            ucfirst($r->status), 
+            $r->check_in . ' to ' . $r->check_out
         ]);
-        $title = 'Reservations';
+        $title = 'Morocco Reservations';
 
         $pdf = Pdf::loadView('admin.exports.pdf', compact('headers', 'data', 'title'));
-        return $pdf->download('reservations_report.pdf');
+        return $pdf->download('moroccan_reservations_report.pdf');
     }
 }

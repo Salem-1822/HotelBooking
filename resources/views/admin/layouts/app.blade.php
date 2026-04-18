@@ -194,22 +194,41 @@
             <div class="d-flex align-items-center gap-4">
                 <div class="dropdown">
                     <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                        <img src="https://ui-avatars.com/api/?name=Super+Admin&background=0F172A&color=fff" width="40" height="40" class="rounded-circle border border-2 border-white shadow-sm me-2">
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('admin')->user()->name) }}&background=0F172A&color=fff" width="40" height="40" class="rounded-circle border border-2 border-white shadow-sm me-2">
                         <div class="d-none d-sm-block text-start">
-                            <div class="fw-bold lh-1" style="font-size: 0.9rem;">Super Admin</div>
-                            <small class="text-muted" style="font-size: 0.75rem;">Administrator</small>
+                            <div class="fw-bold lh-1" style="font-size: 0.9rem;">{{ Auth::guard('admin')->user()->name }}</div>
+                            <small class="text-muted text-capitalize" style="font-size: 0.75rem;">{{ str_replace('_', ' ', Auth::guard('admin')->user()->role) }}</small>
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-2" style="border-radius: 12px; min-width: 200px;">
                         <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-person me-2"></i> My Profile</a></li>
                         <li><hr class="dropdown-divider mx-2"></li>
-                        <li><a class="dropdown-item rounded-3 py-2 text-danger" href="#"><i class="bi bi-box-arrow-right me-2"></i> Sign Out</a></li>
+                        <li>
+                            <form action="{{ route('admin.logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item rounded-3 py-2 text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+                                </button>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>
         </header>
 
         <div class="p-4 p-md-5">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 0.75rem;">
+                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 0.75rem;">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
             @yield('content')
         </div>
     </main>
