@@ -49,7 +49,10 @@
                     </td>
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
-                            <button class="btn btn-sm btn-light border" data-bs-toggle="modal" data-bs-target="#editHotelModal{{ $hotel->id }}">
+                            <a href="{{ route('admin.hotels.show', $hotel) }}" class="btn btn-sm btn-light border text-primary" title="View Details">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <button class="btn btn-sm btn-light border" data-bs-toggle="modal" data-bs-target="#editHotelModal{{ $hotel->id }}" title="Edit Hotel">
                                 <i class="bi bi-pencil"></i>
                             </button>
                             <form action="{{ route('admin.hotels.destroy', $hotel) }}" method="POST" onsubmit="return confirm('Delete this hotel?')">
@@ -90,6 +93,11 @@
                                     <div class="mb-3">
                                         <label class="form-label">Address</label>
                                         <input type="text" name="address" class="form-control" value="{{ $hotel->address }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Price per Night</label>
+                                        <!-- Added price_per_night input to fix the 1364 default value error -->
+                                        <input type="number" name="price_per_night" class="form-control" value="{{ $hotel->price_per_night }}" step="0.01" min="0" required>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Status</label>
@@ -143,6 +151,11 @@
                     <div class="mb-3">
                         <label class="form-label">Address</label>
                         <input type="text" name="address" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Price per Night</label>
+                        <!-- Added price_per_night input to fix the 1364 default value error -->
+                        <input type="number" name="price_per_night" class="form-control" step="0.01" min="0" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Status</label>

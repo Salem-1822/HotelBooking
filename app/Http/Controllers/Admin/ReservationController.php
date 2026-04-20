@@ -14,16 +14,7 @@ class ReservationController extends Controller
         // 1. Initialize query with eager loading
         $query = Reservation::with(['hotel.city']);
 
-        // 2. Apply Dynamic Filters
-        // Search by name or phone
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('guest_name', 'like', "%{$search}%")
-                  ->orWhere('guest_phone', 'like', "%{$search}%");
-            });
-        }
-
+        // 2. Apply Dynamic Filters (Search removed)
         // Filter by Status
         if ($request->filled('status')) {
             $query->where('status', $request->status);

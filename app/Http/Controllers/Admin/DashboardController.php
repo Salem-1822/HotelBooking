@@ -30,15 +30,6 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact('stats', 'recent_hotels'));
     }
 
-    public function reports()
-    {
-        return view('admin.reports');
-    }
-
-    public function exports()
-    {
-        return view('admin.exports');
-    }
 
     public function settings()
     {

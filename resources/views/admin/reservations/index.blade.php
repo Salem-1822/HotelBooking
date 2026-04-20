@@ -24,13 +24,6 @@
         <form action="{{ route('admin.reservations.index') }}" method="GET" id="filterForm">
             <div class="row g-3">
                 <div class="col-12 col-md-6 col-lg-3">
-                    <label class="form-label small fw-bold text-muted">Search Guest</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-                        <input type="text" name="search" class="form-control bg-light border-0" value="{{ request('search') }}" placeholder="Enter name or phone...">
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-2">
                     <label class="form-label small fw-bold text-muted">City</label>
                     <select name="city_id" class="form-select bg-light border-0" onchange="this.form.submit()">
                         <option value="">All Cities</option>
@@ -39,7 +32,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-12 col-md-6 col-lg-2">
+                <div class="col-12 col-md-6 col-lg-3">
                     <label class="form-label small fw-bold text-muted">Status</label>
                     <select name="status" class="form-select bg-light border-0" onchange="this.form.submit()">
                         <option value="">All Status</option>
@@ -49,7 +42,7 @@
                         <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-6 col-lg-3">
+                <div class="col-12 col-md-8 col-lg-4">
                     <label class="form-label small fw-bold text-muted">Hotel Establishment</label>
                     <select name="hotel_id" class="form-select bg-light border-0" onchange="this.form.submit()">
                         <option value="">All Hotels</option>
@@ -58,7 +51,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-12 col-lg-2 d-flex flex-column justify-content-end">
+                <div class="col-12 col-md-4 col-lg-2 d-flex flex-column justify-content-end">
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary flex-grow-1 fw-bold border-0 shadow-sm">
                             Apply

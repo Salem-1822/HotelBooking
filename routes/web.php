@@ -34,14 +34,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::middleware(['role:super_admin'])->group(function () {
             Route::get('admins/export', [AdminUserController::class, 'exportPDF'])->name('admins.export');
             Route::resource('admins', AdminUserController::class);
+            
+            // System Configuration
+            Route::get('/settings', [\App\Http\Controllers\Admin\SystemConfigController::class, 'index'])->name('settings');
+            Route::post('/settings', [\App\Http\Controllers\Admin\SystemConfigController::class, 'update'])->name('settings.update');
+
+            // Profile
+            Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile');
+            Route::post('/profile/update', [\App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
         });
         
         // Reservations
         Route::get('reservations/export', [ReservationController::class, 'exportPDF'])->name('reservations.export');
         Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
         
-        Route::get('/reports', [DashboardController::class, 'reports'])->name('reports');
-        Route::get('/exports', [DashboardController::class, 'exports'])->name('exports');
-        Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
     });
 });

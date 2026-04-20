@@ -17,6 +17,11 @@ class HotelController extends Controller
         return view('admin.hotels.index', compact('hotels', 'cities'));
     }
 
+    public function show(Hotel $hotel)
+    {
+        return view('admin.hotels.show', compact('hotel'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -24,6 +29,8 @@ class HotelController extends Controller
             'city_id' => 'required|exists:cities,id',
             'address' => 'required|string',
             'status' => 'required|in:active,inactive',
+            // Added validation for price_per_night to fix the 1364 default value error
+            'price_per_night' => 'required|numeric|min:0',
         ]);
 
         Hotel::create($request->all());
@@ -38,6 +45,8 @@ class HotelController extends Controller
             'city_id' => 'required|exists:cities,id',
             'address' => 'required|string',
             'status' => 'required|in:active,inactive',
+            // Added validation for price_per_night
+            'price_per_night' => 'required|numeric|min:0',
         ]);
 
         $hotel->update($request->all());
