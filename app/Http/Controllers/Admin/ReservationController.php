@@ -38,7 +38,7 @@ class ReservationController extends Controller
         $cities = \App\Models\City::orderBy('name')->get();
         $hotels = \App\Models\Hotel::orderBy('name')->get();
 
-        return view('admin.reservations.index', compact('reservations', 'cities', 'hotels'));
+        return view('super_admin.reservations.index', compact('reservations', 'cities', 'hotels'));
     }
 
     public function exportPDF()

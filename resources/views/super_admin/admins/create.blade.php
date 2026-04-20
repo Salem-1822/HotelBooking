@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('super_admin.layouts.app')
 
 @section('title', 'Create New Admin')
 
@@ -13,13 +13,13 @@
                             <h4 class="fw-bold mb-0 text-dark">Create Admin Account</h4>
                             <p class="text-muted small mb-0">Fill in the details to register a new administrator and assign them to a city.</p>
                         </div>
-                        <a href="{{ route('admin.admins.index') }}" class="btn btn-light btn-sm rounded-pill px-3">
+                        <a href="{{ route('super_admin.admins.index') }}" class="btn btn-light btn-sm rounded-pill px-3">
                             <i class="bi bi-arrow-left me-1"></i> Back to List
                         </a>
                     </div>
                 </div>
                 <div class="card-body p-4">
-                    <form action="{{ route('admin.admins.store') }}" method="POST" autocomplete="off">
+                    <form action="{{ route('super_admin.admins.store') }}" method="POST" autocomplete="off">
                         @csrf
                         
                         <div class="row g-4">

@@ -14,12 +14,12 @@ class HotelController extends Controller
     {
         $hotels = Hotel::with('city')->latest()->paginate(10);
         $cities = City::all();
-        return view('admin.hotels.index', compact('hotels', 'cities'));
+        return view('super_admin.hotels.index', compact('hotels', 'cities'));
     }
 
     public function show(Hotel $hotel)
     {
-        return view('admin.hotels.show', compact('hotel'));
+        return view('super_admin.hotels.show', compact('hotel'));
     }
 
     public function store(Request $request)
@@ -35,7 +35,7 @@ class HotelController extends Controller
 
         Hotel::create($request->all());
 
-        return redirect()->route('admin.hotels.index')->with('success', 'Hotel created successfully.');
+        return redirect()->route('super_admin.hotels.index')->with('success', 'Hotel created successfully.');
     }
 
     public function update(Request $request, Hotel $hotel)
@@ -51,13 +51,13 @@ class HotelController extends Controller
 
         $hotel->update($request->all());
 
-        return redirect()->route('admin.hotels.index')->with('success', 'Hotel updated successfully.');
+        return redirect()->route('super_admin.hotels.index')->with('success', 'Hotel updated successfully.');
     }
 
     public function destroy(Hotel $hotel)
     {
         $hotel->delete();
-        return redirect()->route('admin.hotels.index')->with('success', 'Hotel deleted successfully.');
+        return redirect()->route('super_admin.hotels.index')->with('success', 'Hotel deleted successfully.');
     }
 
     public function exportPDF()

@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('super_admin.layouts.app')
 
 @section('title', 'Hotel Details')
 
@@ -8,12 +8,12 @@
         <h5 class="fw-bold mb-0">Hotel Details</h5>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 small">
-                <li class="breadcrumb-item"><a href="{{ route('admin.hotels.index') }}" class="text-decoration-none">Hotels</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('super_admin.hotels.index') }}" class="text-decoration-none">Hotels</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $hotel->name }}</li>
             </ol>
         </nav>
     </div>
-    <a href="{{ route('admin.hotels.index') }}" class="btn btn-light border shadow-sm rounded-pill px-4 fw-bold">
+    <a href="{{ route('super_admin.hotels.index') }}" class="btn btn-light border shadow-sm rounded-pill px-4 fw-bold">
         <i class="bi bi-arrow-left me-2"></i> Back
     </a>
 </div>

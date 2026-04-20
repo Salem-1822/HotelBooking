@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('super_admin.layouts.app')
 
 @section('title', 'My Profile')
 
@@ -36,7 +36,7 @@
 
                 @if($admin->profile_image)
                 <div class="mt-4 pt-3 border-top">
-                    <form action="{{ route('admin.profile.update') }}" method="POST">
+                    <form action="{{ route('super_admin.profile.update') }}" method="POST">
                         @csrf
                         <button type="submit" name="remove_image" value="1" class="btn btn-sm btn-outline-danger fw-bold px-3 shadow-sm" style="border-radius: 0.5rem;" onclick="return confirm('Are you sure you want to remove your profile photo?');">
                             <i class="bi bi-trash-fill me-1"></i> Remove Photo
@@ -55,7 +55,7 @@
                 <h6 class="fw-bold mb-0"><i class="bi bi-person-lines-fill me-2 text-primary"></i> Edit Profile</h6>
             </div>
             <div class="card-body p-4">
-                <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('super_admin.profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
                     <input type="file" name="profile_image" id="profile_image" class="d-none" accept="image/*" onchange="previewImage(this)">

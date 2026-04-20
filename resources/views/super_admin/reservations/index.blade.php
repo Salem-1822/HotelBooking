@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('super_admin.layouts.app')
 
 @section('title', 'Morocco Reservations')
 
@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="d-flex gap-2">
-        <a href="{{ route('admin.reservations.export') }}" class="btn-export">
+        <a href="{{ route('super_admin.reservations.export') }}" class="btn-export">
             <i class="bi bi-file-earmark-pdf"></i> <span class="d-none d-sm-inline">Export PDF</span>
         </a>
     </div>
@@ -21,16 +21,9 @@
 {{-- Dynamic Filters Bar --}}
 <div class="card border-0 shadow-sm mb-4" style="border-radius: 1rem;">
     <div class="card-body p-4 bg-white">
-        <form action="{{ route('admin.reservations.index') }}" method="GET" id="filterForm">
+        <form action="{{ route('super_admin.reservations.index') }}" method="GET" id="filterForm">
             <div class="row g-3">
                 <div class="col-12 col-md-6 col-lg-3">
-                    <label class="form-label small fw-bold text-muted">Search Guest</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-                        <input type="text" name="search" class="form-control bg-light border-0" value="{{ request('search') }}" placeholder="Enter name or phone...">
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-2">
                     <label class="form-label small fw-bold text-muted">City</label>
                     <select name="city_id" class="form-select bg-light border-0" onchange="this.form.submit()">
                         <option value="">All Cities</option>
@@ -39,7 +32,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-12 col-md-6 col-lg-2">
+                <div class="col-12 col-md-6 col-lg-3">
                     <label class="form-label small fw-bold text-muted">Status</label>
                     <select name="status" class="form-select bg-light border-0" onchange="this.form.submit()">
                         <option value="">All Status</option>
@@ -49,7 +42,7 @@
                         <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-6 col-lg-3">
+                <div class="col-12 col-md-8 col-lg-4">
                     <label class="form-label small fw-bold text-muted">Hotel Establishment</label>
                     <select name="hotel_id" class="form-select bg-light border-0" onchange="this.form.submit()">
                         <option value="">All Hotels</option>
@@ -58,12 +51,12 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-12 col-lg-2 d-flex flex-column justify-content-end">
+                <div class="col-12 col-md-4 col-lg-2 d-flex flex-column justify-content-end">
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary flex-grow-1 fw-bold border-0 shadow-sm">
                             Apply
                         </button>
-                        <a href="{{ route('admin.reservations.index') }}" class="btn btn-light border-0" title="Reset Filters">
+                        <a href="{{ route('super_admin.reservations.index') }}" class="btn btn-light border-0" title="Reset Filters">
                             <i class="bi bi-arrow-clockwise"></i>
                         </a>
                     </div>
@@ -146,7 +139,7 @@
         </div>
         <h5 class="text-dark fw-bold">No reservations found</h5>
         <p class="text-muted small mx-auto" style="max-width: 300px;">We couldn't find any results matching your current filters. Try resetting or using broader terms.</p>
-        <a href="{{ route('admin.reservations.index') }}" class="btn btn-primary px-4 py-2 rounded-pill mt-3 fw-bold">
+        <a href="{{ route('super_admin.reservations.index') }}" class="btn btn-primary px-4 py-2 rounded-pill mt-3 fw-bold">
             <i class="bi bi-arrow-left me-2"></i> Show All Reservations
         </a>
     </div>

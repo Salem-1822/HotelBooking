@@ -17,7 +17,7 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, string $role): Response
     {
         if (! Auth::guard('admin')->check()) {
-            return redirect()->route('admin.login');
+            return redirect()->route('super_admin.login');
         }
 
         if (Auth::guard('admin')->user()->role !== $role) {

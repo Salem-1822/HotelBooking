@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('super_admin.layouts.app')
 
 @section('title', 'Hotel Management')
 
@@ -7,7 +7,7 @@
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h5 class="mb-0 fw-bold text-dark">All Hotels</h5>
         <div class="d-flex gap-2">
-            <a href="{{ route('admin.hotels.export') }}" class="btn-export">
+            <a href="{{ route('super_admin.hotels.export') }}" class="btn-export">
                 <i class="bi bi-file-pdf"></i> Export PDF
             </a>
             <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addHotelModal">
@@ -49,13 +49,13 @@
                     </td>
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="{{ route('admin.hotels.show', $hotel) }}" class="btn btn-sm btn-light border text-primary" title="View Details">
+                            <a href="{{ route('super_admin.hotels.show', $hotel) }}" class="btn btn-sm btn-light border text-primary" title="View Details">
                                 <i class="bi bi-eye"></i>
                             </a>
                             <button class="btn btn-sm btn-light border" data-bs-toggle="modal" data-bs-target="#editHotelModal{{ $hotel->id }}" title="Edit Hotel">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <form action="{{ route('admin.hotels.destroy', $hotel) }}" method="POST" onsubmit="return confirm('Delete this hotel?')">
+                            <form action="{{ route('super_admin.hotels.destroy', $hotel) }}" method="POST" onsubmit="return confirm('Delete this hotel?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-light border text-danger">
@@ -69,7 +69,7 @@
                 <!-- Edit Modal -->
                 <div class="modal fade" id="editHotelModal{{ $hotel->id }}" tabindex="-1">
                     <div class="modal-dialog">
-                        <form action="{{ route('admin.hotels.update', $hotel) }}" method="POST">
+                        <form action="{{ route('super_admin.hotels.update', $hotel) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="modal-content text-start">
@@ -127,7 +127,7 @@
 <!-- Add Modal -->
 <div class="modal fade" id="addHotelModal" tabindex="-1">
     <div class="modal-dialog">
-        <form action="{{ route('admin.hotels.store') }}" method="POST">
+        <form action="{{ route('super_admin.hotels.store') }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">

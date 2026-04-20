@@ -1,10 +1,10 @@
-@extends('admin.layouts.app')
+@extends('super_admin.layouts.app')
 
 @section('title', 'Admin Overview: ' . $admin->name)
 
 @section('content')
 <div class="mb-4">
-    <a href="{{ route('admin.admins.index') }}" class="btn btn-light btn-sm border mb-3">
+    <a href="{{ route('super_admin.admins.index') }}" class="btn btn-light btn-sm border mb-3">
         <i class="bi bi-arrow-left me-1"></i> Back to Admins
     </a>
     <div class="d-flex justify-content-between align-items-center">
@@ -22,7 +22,7 @@
             <button class="btn btn-light border" data-bs-toggle="modal" data-bs-target="#editAdminModal{{ $admin->id }}">
                 <i class="bi bi-pencil me-1"></i> Edit Account
             </button>
-            <form action="{{ route('admin.admins.update', $admin) }}" method="POST">
+            <form action="{{ route('super_admin.admins.update', $admin) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="status" value="{{ $admin->status == 'blocked' ? 'active' : 'blocked' }}">
@@ -131,7 +131,7 @@
                                     </span>
                                 </td>
                                 <td class="text-end pe-4">
-                                    <a href="{{ route('admin.hotels.show', $hotel) }}" class="btn btn-sm btn-light border">View</a>
+                                    <a href="{{ route('super_admin.hotels.show', $hotel) }}" class="btn btn-sm btn-light border">View</a>
                                 </td>
                             </tr>
                             @empty
@@ -231,7 +231,7 @@
 <!-- Edit Admin Modal (Reuse from index) -->
 <div class="modal fade" id="editAdminModal{{ $admin->id }}" tabindex="-1">
     <div class="modal-dialog">
-        <form action="{{ route('admin.admins.update', $admin) }}" method="POST">
+        <form action="{{ route('super_admin.admins.update', $admin) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="modal-content">

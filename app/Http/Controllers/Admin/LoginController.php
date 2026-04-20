@@ -11,9 +11,9 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::guard('admin')->check()) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('super_admin.dashboard');
         }
-        return view('admin.auth.login');
+        return view('super_admin.auth.login');
     }
 
     public function login(Request $request)
@@ -26,7 +26,7 @@ class LoginController extends Controller
         if (Auth::guard('admin')->attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->intended(route('super_admin.dashboard'));
         }
 
         return back()->withErrors([
@@ -41,6 +41,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login');
+        return redirect()->route('super_admin.login');
     }
 }

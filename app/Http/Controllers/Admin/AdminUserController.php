@@ -20,13 +20,13 @@ class AdminUserController extends Controller
             ->latest()
             ->paginate(10);
             
-        return view('admin.admins.index', compact('admins'));
+        return view('super_admin.admins.index', compact('admins'));
     }
 
     public function create()
     {
         $cities = City::orderBy('name')->get();
-        return view('admin.admins.create', compact('cities'));
+        return view('super_admin.admins.create', compact('cities'));
     }
 
     public function show($id)
@@ -43,7 +43,7 @@ class AdminUserController extends Controller
             'cancelled_res' => $hotels->sum(fn($h) => $h->reservations->where('status', 'cancelled')->count()),
         ];
 
-        return view('admin.admins.show', compact('admin', 'stats'));
+        return view('super_admin.admins.show', compact('admin', 'stats'));
     }
 
     public function store(Request $request)
@@ -64,7 +64,7 @@ class AdminUserController extends Controller
             'status' => 'active'
         ]);
 
-        return redirect()->route('admin.admins.index')->with('success', 'Admin created successfully and assigned to city.');
+        return redirect()->route('super_admin.admins.index')->with('success', 'Admin created successfully and assigned to city.');
     }
 
     public function update(Request $request, Admin $admin)
@@ -93,7 +93,7 @@ class AdminUserController extends Controller
         }
 
         $admin->delete();
-        return redirect()->route('admin.admins.index')->with('success', 'Admin deleted successfully.');
+        return redirect()->route('super_admin.admins.index')->with('success', 'Admin deleted successfully.');
     }
 
     public function exportPDF()

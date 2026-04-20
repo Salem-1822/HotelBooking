@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('super_admin.layouts.app')
 
 @section('title', 'Dashboard')
 
@@ -88,7 +88,7 @@
                 <p class="text-center text-muted py-3">No hotels found.</p>
                 @endforelse
             </div>
-            <a href="{{ route('admin.hotels.index') }}" class="btn btn-light border w-100 mt-auto">View All Hotels</a>
+            <a href="{{ route('super_admin.hotels.index') }}" class="btn btn-light border w-100 mt-auto">View All Hotels</a>
         </div>
     </div>
 </div>

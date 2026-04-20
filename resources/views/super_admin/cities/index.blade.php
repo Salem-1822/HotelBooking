@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('super_admin.layouts.app')
 
 @section('title', 'City Management')
 
@@ -16,7 +16,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h5 class="fw-bold mb-0">Manage Cities</h5>
     <div class="d-flex gap-2">
-        <a href="{{ route('admin.cities.export') }}" class="btn-export">
+        <a href="{{ route('super_admin.cities.export') }}" class="btn-export">
             <i class="bi bi-file-pdf"></i> Export PDF
         </a>
         <button class="btn btn-primary btn-sm px-4" data-bs-toggle="modal" data-bs-target="#addCityModal">
@@ -28,7 +28,7 @@
 <div class="row g-4">
     @foreach($cities as $city)
     <div class="col-md-3">
-        <a href="{{ route('admin.cities.show', $city) }}" class="text-decoration-none text-dark">
+        <a href="{{ route('super_admin.cities.show', $city) }}" class="text-decoration-none text-dark">
             <div class="card h-100 overflow-hidden shadow-sm border-0 card-hover transition">
                 <div class="position-relative">
                     <img src="{{ Str::startsWith($city->image, ['http://', 'https://']) ? $city->image : asset('storage/' . $city->image) }}" 
@@ -42,7 +42,7 @@
                     <h6 class="fw-bold mb-3">{{ $city->name }}</h6>
                     <div class="d-flex gap-2 justify-content-center">
                         <button class="btn btn-sm btn-light border px-3" data-bs-toggle="modal" data-bs-target="#editCityModal{{ $city->id }}" onclick="event.stopPropagation(); event.preventDefault();">Edit</button>
-                        <form action="{{ route('admin.cities.destroy', $city) }}" method="POST" onsubmit="return confirm('Delete this city?')" class="d-inline" onclick="event.stopPropagation();">
+                        <form action="{{ route('super_admin.cities.destroy', $city) }}" method="POST" onsubmit="return confirm('Delete this city?')" class="d-inline" onclick="event.stopPropagation();">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-outline-danger px-3"><i class="bi bi-trash"></i></button>
@@ -56,7 +56,7 @@
     <!-- Edit Modal -->
     <div class="modal fade" id="editCityModal{{ $city->id }}" tabindex="-1">
         <div class="modal-dialog">
-            <form action="{{ route('admin.cities.update', $city) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('super_admin.cities.update', $city) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-content">
@@ -96,7 +96,7 @@
 <!-- Add Modal -->
 <div class="modal fade" id="addCityModal" tabindex="-1">
     <div class="modal-dialog">
-        <form action="{{ route('admin.cities.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('super_admin.cities.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">

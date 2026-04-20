@@ -12,7 +12,7 @@ class SystemConfigController extends Controller
     {
         // Load all settings into a key => value array
         $settings = Setting::pluck('value', 'key')->toArray();
-        return view('admin.settings', compact('settings'));
+        return view('super_admin.settings', compact('settings'));
     }
 
     public function update(Request $request)

@@ -13,7 +13,7 @@ class ProfileController extends Controller
     public function index()
     {
         $admin = Auth::guard('admin')->user();
-        return view('admin.profile', compact('admin'));
+        return view('super_admin.profile', compact('admin'));
     }
 
     public function update(Request $request)

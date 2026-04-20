@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('super_admin.layouts.app')
 
 @section('title', 'System Configuration')
 
@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<form action="{{ route('admin.settings.update') }}" method="POST">
+<form action="{{ route('super_admin.settings.update') }}" method="POST">
     @csrf
 
     <div class="row g-4">

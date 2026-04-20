@@ -278,28 +278,28 @@
             </div>
         </div>
         <nav class="sidebar-nav">
-            <a href="{{ route('admin.dashboard') }}"
-                class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('super_admin.dashboard') }}"
+                class="sidebar-link {{ request()->routeIs('super_admin.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-grid-1x2-fill"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="{{ route('admin.hotels.index') }}"
-                class="sidebar-link {{ request()->routeIs('admin.hotels.*') ? 'active' : '' }}">
+            <a href="{{ route('super_admin.hotels.index') }}"
+                class="sidebar-link {{ request()->routeIs('super_admin.hotels.*') ? 'active' : '' }}">
                 <i class="bi bi-building-fill"></i>
                 <span>Hotels</span>
             </a>
-            <a href="{{ route('admin.cities.index') }}"
-                class="sidebar-link {{ request()->routeIs('admin.cities.*') ? 'active' : '' }}">
+            <a href="{{ route('super_admin.cities.index') }}"
+                class="sidebar-link {{ request()->routeIs('super_admin.cities.*') ? 'active' : '' }}">
                 <i class="bi bi-geo-alt-fill"></i>
                 <span>Cities</span>
             </a>
-            <a href="{{ route('admin.admins.index') }}"
-                class="sidebar-link {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}">
+            <a href="{{ route('super_admin.admins.index') }}"
+                class="sidebar-link {{ request()->routeIs('super_admin.admins.*') ? 'active' : '' }}">
                 <i class="bi bi-people-fill"></i>
                 <span>Admins</span>
             </a>
-            <a href="{{ route('admin.reservations.index') }}"
-                class="sidebar-link {{ request()->routeIs('admin.reservations.*') ? 'active' : '' }}">
+            <a href="{{ route('super_admin.reservations.index') }}"
+                class="sidebar-link {{ request()->routeIs('super_admin.reservations.*') ? 'active' : '' }}">
                 <i class="bi bi-calendar-check-fill"></i>
                 <span>Reservations</span>
             </a>
@@ -309,8 +309,8 @@
             <div class="mt-4 mb-2 small text-uppercase text-muted px-3 fw-bold"
                 style="font-size: 0.7rem; letter-spacing: 0.1em;">Settings</div>
 
-            <a href="{{ route('admin.settings') }}"
-                class="sidebar-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
+            <a href="{{ route('super_admin.settings') }}"
+                class="sidebar-link {{ request()->routeIs('super_admin.settings') ? 'active' : '' }}">
                 <i class="bi bi-gear-fill"></i>
                 <span>System Config</span>
             </a>
@@ -353,13 +353,13 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-2"
                         style="border-radius: 12px; min-width: 200px;">
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('admin.profile') }}"><i class="bi bi-person me-2"></i> My
+                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('super_admin.profile') }}"><i class="bi bi-person me-2"></i> My
                                 Profile</a></li>
                         <li>
                             <hr class="dropdown-divider mx-2">
                         </li>
                         <li>
-                            <form action="{{ route('admin.logout') }}" method="POST">
+                            <form action="{{ route('super_admin.logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="dropdown-item rounded-3 py-2 text-danger">
                                     <i class="bi bi-box-arrow-right me-2"></i> Sign Out

@@ -27,12 +27,12 @@ class DashboardController extends Controller
         
         $recent_hotels = Hotel::with('city')->latest()->take(5)->get();
         
-        return view('admin.dashboard', compact('stats', 'recent_hotels'));
+        return view('super_admin.dashboard', compact('stats', 'recent_hotels'));
     }
 
 
     public function settings()
     {
-        return view('admin.settings');
+        return view('super_admin.settings');
     }
 }

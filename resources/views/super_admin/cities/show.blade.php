@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('super_admin.layouts.app')
 
 @section('title', $city->name . ' Dashboard')
 
@@ -7,7 +7,7 @@
     <div class="col-12">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('admin.cities.index') }}">Cities</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('super_admin.cities.index') }}">Cities</a></li>
                 <li class="breadcrumb-item active">{{ $city->name }}</li>
             </ol>
         </nav>
@@ -111,7 +111,7 @@
                                 </td>
                                 <td>{{ $hotel->reservations->count() }}</td>
                                 <td>
-                                    <a href="{{ route('admin.hotels.show', $hotel) }}" class="btn btn-sm btn-light border px-3">View</a>
+                                    <a href="{{ route('super_admin.hotels.show', $hotel) }}" class="btn btn-sm btn-light border px-3">View</a>
                                 </td>
                             </tr>
                             @empty

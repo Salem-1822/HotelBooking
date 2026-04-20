@@ -14,13 +14,13 @@ class CityController extends Controller
     public function index()
     {
         $cities = City::withCount('hotels')->latest()->get();
-        return view('admin.cities.index', compact('cities'));
+        return view('super_admin.cities.index', compact('cities'));
     }
 
     public function show($id)
     {
         $city = City::with(['hotels.reservations'])->findOrFail($id);
-        return view('admin.cities.show', compact('city'));
+        return view('super_admin.cities.show', compact('city'));
     }
 
     public function store(Request $request)
@@ -44,7 +44,7 @@ class CityController extends Controller
             'image' => $imagePath
         ]);
 
-        return redirect()->route('admin.cities.index')->with('success', 'City created successfully.');
+        return redirect()->route('super_admin.cities.index')->with('success', 'City created successfully.');
     }
 
     public function update(Request $request, City $city)
@@ -77,13 +77,13 @@ class CityController extends Controller
             'image' => $imagePath
         ]);
 
-        return redirect()->route('admin.cities.index')->with('success', 'City updated successfully.');
+        return redirect()->route('super_admin.cities.index')->with('success', 'City updated successfully.');
     }
 
     public function destroy(City $city)
     {
         $city->delete();
-        return redirect()->route('admin.cities.index')->with('success', 'City deleted successfully.');
+        return redirect()->route('super_admin.cities.index')->with('success', 'City deleted successfully.');
     }
 
     public function exportPDF()

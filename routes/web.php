@@ -9,10 +9,10 @@ use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\LoginController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('super_admin.login');
 });
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('super-admin')->name('super_admin.')->group(function () {
     // Auth Routes
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);

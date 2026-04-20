@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('super_admin.layouts.app')
 
 @section('title', 'Admins Management')
 
@@ -9,10 +9,10 @@
         <p class="text-muted small mb-0">Manage and monitor platform administrators and their performance.</p>
     </div>
     <div class="d-flex gap-2">
-        <a href="{{ route('admin.admins.export') }}" class="btn-export">
+        <a href="{{ route('super_admin.admins.export') }}" class="btn-export">
             <i class="bi bi-file-pdf"></i> Export Data
         </a>
-        <a href="{{ route('admin.admins.create') }}" class="btn btn-primary btn-sm px-4 d-flex align-items-center">
+        <a href="{{ route('super_admin.admins.create') }}" class="btn btn-primary btn-sm px-4 d-flex align-items-center">
             <i class="bi bi-person-plus-fill me-2"></i>Create New Admin
         </a>
     </div>
@@ -21,7 +21,7 @@
 <div class="row g-4">
     @forelse($admins as $admin)
     <div class="col-md-6 col-xl-4">
-        <div class="card h-100 border-0 shadow-sm admin-card hover-lift" onclick="window.location='{{ route('admin.admins.show', $admin->id) }}'" style="cursor: pointer;">
+        <div class="card h-100 border-0 shadow-sm admin-card hover-lift" onclick="window.location='{{ route('super_admin.admins.show', $admin->id) }}'" style="cursor: pointer;">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div class="d-flex align-items-center">
@@ -79,7 +79,7 @@
                             <i class="bi bi-pencil-fill text-muted"></i>
                         </button>
                         @if($admin->id !== Auth::guard('admin')->id())
-                        <form action="{{ route('admin.admins.destroy', $admin) }}" method="POST" onsubmit="return confirm('Delete this admin?')">
+                        <form action="{{ route('super_admin.admins.destroy', $admin) }}" method="POST" onsubmit="return confirm('Delete this admin?')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-light border-0">
@@ -96,7 +96,7 @@
     <!-- Edit Modal (Copied from previous index) -->
     <div class="modal fade" id="editAdminModal{{ $admin->id }}" tabindex="-1" onclick="event.stopPropagation()">
         <div class="modal-dialog">
-            <form action="{{ route('admin.admins.update', $admin) }}" method="POST">
+            <form action="{{ route('super_admin.admins.update', $admin) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="modal-content">
@@ -144,7 +144,7 @@
 <!-- Add Modal -->
 <div class="modal fade" id="addAdminModal" tabindex="-1">
     <div class="modal-dialog">
-        <form action="{{ route('admin.admins.store') }}" method="POST">
+        <form action="{{ route('super_admin.admins.store') }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header border-0 pb-0">
