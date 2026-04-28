@@ -1,68 +1,85 @@
 <p align="center">
-  <img src="https://img.icons8.com/fluency/240/hotel.png" width="140" alt="HOTELIA Logo">
+  <img src="https://img.icons8.com/fluency/160/hotel.png" width="120" alt="HOTELIA Logo">
 </p>
 
-<h1 align="center">🏨 HOTELIA</h1>
+<h1 align="center">HOTELIA</h1>
 
 <p align="center">
-Hotel Management Web Application developed with Laravel
+Modern Hotel Management Platform built with Laravel
 </p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/Laravel-Framework-red?style=for-the-badge&logo=laravel">
-<img src="https://img.shields.io/badge/PHP-Backend-blue?style=for-the-badge&logo=php">
-<img src="https://img.shields.io/badge/MySQL-Database-orange?style=for-the-badge&logo=mysql">
-<img src="https://img.shields.io/badge/Bootstrap-Frontend-purple?style=for-the-badge&logo=bootstrap">
+<img src="https://img.shields.io/badge/Laravel-10.x-red?style=flat-square&logo=laravel">
+<img src="https://img.shields.io/badge/PHP-8.x-blue?style=flat-square&logo=php">
+<img src="https://img.shields.io/badge/MySQL-Database-orange?style=flat-square&logo=mysql">
+<img src="https://img.shields.io/badge/Bootstrap-5-purple?style=flat-square&logo=bootstrap">
 </p>
 
 ---
 
-## 📌 About HOTELIA
+## 📌 Overview
 
-HOTELIA is a modern hotel management system created using Laravel.  
-It helps administrators manage hotels, rooms, reservations, clients, and staff with an easy and secure dashboard.
+**HOTELIA** is a professional hotel management web application developed using Laravel.  
+The platform allows administrators to manage hotels, reservations, rooms, cities, clients, and revenues through a modern dashboard.
 
 ---
 
-## ✨ Main Features
+## ✨ Core Features
 
-✅ Admin Dashboard  
-✅ Manage Hotels  
-✅ Manage Rooms  
-✅ Booking Management  
-✅ Customer Management  
-✅ Staff Management  
-✅ Secure Authentication  
-✅ Responsive Design  
+### 🏨 Hotel Management
+- Add new hotels  
+- Edit hotel information  
+- Delete hotels  
+- Upload hotel images  
+
+### 📅 Reservation Management
+- Create reservations  
+- Track bookings  
+- Manage check-in / check-out  
+
+### 🌍 Cities Management
+- Add and organize cities  
+- Assign hotels by city  
+
+### 💰 Revenue Dashboard
+- Reservation statistics  
+- Total earnings  
+- Live overview cards  
+
+### 🔐 Authentication
+- Secure admin login  
+- Session management  
+- Protected routes  
+
+---
+
+## 🖥️ Admin Dashboard Preview
+
+- Total Hotels  
+- Reservations  
+- Cities  
+- Revenue  
+- Recently Added Hotels  
+- Statistics Section  
 
 ---
 
 ## 🛠️ Technologies Used
 
-- Laravel  
-- PHP  
-- MySQL  
-- Blade Template  
-- Bootstrap / CSS  
-- JavaScript  
+| Technology | Role |
+|-----------|------|
+| Laravel | Backend Framework |
+| PHP | Server Side |
+| MySQL | Database |
+| Bootstrap 5 | UI Design |
+| Blade | Template Engine |
+| JavaScript | Dynamic Features |
 
 ---
 
-## 📷 Project Preview
+## 🚀 Installation Guide
 
-<p align="center">
-<img src="https://img.icons8.com/color/480/hotel-building.png" width="300">
-</p>
-
----
-
-## 🚀 Installation
+### 1️⃣ Clone Project
 
 ```bash
 git clone https://github.com/Salem-1822/SuperAdmin.git
-cd SuperAdmin
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
-php artisan serve
