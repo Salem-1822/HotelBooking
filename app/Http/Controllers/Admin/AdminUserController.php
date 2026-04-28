@@ -103,7 +103,7 @@ class AdminUserController extends Controller
         $data = $users->map(fn($u) => [$u->id, $u->name, $u->email, $u->created_at]);
         $title = 'System Admins';
 
-        $pdf = Pdf::loadView('admin.exports.pdf', compact('headers', 'data', 'title'));
+        $pdf = Pdf::loadView('super_admin.exports.pdf', compact('headers', 'data', 'title'));
         return $pdf->download('admins_report.pdf');
     }
 }

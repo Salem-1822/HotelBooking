@@ -55,7 +55,7 @@ class ReservationController extends Controller
         ]);
         $title = 'Morocco Reservations';
 
-        $pdf = Pdf::loadView('admin.exports.pdf', compact('headers', 'data', 'title'));
+        $pdf = Pdf::loadView('super_admin.exports.pdf', compact('headers', 'data', 'title'));
         return $pdf->download('moroccan_reservations_report.pdf');
     }
 }

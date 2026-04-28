@@ -67,7 +67,7 @@ class HotelController extends Controller
         $data = $hotels->map(fn($h) => [$h->id, $h->name, $h->city->name, $h->address, $h->status]);
         $title = 'Hotels';
 
-        $pdf = Pdf::loadView('admin.exports.pdf', compact('headers', 'data', 'title'));
+        $pdf = Pdf::loadView('super_admin.exports.pdf', compact('headers', 'data', 'title'));
         return $pdf->download('hotels_report.pdf');
     }
 }

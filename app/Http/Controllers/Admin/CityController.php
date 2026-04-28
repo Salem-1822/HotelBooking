@@ -93,7 +93,7 @@ class CityController extends Controller
         $data = $cities->map(fn($c) => [$c->id, $c->name, $c->slug, $c->hotels()->count(), $c->created_at]);
         $title = 'Cities';
 
-        $pdf = Pdf::loadView('admin.exports.pdf', compact('headers', 'data', 'title'));
+        $pdf = Pdf::loadView('super_admin.exports.pdf', compact('headers', 'data', 'title'));
         return $pdf->download('cities_report.pdf');
     }
 }
