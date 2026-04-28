@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.icons8.com/fluency/160/hotel.png" width="120" alt="HOTELIA Logo">
+  <img src="public/logo/photo.png" width="120" alt="HOTELIA Logo">
 </p>
 
 <h1 align="center">HOTELIA</h1>
