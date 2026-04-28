@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Salem-1822/SuperAdmin/main/public/logo/ProjetLaravel.png" width="120" alt="HOTELIA Logo">
-</p>
+
 
 <h1 align="center">HOTELIA</h1>
 
