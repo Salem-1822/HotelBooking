@@ -1,9 +1,7 @@
-
-
-<h1 align="center">HOTELIA</h1>
+<h1 align="center">🏨 HOTELIA</h1>
 
 <p align="center">
-Modern Hotel Management Platform built with Laravel
+Hotel Management & Reservation System
 </p>
 
 <p align="center">
@@ -15,69 +13,71 @@ Modern Hotel Management Platform built with Laravel
 
 ---
 
-## 📌 Overview
+## 📊 Dashboard Overview
 
-**HOTELIA** is a professional hotel management web application developed using Laravel.  
-The platform allows administrators to manage hotels, reservations, rooms, cities, clients, and revenues through a modern dashboard.
+<p align="center">
+<img src="https://img.icons8.com/fluency/240/hotel-information.png" width="120">
+</p>
 
----
+### 📌 Key Statistics (Like Dashboard Cards)
 
-## ✨ Core Features
-
-### 🏨 Hotel Management
+🏨 **Hotels Management**
 - Add new hotels  
-- Edit hotel information  
+- Update hotel details  
 - Delete hotels  
-- Upload hotel images  
+- Organize hotels by cities  
 
-### 📅 Reservation Management
-- Create reservations  
-- Track bookings  
+📅 **Reservations System**
+- Create new reservations  
+- Track booking status  
 - Manage check-in / check-out  
+- Monitor reservation history  
 
-### 🌍 Cities Management
-- Add and organize cities  
-- Assign hotels by city  
+🌍 **Cities Management**
+- Add cities  
+- Assign hotels to cities  
+- Organize locations  
 
-### 💰 Revenue Dashboard
-- Reservation statistics  
-- Total earnings  
-- Live overview cards  
+💰 **Revenue Tracking**
+- Total income from reservations  
+- Daily / monthly statistics  
+- Financial overview dashboard  
 
-### 🔐 Authentication
-- Secure admin login  
+👤 **Users & Roles**
+- Admin authentication  
+- Secure access control  
 - Session management  
-- Protected routes  
 
 ---
 
-## 🖥️ Admin Dashboard Preview
+## 🖥️ Dashboard Style Features
 
-- Total Hotels  
-- Reservations  
-- Cities  
-- Revenue  
-- Recently Added Hotels  
-- Statistics Section  
+- 📊 Card-based statistics (Hotels / Reservations / Cities / Revenue)  
+- 🎨 Clean Bootstrap UI  
+- 📈 Analytics section (charts placeholder)  
+- 🏨 Recent hotels list  
+- ⚡ Fast & responsive admin panel  
 
 ---
 
 ## 🛠️ Technologies Used
 
-| Technology | Role |
-|-----------|------|
-| Laravel | Backend Framework |
-| PHP | Server Side |
-| MySQL | Database |
-| Bootstrap 5 | UI Design |
-| Blade | Template Engine |
-| JavaScript | Dynamic Features |
+- Laravel 10  
+- PHP 8  
+- MySQL  
+- Bootstrap 5  
+- Blade Templates  
+- JavaScript  
 
 ---
 
-## 🚀 Installation Guide
-
-### 1️⃣ Clone Project
+## 🚀 Installation Steps
 
 ```bash
 git clone https://github.com/Salem-1822/SuperAdmin.git
+cd SuperAdmin
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan serve
