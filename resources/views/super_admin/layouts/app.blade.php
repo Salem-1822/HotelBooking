@@ -31,7 +31,14 @@
             --sidebar-width: 260px;
 
             --bg-body: #f8fafc;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Scoped transition values — never use 'all' globally */
+            --t-sidebar:  left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --t-layout:   margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --t-color:    background-color 0.2s ease, color 0.2s ease;
+            --t-btn:      background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+            --t-link:     background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+
             --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
 
@@ -42,7 +49,7 @@
             overflow-x: hidden;
         }
 
-        /* FIX RESPONSIVE SIDEBAR & CONTENT */
+        /* SIDEBAR & CONTENT — only transition the properties that actually change */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
@@ -51,14 +58,16 @@
             top: 0;
             left: 0;
             z-index: 1060;
-            transition: var(--transition);
+            /* Only 'left' changes on mobile toggle — never animate 'all' */
+            transition: var(--t-sidebar);
         }
 
         .main-content {
             margin-left: var(--sidebar-width);
             min-height: 100vh;
             width: calc(100% - var(--sidebar-width));
-            transition: var(--transition);
+            /* Only 'margin-left' changes on mobile — never animate 'all' */
+            transition: var(--t-layout);
         }
 
         .topbar {
@@ -103,7 +112,7 @@
             }
         }
 
-        /* UPDATE EXPORT PDF BUTTON STYLE */
+        /* EXPORT BUTTON — scoped transition, no 'all' */
         .btn-export {
             background-color: var(--brand-primary);
             color: #fff !important;
@@ -115,7 +124,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            transition: var(--transition);
+            transition: var(--t-btn);
             box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15);
         }
 
@@ -136,6 +145,7 @@
             background-color: var(--brand-primary);
             border: none;
             box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+            transition: var(--t-btn);
         }
 
         .btn-primary:hover {
@@ -157,7 +167,8 @@
             text-decoration: none;
             border-radius: 0.5rem;
             margin: 0.25rem 1rem;
-            transition: var(--transition);
+            /* Scoped: only color and background animate on hover/active */
+            transition: var(--t-link);
         }
 
         .sidebar-link i {
@@ -176,37 +187,45 @@
             box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.25);
         }
 
-        /* Animated Brand Element */
+        /*
+         * Brand title — ONE-SHOT fade-in only.
+         * softPulse and shimmer removed: they were infinite loops
+         * running on every page, causing constant layout repaints.
+         */
         .brand-title {
             font-family: 'Inter', sans-serif;
             font-weight: 800;
             font-size: 1.8rem;
             letter-spacing: 0.08em;
-            background: linear-gradient(120deg, #ffffff 20%, var(--brand-primary) 50%, #ffffff 80%);
+            background: linear-gradient(120deg, #ffffff 30%, var(--brand-primary) 60%, #ffffff 90%);
             background-size: 200% auto;
             color: #fff;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: fadeIn 1.2s ease-out forwards, shimmer 5s linear infinite, softPulse 4s ease-in-out infinite;
+            /* Only fadeIn — runs once, then stops. No infinite loops. */
+            animation: brandFadeIn 0.6s ease-out forwards;
             display: inline-block;
             margin-bottom: 0;
-            text-shadow: 0 0 20px rgba(249, 115, 22, 0.1);
         }
 
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(10px); }
+        @keyframes brandFadeIn {
+            0%   { opacity: 0; transform: translateY(8px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes shimmer {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
+        /*
+         * Page content area — lightweight one-shot entry animation.
+         * Replaces the heavy full-screen loader for non-sidebar navigations.
+         * Runs once per page load, then the element is static.
+         */
+        .page-content-wrapper {
+            animation: pageEnter 0.25s ease-out both;
         }
 
-        @keyframes softPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); text-shadow: 0 0 15px rgba(249, 115, 22, 0.3); }
+        @keyframes pageEnter {
+            0%   { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         /* Page Transition Loader */
@@ -246,15 +265,24 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: 
+            animation:
                 loaderScale 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
                 shimmer 3s linear infinite;
             text-shadow: 0 0 30px rgba(249, 115, 22, 0.2);
         }
 
         @keyframes loaderScale {
-            0% { transform: scale(0.85); opacity: 0; filter: blur(4px); }
-            100% { transform: scale(1); opacity: 1; filter: blur(0); }
+            0% {
+                transform: scale(0.85);
+                opacity: 0;
+                filter: blur(4px);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                filter: blur(0);
+            }
         }
     </style>
 </head>
@@ -338,22 +366,25 @@
                         data-bs-toggle="dropdown">
                         @php $layoutAdmin = Auth::guard('admin')->user(); @endphp
                         @if($layoutAdmin->profile_image && \Storage::disk('public')->exists('profiles/' . $layoutAdmin->profile_image))
-                            <img src="{{ asset('storage/profiles/' . $layoutAdmin->profile_image) }}"
-                                width="40" height="40" class="rounded-circle border border-2 border-white shadow-sm me-2" style="object-fit: cover;">
+                            <img src="{{ asset('storage/profiles/' . $layoutAdmin->profile_image) }}" width="40" height="40"
+                                class="rounded-circle border border-2 border-white shadow-sm me-2"
+                                style="object-fit: cover;">
                         @else
                             <img src="https://ui-avatars.com/api/?name={{ urlencode($layoutAdmin->name) }}&background=0F172A&color=fff"
                                 width="40" height="40" class="rounded-circle border border-2 border-white shadow-sm me-2">
                         @endif
                         <div class="d-none d-sm-block text-start">
                             <div class="fw-bold lh-1" style="font-size: 0.9rem;">
-                                {{ $layoutAdmin->name }}</div>
+                                {{ $layoutAdmin->name }}
+                            </div>
                             <small class="text-muted text-capitalize"
                                 style="font-size: 0.75rem;">{{ str_replace('_', ' ', $layoutAdmin->role) }}</small>
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-2"
                         style="border-radius: 12px; min-width: 200px;">
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('super_admin.profile') }}"><i class="bi bi-person me-2"></i> My
+                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('super_admin.profile') }}"><i
+                                    class="bi bi-person me-2"></i> My
                                 Profile</a></li>
                         <li>
                             <hr class="dropdown-divider mx-2">
@@ -371,7 +402,8 @@
             </div>
         </header>
 
-        <div class="p-4 p-md-5">
+        {{-- page-content-wrapper applies the lightweight one-shot pageEnter fade --}}
+        <div class="p-4 p-md-5 page-content-wrapper">
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert"
                     style="border-radius: 0.75rem;">
@@ -401,47 +433,68 @@
         });
     </script>
     @stack('scripts')
-    
-    <script>
-        // Page Transition Animation Logic
-        document.addEventListener("DOMContentLoaded", function() {
-            const loader = document.getElementById('page-loader');
-            
-            // Hide loader on initial page load
-            setTimeout(() => {
-                if(loader) loader.classList.add('fade-out');
-            }, 300); // slight delay for smooth entry
 
-            // Intercept internal link clicks
-            document.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', function(e) {
+    <script>
+        /**
+         * PAGE TRANSITION SYSTEM — HOTELIA Super Admin
+         *
+         * Rules:
+         *  ✅ Full-screen loader fires ONLY on sidebar navigation clicks (.sidebar-link)
+         *  ✅ Lightweight pageEnter CSS animation handles all other page arrivals
+         *  ❌ Loader does NOT fire on: table actions, export buttons, modal triggers,
+         *     pagination links, dropdown items, form submissions, or any other anchor
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+            const loader = document.getElementById('page-loader');
+
+            // ── Step 1: Fade out the loader on every page arrival ──────────────
+            // Fast fade-out so the page content becomes visible immediately.
+            if (loader) {
+                setTimeout(() => loader.classList.add('fade-out'), 200);
+            }
+
+            // ── Step 2: Attach loader ONLY to sidebar navigation links ─────────
+            // We target '.sidebar-link' exclusively — not all anchors.
+            // This prevents the loader from firing on:
+            //   • Export PDF buttons
+            //   • "View Details" / "Edit" / "Delete" table actions
+            //   • Pagination links
+            //   • Profile dropdown items
+            //   • Any link inside modals or cards
+            const sidebarLinks = document.querySelectorAll('.sidebar-link[href]');
+
+            sidebarLinks.forEach(function (link) {
+                link.addEventListener('click', function (e) {
                     const href = this.getAttribute('href');
-                    const target = this.getAttribute('target');
-                    
-                    // Proceed with animation if it's an internal link, valid, and not opening in new tab
+
+                    // Skip: empty, hash, javascript:, external, or modifier-key clicks
                     if (
-                        href && 
-                        href.startsWith(window.location.origin) && 
-                        target !== '_blank' && 
-                        !e.ctrlKey && 
-                        !e.metaKey
-                    ) {
-                        e.preventDefault();
-                        
-                        // Show loader
-                        if(loader) loader.classList.remove('fade-out');
-                        
-                        // Redirect after animation finishes
-                        setTimeout(() => {
-                            window.location.href = href;
-                        }, 500);
-                    }
+                        !href ||
+                        href === '#' ||
+                        href.startsWith('javascript') ||
+                        this.getAttribute('target') === '_blank' ||
+                        e.ctrlKey || e.metaKey || e.shiftKey
+                    ) return;
+
+                    // Skip: already on this page (same URL) — no need to reload
+                    if (href === window.location.href || href === window.location.pathname) return;
+
+                    // ✅ Show the full-screen loader for sidebar page navigation
+                    e.preventDefault();
+                    if (loader) loader.classList.remove('fade-out');
+
+                    // Navigate after the loader fade-in completes
+                    setTimeout(function () {
+                        window.location.href = href;
+                    }, 400);
                 });
             });
 
-            // Fallback: If user uses browsers back/forward buttons, hide loader
-            window.addEventListener('pageshow', function(event) {
-                if (event.persisted && loader) { // if loaded from cache
+            // ── Step 3: Handle browser back/forward cache (bfcache) ────────────
+            // When the user navigates back, the page may be served from cache
+            // with the loader still visible — ensure it fades out.
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted && loader) {
                     loader.classList.add('fade-out');
                 }
             });
