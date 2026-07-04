@@ -11,6 +11,12 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::guard('admin')->check()) {
+            $role = Auth::guard('admin')->user()->role;
+            if ($role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($role === 'client') {
+                return redirect()->route('client.dashboard');
+            }
             return redirect()->route('super_admin.dashboard');
         }
         return view('super_admin.auth.login');
@@ -25,6 +31,13 @@ class LoginController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
+
+            $role = Auth::guard('admin')->user()->role;
+            if ($role === 'admin') {
+                return redirect()->intended(route('admin.dashboard'));
+            } elseif ($role === 'client') {
+                return redirect()->intended(route('client.dashboard'));
+            }
 
             return redirect()->intended(route('super_admin.dashboard'));
         }

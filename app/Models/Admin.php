@@ -42,6 +42,6 @@ class Admin extends Authenticatable
      */
     public function scopeVisibleAdmins($query)
     {
-        return $query->whereNotIn('role', ['super_admin', 'city_admin']);
+        return $query->whereNotIn('role', ['super_admin', 'admin']);
     }
 }

@@ -23,11 +23,21 @@ class AdminSeeder extends Seeder
         );
 
         \App\Models\Admin::updateOrCreate(
-            ['email' => 'cityadmin@test.com'],
+            ['email' => 'admin2@test.com'],
             [
-                'name' => 'City Admin',
+                'name' => 'Admin User',
                 'password' => \Illuminate\Support\Facades\Hash::make('123456'),
-                'role' => 'city_admin',
+                'role' => 'admin',
+                'status' => 'active'
+            ]
+        );
+
+        \App\Models\Admin::updateOrCreate(
+            ['email' => 'client@test.com'],
+            [
+                'name' => 'Client User',
+                'password' => \Illuminate\Support\Facades\Hash::make('123456'),
+                'role' => 'client',
                 'status' => 'active'
             ]
         );

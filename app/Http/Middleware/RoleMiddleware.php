@@ -21,6 +21,14 @@ class RoleMiddleware
         }
 
         if (Auth::guard('admin')->user()->role !== $role) {
+            $userRole = Auth::guard('admin')->user()->role;
+            if ($userRole === 'super_admin') {
+                return redirect()->route('super_admin.dashboard');
+            } elseif ($userRole === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($userRole === 'client') {
+                return redirect()->route('client.dashboard');
+            }
             abort(403, 'Unauthorized access.');
         }
 
