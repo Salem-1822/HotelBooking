@@ -4,11 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SuperAdmin\DashboardController;
 use App\Http\Controllers\SuperAdmin\HotelController;
 use App\Http\Controllers\SuperAdmin\CityController;
-use App\Http\Controllers\SuperAdmin\AdminUserController;
 use App\Http\Controllers\SuperAdmin\ReservationController;
 use App\Http\Controllers\SuperAdmin\LoginController;
 use App\Http\Controllers\SuperAdmin\SystemConfigController;
 use App\Http\Controllers\SuperAdmin\ProfileController;
+use App\Http\Controllers\SuperAdmin\AdminUserController;
 
 // Auth Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -24,13 +24,13 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::resource('hotels', HotelController::class);
     
     // Cities
-    Route::get('cities/export', [CityController::class, 'exportPDF'])->name('cities.export');
-    Route::resource('cities', CityController::class);
+    Route::resource('cities', CityController::class)->except(['create', 'edit', 'show']);
     
     // Admins (Only Super Admin)
     Route::middleware(['role:super_admin'])->group(function () {
-        Route::get('admins/export', [AdminUserController::class, 'exportPDF'])->name('admins.export');
-        Route::resource('admins', AdminUserController::class);
+        
+        // Admins Management
+        Route::resource('admins', AdminUserController::class)->except(['create', 'edit', 'show']);
         
         // System Configuration
         Route::get('/settings', [SystemConfigController::class, 'index'])->name('settings');

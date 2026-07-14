@@ -7,35 +7,40 @@ use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class CityController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $cities = City::withCount('hotels')->latest()->get();
-        return view('super_admin.cities.index', compact('cities'));
-    }
+        $query = City::withCount('hotels');
 
-    public function show($id)
-    {
-        $city = City::with(['hotels.reservations'])->findOrFail($id);
-        return view('super_admin.cities.show', compact('city'));
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $cities = $query->latest()->paginate(10)->withQueryString();
+        
+        $totalCities = City::count();
+        $totalHotels = \App\Models\Hotel::count();
+
+        return view('super_admin.cities.index', compact('cities', 'totalCities', 'totalHotels'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:cities,name',
-            'image_file' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'image_url' => 'nullable|url'
+            'image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
+        ], [
+            'name.required' => 'The city name is required.',
+            'name.unique' => 'This city already exists.',
+            'image_file.image' => 'The uploaded file must be an image.',
+            'image_file.mimes' => 'The image must be a file of type: jpg, jpeg, png, webp.'
         ]);
 
         $imagePath = null;
         if ($request->hasFile('image_file')) {
             $imagePath = $request->file('image_file')->store('cities', 'public');
-        } elseif ($request->filled('image_url')) {
-            $imagePath = $request->image_url;
         }
 
         City::create([
@@ -51,24 +56,19 @@ class CityController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:cities,name,' . $city->id,
-            'image_file' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'image_url' => 'nullable|url'
+            'image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
+        ], [
+            'image_file.image' => 'The uploaded file must be an image.',
+            'image_file.mimes' => 'The image must be a file of type: jpg, jpeg, png, webp.'
         ]);
 
         $imagePath = $city->image;
 
         if ($request->hasFile('image_file')) {
-            // Delete old file if it's local
             if ($city->image && !Str::startsWith($city->image, ['http://', 'https://'])) {
                 Storage::disk('public')->delete($city->image);
             }
             $imagePath = $request->file('image_file')->store('cities', 'public');
-        } elseif ($request->filled('image_url')) {
-            // Delete old file if switching to URL
-            if ($city->image && !Str::startsWith($city->image, ['http://', 'https://'])) {
-                Storage::disk('public')->delete($city->image);
-            }
-            $imagePath = $request->image_url;
         }
 
         $city->update([
@@ -82,18 +82,11 @@ class CityController extends Controller
 
     public function destroy(City $city)
     {
+        if ($city->image && !Str::startsWith($city->image, ['http://', 'https://'])) {
+            Storage::disk('public')->delete($city->image);
+        }
+        
         $city->delete();
         return redirect()->route('super_admin.cities.index')->with('success', 'City deleted successfully.');
-    }
-
-    public function exportPDF()
-    {
-        $cities = City::all();
-        $headers = ['ID', 'Name', 'Slug', 'Hotels Count', 'Created At'];
-        $data = $cities->map(fn($c) => [$c->id, $c->name, $c->slug, $c->hotels()->count(), $c->created_at]);
-        $title = 'Cities';
-
-        $pdf = Pdf::loadView('super_admin.exports.pdf', compact('headers', 'data', 'title'));
-        return $pdf->download('cities_report.pdf');
     }
 }

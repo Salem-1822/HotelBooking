@@ -321,11 +321,13 @@
                 <i class="bi bi-geo-alt-fill"></i>
                 <span>Cities</span>
             </a>
+            @if(Auth::guard('admin')->user()->role === 'super_admin')
             <a href="{{ route('super_admin.admins.index') }}"
                 class="sidebar-link {{ request()->routeIs('super_admin.admins.*') ? 'active' : '' }}">
-                <i class="bi bi-people-fill"></i>
-                <span>Admins</span>
+                <i class="bi bi-shield-lock-fill"></i>
+                <span>Administrators</span>
             </a>
+            @endif
             <a href="{{ route('super_admin.reservations.index') }}"
                 class="sidebar-link {{ request()->routeIs('super_admin.reservations.*') ? 'active' : '' }}">
                 <i class="bi bi-calendar-check-fill"></i>
@@ -497,6 +499,14 @@
                 if (event.persisted && loader) {
                     loader.classList.add('fade-out');
                 }
+            });
+
+            // ── Step 4: Global Modal Stacking Context Fix ──────────────
+            // Modals must reside in the root stacking context to avoid rendering behind the backdrop.
+            // This safely moves any static Bootstrap modal across ALL modules directly into the body.
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(function(modal) {
+                document.body.appendChild(modal);
             });
         });
     </script>

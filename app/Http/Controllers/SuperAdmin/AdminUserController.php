@@ -7,103 +7,127 @@ use App\Models\Admin;
 use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminUserController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of the administrators.
+     */
+    public function index(Request $request)
     {
-        // Use the scope to show only "normal" admins consistently
-        $admins = Admin::with('city.hotels')
-            ->visibleAdmins()
-            ->latest()
-            ->paginate(10);
-            
-        return view('super_admin.admins.index', compact('admins'));
+        $query = Admin::with('city');
+
+        // Implementation of search by name or email
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        $admins = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        $totalAdmins = Admin::count();
+        $adminsWithCity = Admin::whereNotNull('city_id')->count();
+        $cities = City::orderBy('name', 'asc')->get();
+
+        return view('super_admin.admins.index', compact('admins', 'totalAdmins', 'adminsWithCity', 'cities'));
     }
 
-    public function create()
-    {
-        $cities = City::orderBy('name')->get();
-        return view('super_admin.admins.create', compact('cities'));
-    }
-
-    public function show($id)
-    {
-        $admin = Admin::with(['city.hotels.reservations'])->findOrFail($id);
-        
-        // Calculate basic stats
-        $hotels = $admin->city ? $admin->city->hotels : collect();
-        
-        $stats = [
-            'total_hotels' => $hotels->count(),
-            'total_reservations' => $hotels->sum(fn($h) => $h->reservations->count()),
-            'confirmed_res' => $hotels->sum(fn($h) => $h->reservations->where('status', 'confirmed')->count()),
-            'cancelled_res' => $hotels->sum(fn($h) => $h->reservations->where('status', 'cancelled')->count()),
-        ];
-
-        return view('super_admin.admins.show', compact('admin', 'stats'));
-    }
-
+    /**
+     * Store a newly created administrator in storage.
+     */
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|string|email|max:255|unique:admins,email',
             'password' => 'required|string|min:8',
-            'city_id' => 'required|exists:cities,id'
+            'city_id' => 'nullable|exists:cities,id',
+            'image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
+        ], [
+            'image_file.image' => 'The uploaded file must be an image.',
+            'image_file.mimes' => 'The image must be a file of type: jpg, jpeg, png, webp.'
         ]);
+
+        $profileImage = null;
+        if ($request->hasFile('image_file')) {
+            $profileImage = $request->file('image_file')->store('profiles', 'public');
+        }
 
         Admin::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'profile_image' => $profileImage,
             'city_id' => $request->city_id,
-            'role' => 'admin',
+            'role' => 'admin', // default role
             'status' => 'active'
         ]);
 
-        return redirect()->route('super_admin.admins.index')->with('success', 'Admin created successfully and assigned to city.');
+        return redirect()->route('super_admin.admins.index')->with('success', 'Administrator created successfully.');
     }
 
+    /**
+     * Update the specified administrator in storage.
+     */
     public function update(Request $request, Admin $admin)
     {
-        $admin->update($request->only('name', 'email', 'status'));
-        if ($request->password) {
-            $admin->update(['password' => Hash::make($request->password)]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('admins')->ignore($admin->id)],
+            'password' => 'nullable|string|min:8',
+            'city_id' => 'nullable|exists:cities,id',
+            'image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
+        ], [
+            'image_file.image' => 'The uploaded file must be an image.',
+            'image_file.mimes' => 'The image must be a file of type: jpg, jpeg, png, webp.'
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'city_id' => $request->city_id,
+        ];
+
+        // Only update password if a new one is provided
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
         }
 
-        return redirect()->back()->with('success', 'Admin updated successfully.');
+        // Handle profile image update
+        if ($request->hasFile('image_file')) {
+            if ($admin->profile_image) {
+                Storage::disk('public')->delete($admin->profile_image);
+            }
+            $data['profile_image'] = $request->file('image_file')->store('profiles', 'public');
+        }
+
+        $admin->update($data);
+
+        return redirect()->route('super_admin.admins.index')->with('success', 'Administrator updated successfully.');
     }
 
+    /**
+     * Remove the specified administrator from storage.
+     */
     public function destroy(Admin $admin)
     {
-        // 1. Prevent deleting self
+        // Prevent deletion of the currently logged-in super admin
         if (Auth::guard('admin')->id() === $admin->id) {
-            return redirect()->back()->with('error', 'You cannot delete your own account.');
+            return redirect()->route('super_admin.admins.index')->withErrors(['error' => 'You cannot delete your own account.']);
         }
 
-        // 2. Prevent deleting the last super admin
-        if ($admin->role === 'super_admin') {
-            $superAdminCount = Admin::where('role', 'super_admin')->count();
-            if ($superAdminCount <= 1) {
-                return redirect()->back()->with('error', 'The system must have at least one Super Admin.');
-            }
+        if ($admin->profile_image) {
+            Storage::disk('public')->delete($admin->profile_image);
         }
 
         $admin->delete();
-        return redirect()->route('super_admin.admins.index')->with('success', 'Admin deleted successfully.');
-    }
 
-    public function exportPDF()
-    {
-        $users = Admin::visibleAdmins()->get();
-        $headers = ['ID', 'Name', 'Email', 'Joined At'];
-        $data = $users->map(fn($u) => [$u->id, $u->name, $u->email, $u->created_at]);
-        $title = 'System Admins';
-
-        $pdf = Pdf::loadView('super_admin.exports.pdf', compact('headers', 'data', 'title'));
-        return $pdf->download('admins_report.pdf');
+        return redirect()->route('super_admin.admins.index')->with('success', 'Administrator deleted successfully.');
     }
 }
