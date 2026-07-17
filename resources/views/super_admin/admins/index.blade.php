@@ -106,7 +106,16 @@
                                 </div>
                             </td>
                             <td class="py-3 border-light">
-                                @if($admin->city)
+                                @if($admin->city && $admin->hotel)
+                                    <div class="d-flex flex-column gap-1">
+                                        <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill fw-semibold border border-info border-opacity-25 text-start" style="width: fit-content;">
+                                            <i class="bi bi-geo-alt-fill me-1"></i> {{ $admin->city->name }}
+                                        </span>
+                                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold border border-primary border-opacity-25 text-start" style="width: fit-content;">
+                                            <i class="bi bi-building me-1"></i> {{ $admin->hotel->name }}
+                                        </span>
+                                    </div>
+                                @elseif($admin->city)
                                     <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill fw-semibold border border-info border-opacity-25">
                                         <i class="bi bi-geo-alt-fill me-1"></i> {{ $admin->city->name }}
                                     </span>
@@ -204,14 +213,20 @@
                         <input type="password" name="password" class="form-control form-control-lg bg-white border" placeholder="Min 8 characters" required minlength="8">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold text-dark small mb-2">Assign City</label>
-                        <select name="city_id" class="form-select form-select-lg bg-white border">
-                            <option value="">-- No City Assigned --</option>
+                        <label class="form-label fw-bold text-dark small mb-2">Assign City <span class="text-danger">*</span></label>
+                        <select name="city_id" id="create_city_id" class="form-select form-select-lg bg-white border" required>
+                            <option value="">-- Select City --</option>
                             @foreach($cities as $c)
                                 <option value="{{ $c->id }}" {{ old('city_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
                             @endforeach
                         </select>
-                        <div class="form-text mt-1"><i class="bi bi-info-circle me-1"></i>Limits access to specific city hotels.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-dark small mb-2">Assign Hotel <span class="text-danger">*</span></label>
+                        <select name="hotel_id" id="create_hotel_id" class="form-select form-select-lg bg-white border" required>
+                            <option value="">-- Select Hotel --</option>
+                        </select>
+                        <div class="form-text mt-1"><i class="bi bi-info-circle me-1"></i>Administrator manages ONLY this hotel.</div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Profile Image</label>
@@ -255,12 +270,18 @@
                         <input type="password" name="password" class="form-control form-control-lg bg-white border" placeholder="Leave empty to keep current" minlength="8">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold text-dark small mb-2">Assign City</label>
-                        <select name="city_id" class="form-select form-select-lg bg-white border">
-                            <option value="">-- No City Assigned --</option>
+                        <label class="form-label fw-bold text-dark small mb-2">Assign City <span class="text-danger">*</span></label>
+                        <select name="city_id" id="edit_city_{{ $admin->id }}" class="form-select form-select-lg bg-white border city-select" data-admin-id="{{ $admin->id }}" required>
+                            <option value="">-- Select City --</option>
                             @foreach($cities as $c)
                                 <option value="{{ $c->id }}" {{ $admin->city_id == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-dark small mb-2">Assign Hotel <span class="text-danger">*</span></label>
+                        <select name="hotel_id" id="edit_hotel_{{ $admin->id }}" class="form-select form-select-lg bg-white border" data-current-hotel="{{ $admin->hotel_id }}" required>
+                            <option value="">-- Select Hotel --</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -303,5 +324,65 @@
 </div>
 @endif
 @endforeach
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cities = @json($cities);
+
+        function populateHotels(citySelectId, hotelSelectId, selectedHotelId = null) {
+            const citySelect = document.getElementById(citySelectId);
+            const hotelSelect = document.getElementById(hotelSelectId);
+            
+            if (!citySelect || !hotelSelect) return;
+
+            const cityId = citySelect.value;
+            hotelSelect.innerHTML = '<option value="">-- Select Hotel --</option>';
+
+            if (cityId) {
+                const city = cities.find(c => c.id == cityId);
+                if (city && city.hotels) {
+                    city.hotels.forEach(hotel => {
+                        const option = document.createElement('option');
+                        option.value = hotel.id;
+                        option.textContent = hotel.name;
+                        if (selectedHotelId && selectedHotelId == hotel.id) {
+                            option.selected = true;
+                        }
+                        hotelSelect.appendChild(option);
+                    });
+                }
+            }
+        }
+
+        // Create form
+        const createCitySelect = document.getElementById('create_city_id');
+        if (createCitySelect) {
+            createCitySelect.addEventListener('change', function() {
+                populateHotels('create_city_id', 'create_hotel_id');
+            });
+            // Initial population if old('city_id') exists
+            if (createCitySelect.value) {
+                populateHotels('create_city_id', 'create_hotel_id', "{{ old('hotel_id') }}");
+            }
+        }
+
+        // Edit forms
+        const editCitySelects = document.querySelectorAll('.city-select');
+        editCitySelects.forEach(select => {
+            select.addEventListener('change', function() {
+                const adminId = this.getAttribute('data-admin-id');
+                populateHotels('edit_city_' + adminId, 'edit_hotel_' + adminId);
+            });
+            
+            // Initial population
+            const adminId = select.getAttribute('data-admin-id');
+            const hotelSelect = document.getElementById('edit_hotel_' + adminId);
+            const currentHotelId = hotelSelect.getAttribute('data-current-hotel');
+            if (select.value) {
+                populateHotels('edit_city_' + adminId, 'edit_hotel_' + adminId, currentHotelId);
+            }
+        });
+    });
+</script>
 
 @endsection

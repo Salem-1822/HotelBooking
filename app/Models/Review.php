@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reservation extends Model
+class Review extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['hotel_id', 'room_id', 'guest_name', 'guest_phone', 'guests_count', 'check_in', 'check_out', 'total_price', 'status'];
+    protected $fillable = ['hotel_id', 'user_id', 'rating', 'comment'];
 
     public function hotel()
     {
@@ -19,10 +19,5 @@ class Reservation extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function room()
-    {
-        return $this->belongsTo(Room::class);
     }
 }

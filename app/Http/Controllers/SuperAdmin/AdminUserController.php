@@ -18,7 +18,7 @@ class AdminUserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Admin::with('city');
+        $query = Admin::with(['city', 'hotel']);
 
         // Implementation of search by name or email
         if ($request->filled('search')) {
@@ -33,7 +33,7 @@ class AdminUserController extends Controller
 
         $totalAdmins = Admin::count();
         $adminsWithCity = Admin::whereNotNull('city_id')->count();
-        $cities = City::orderBy('name', 'asc')->get();
+        $cities = City::with('hotels')->orderBy('name', 'asc')->get();
 
         return view('super_admin.admins.index', compact('admins', 'totalAdmins', 'adminsWithCity', 'cities'));
     }
@@ -47,7 +47,13 @@ class AdminUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:admins,email',
             'password' => 'required|string|min:8',
-            'city_id' => 'nullable|exists:cities,id',
+            'city_id' => 'required|exists:cities,id',
+            'hotel_id' => [
+                'required',
+                Rule::exists('hotels', 'id')->where(function ($query) use ($request) {
+                    return $query->where('city_id', $request->city_id);
+                }),
+            ],
             'image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
         ], [
             'image_file.image' => 'The uploaded file must be an image.',
@@ -65,6 +71,7 @@ class AdminUserController extends Controller
             'password' => Hash::make($request->password),
             'profile_image' => $profileImage,
             'city_id' => $request->city_id,
+            'hotel_id' => $request->hotel_id,
             'role' => 'admin', // default role
             'status' => 'active'
         ]);
@@ -81,7 +88,13 @@ class AdminUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('admins')->ignore($admin->id)],
             'password' => 'nullable|string|min:8',
-            'city_id' => 'nullable|exists:cities,id',
+            'city_id' => 'required|exists:cities,id',
+            'hotel_id' => [
+                'required',
+                Rule::exists('hotels', 'id')->where(function ($query) use ($request) {
+                    return $query->where('city_id', $request->city_id);
+                }),
+            ],
             'image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
         ], [
             'image_file.image' => 'The uploaded file must be an image.',
@@ -92,6 +105,7 @@ class AdminUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'city_id' => $request->city_id,
+            'hotel_id' => $request->hotel_id,
         ];
 
         // Only update password if a new one is provided

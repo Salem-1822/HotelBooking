@@ -17,6 +17,7 @@ class Admin extends Authenticatable
         'profile_image',
         'role',
         'city_id',
+        'hotel_id',
         'status',
     ];
 
@@ -35,6 +36,11 @@ class Admin extends Authenticatable
     public function city()
     {
         return $this->belongsTo(City::class);
+    }
+
+    public function hotel()
+    {
+        return $this->belongsTo(Hotel::class);
     }
 
     /**
