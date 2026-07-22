@@ -433,7 +433,7 @@
                 <i class="bi bi-grid-1x2-fill"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.rooms.index') }}" class="sidebar-link {{ request()->routeIs('admin.rooms.*') ? 'active' : '' }}">
                 <i class="bi bi-door-open-fill"></i>
                 <span>Manage Rooms</span>
             </a>
@@ -582,6 +582,12 @@
                         window.location.href = href;
                     }, 380);
                 });
+            });
+
+            // Step 4: Global Modal Stacking Context Fix
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(function(modal) {
+                document.body.appendChild(modal);
             });
         });
     </script>
