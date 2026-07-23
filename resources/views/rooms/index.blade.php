@@ -58,6 +58,18 @@
         opacity: 1;
         transform: translateY(0);
     }
+    .modal {
+        z-index: 9999 !important;
+    }
+    .modal-backdrop {
+        z-index: 9998 !important;
+    }
+    .modal-content {
+        border: none;
+        border-radius: 1.25rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+    }
     .modal .form-label {
         font-weight: 600;
     }
@@ -104,7 +116,7 @@
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl-2">
+    <div class="col-sm-6 col-xl-3">
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body">
                 <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Total Rooms</p>
@@ -113,7 +125,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-2">
+    <div class="col-sm-6 col-xl-3">
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body">
                 <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Available</p>
@@ -122,39 +134,21 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-2">
+    <div class="col-sm-6 col-xl-3">
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body">
                 <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Occupied</p>
-                <h3 class="mb-1 fw-bold counter text-info" data-count="{{ $occupiedRooms }}">0</h3>
-                <span class="badge bg-info bg-opacity-10 text-info">In Use</span>
+                <h3 class="mb-1 fw-bold counter text-danger" data-count="{{ $occupiedRooms }}">0</h3>
+                <span class="badge bg-danger bg-opacity-10 text-danger">In Use</span>
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-2">
-        <div class="card summary-card h-100 border-0 shadow-sm">
-            <div class="card-body">
-                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Reserved</p>
-                <h3 class="mb-1 fw-bold counter text-warning" data-count="{{ $reservedRooms }}">0</h3>
-                <span class="badge bg-warning bg-opacity-10 text-warning">Booked</span>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-xl-2">
+    <div class="col-sm-6 col-xl-3">
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body">
                 <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Maintenance</p>
-                <h3 class="mb-1 fw-bold counter text-danger" data-count="{{ $maintenanceRooms }}">0</h3>
-                <span class="badge bg-danger bg-opacity-10 text-danger">Service</span>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-xl-2">
-        <div class="card summary-card h-100 border-0 shadow-sm">
-            <div class="card-body">
-                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Inactive</p>
-                <h3 class="mb-1 fw-bold counter text-secondary" data-count="{{ $inactiveRooms }}">0</h3>
-                <span class="badge bg-secondary bg-opacity-10 text-secondary">Offline</span>
+                <h3 class="mb-1 fw-bold counter text-warning" data-count="{{ $maintenanceRooms }}">0</h3>
+                <span class="badge bg-warning bg-opacity-10 text-warning">Service</span>
             </div>
         </div>
     </div>
@@ -185,15 +179,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-sm-4 col-lg-2">
-                <select id="filterFloor" class="form-select">
-                    <option value="">All Floors</option>
-                    @foreach($floors as $floor)
-                    <option value="{{ $floor }}">{{ $floor }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-sm-12 col-lg-2 text-end">
+            <div class="col-sm-12 col-lg-2 text-end ms-auto">
                 <button id="clearFilters" class="btn btn-light border">Clear Filters</button>
             </div>
         </div>
@@ -239,7 +225,15 @@
                     <td>{{ $room->capacity }}</td>
                     <td>{{ number_format($room->price_per_night, 2) }} MAD</td>
                     <td>
-                        <span class="badge rounded-pill px-3 badge-animate {{ $room->status == 'available' ? 'bg-success bg-opacity-15 text-success' : ($room->status == 'occupied' ? 'bg-info bg-opacity-15 text-info' : ($room->status == 'reserved' ? 'bg-warning bg-opacity-15 text-warning' : ($room->status == 'maintenance' ? 'bg-danger bg-opacity-15 text-danger' : 'bg-secondary bg-opacity-15 text-secondary'))) }}">
+                        @php
+                            $badgeClass = match($room->status) {
+                                'available'   => 'bg-success bg-opacity-15 text-success',
+                                'occupied'    => 'bg-danger bg-opacity-15 text-danger',
+                                'maintenance' => 'bg-warning bg-opacity-15 text-warning',
+                                default       => 'bg-secondary bg-opacity-15 text-secondary',
+                            };
+                        @endphp
+                        <span class="badge rounded-pill px-3 badge-animate {{ $badgeClass }}">
                             {{ ucfirst($room->status) }}
                         </span>
                     </td>
@@ -281,30 +275,18 @@
                 <h5 class="modal-title">Add Room</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="createRoomForm" enctype="multipart/form-data">
+            <form id="createRoomForm" method="POST" action="{{ route($routePrefix . 'rooms.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="row g-3">
-                        @if($hotels)
-                        <div class="col-md-6">
-                            <label class="form-label">Hotel</label>
-                            <select name="hotel_id" class="form-select" required>
-                                <option value="">Select Hotel</option>
-                                @foreach($hotels as $hotel)
-                                <option value="{{ $hotel->id }}">{{ $hotel->name }}</option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        @endif
                         <div class="col-md-6">
                             <label class="form-label">Room Number</label>
-                            <input name="room_number" type="text" class="form-control" required>
+                            <input name="room_number" type="text" class="form-control" placeholder="e.g. 101" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Room Name</label>
-                            <input name="name" type="text" class="form-control" required>
+                            <input name="name" type="text" class="form-control" placeholder="e.g. Deluxe Ocean View" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
@@ -317,58 +299,33 @@
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Capacity</label>
-                            <input name="capacity" type="number" min="1" class="form-control" required>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Bed Type</label>
-                            <select name="bed_type" class="form-select" required>
-                                <option value="">Select Bed Type</option>
-                                @foreach($bedTypes as $bedType)
-                                <option value="{{ $bedType }}">{{ $bedType }}</option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Floor</label>
-                            <input name="floor" type="number" min="0" class="form-control" required>
-                            <div class="invalid-feedback"></div>
-                        </div>
                         <div class="col-md-6">
-                            <label class="form-label">Price Per Night</label>
+                            <label class="form-label">Price Per Night (DH)</label>
                             <input name="price_per_night" type="number" min="0" step="0.01" class="form-control" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Size (m²)</label>
-                            <input name="size" type="number" min="0" step="0.1" class="form-control">
+                            <label class="form-label">Capacity</label>
+                            <input name="capacity" type="number" min="1" class="form-control" placeholder="e.g. 2" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Description</label>
-                            <textarea name="description" rows="3" class="form-control"></textarea>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Main Image</label>
-                            <input name="main_image" type="file" accept="image/*" class="form-control" required>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Gallery Images</label>
-                            <input name="gallery_images[]" type="file" accept="image/*" multiple class="form-control">
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
                             <label class="form-label">Status</label>
                             <select name="status" class="form-select" required>
                                 @foreach($statusOptions as $key => $label)
                                 <option value="{{ $key }}">{{ $label }}</option>
                                 @endforeach
                             </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description <span class="text-muted fw-normal">(Optional)</span></label>
+                            <textarea name="description" rows="3" class="form-control"></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Room Image <span class="text-muted fw-normal">(Optional)</span></label>
+                            <input name="main_image" type="file" accept="image/*" class="form-control">
                             <div class="invalid-feedback"></div>
                         </div>
                     </div>
@@ -394,26 +351,14 @@
                 <input type="hidden" name="_method" value="PUT">
                 <div class="modal-body">
                     <div class="row g-3">
-                        @if($hotels)
-                        <div class="col-md-6">
-                            <label class="form-label">Hotel</label>
-                            <select name="hotel_id" class="form-select" required>
-                                <option value="">Select Hotel</option>
-                                @foreach($hotels as $hotel)
-                                <option value="{{ $hotel->id }}">{{ $hotel->name }}</option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        @endif
                         <div class="col-md-6">
                             <label class="form-label">Room Number</label>
-                            <input name="room_number" type="text" class="form-control" required>
+                            <input name="room_number" type="text" class="form-control" placeholder="e.g. 101" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Room Name</label>
-                            <input name="name" type="text" class="form-control" required>
+                            <input name="name" type="text" class="form-control" placeholder="e.g. Deluxe Ocean View" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
@@ -426,60 +371,34 @@
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Capacity</label>
-                            <input name="capacity" type="number" min="1" class="form-control" required>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Bed Type</label>
-                            <select name="bed_type" class="form-select" required>
-                                <option value="">Select Bed Type</option>
-                                @foreach($bedTypes as $bedType)
-                                <option value="{{ $bedType }}">{{ $bedType }}</option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Floor</label>
-                            <input name="floor" type="number" min="0" class="form-control" required>
-                            <div class="invalid-feedback"></div>
-                        </div>
                         <div class="col-md-6">
-                            <label class="form-label">Price Per Night</label>
+                            <label class="form-label">Price Per Night (DH)</label>
                             <input name="price_per_night" type="number" min="0" step="0.01" class="form-control" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Size (m²)</label>
-                            <input name="size" type="number" min="0" step="0.1" class="form-control">
+                            <label class="form-label">Capacity</label>
+                            <input name="capacity" type="number" min="1" class="form-control" placeholder="e.g. 2" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Description</label>
-                            <textarea name="description" rows="3" class="form-control"></textarea>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Main Image</label>
-                            <input name="main_image" type="file" accept="image/*" class="form-control">
-                            <div class="form-text">Upload only when replacing the current main image.</div>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Gallery Images</label>
-                            <input name="gallery_images[]" type="file" accept="image/*" multiple class="form-control">
-                            <div class="form-text">Uploading new gallery images replaces the existing gallery.</div>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
                             <label class="form-label">Status</label>
                             <select name="status" class="form-select" required>
                                 @foreach($statusOptions as $key => $label)
                                 <option value="{{ $key }}">{{ $label }}</option>
                                 @endforeach
                             </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description <span class="text-muted fw-normal">(Optional)</span></label>
+                            <textarea name="description" rows="3" class="form-control"></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Room Image <span class="text-muted fw-normal">(Optional)</span></label>
+                            <input name="main_image" type="file" accept="image/*" class="form-control">
+                            <div class="form-text">Upload only when replacing the current main image.</div>
                             <div class="invalid-feedback"></div>
                         </div>
                     </div>
@@ -506,7 +425,6 @@
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4 text-center">
                                 <img id="viewMainImage" src="" alt="Room Image" class="img-fluid rounded-4 mb-4" style="max-height:320px; width:auto;">
-                                <div id="viewGallery" class="d-flex flex-wrap justify-content-center gap-2"></div>
                             </div>
                         </div>
                     </div>
@@ -526,20 +444,8 @@
                                 <div id="viewRoomType" class="fw-semibold"></div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="text-muted small">Bed Type</div>
-                                <div id="viewBedType" class="fw-semibold"></div>
-                            </div>
-                            <div class="col-sm-6">
                                 <div class="text-muted small">Capacity</div>
                                 <div id="viewCapacity" class="fw-semibold"></div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="text-muted small">Floor</div>
-                                <div id="viewFloor" class="fw-semibold"></div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="text-muted small">Size</div>
-                                <div id="viewSize" class="fw-semibold"></div>
                             </div>
                             <div class="col-md-6">
                                 <div class="text-muted small">Price Per Night</div>
@@ -619,10 +525,6 @@
             state.type = this.value;
             renderRooms();
         });
-        document.getElementById('filterFloor').addEventListener('change', function () {
-            state.floor = this.value;
-            renderRooms();
-        });
         document.getElementById('clearFilters').addEventListener('click', function () {
             state.search = '';
             state.status = '';
@@ -631,7 +533,6 @@
             document.getElementById('roomSearchInput').value = '';
             document.getElementById('filterStatus').value = '';
             document.getElementById('filterType').value = '';
-            document.getElementById('filterFloor').value = '';
             renderRooms();
         });
 
@@ -655,7 +556,7 @@
             if (state.type && room.type !== state.type) return false;
             if (state.floor && String(room.floor) !== state.floor) return false;
             if (!state.search) return true;
-            return [room.room_number, room.name, room.type, room.bed_type, room.hotel_name || '']
+            return [room.room_number, room.name, room.type, room.hotel_name || '']
                 .join(' ').toLowerCase().includes(state.search);
         });
 
@@ -679,19 +580,17 @@
     }
 
     function roomRowTemplate(room) {
-        const badgeClasses = {
-            available: 'bg-success bg-opacity-15 text-success',
-            occupied: 'bg-info bg-opacity-15 text-info',
-            reserved: 'bg-warning bg-opacity-15 text-warning',
-            maintenance: 'bg-danger bg-opacity-15 text-danger',
-            inactive: 'bg-secondary bg-opacity-15 text-secondary',
+        const statusMap = {
+            available:   'bg-success bg-opacity-15 text-success',
+            occupied:    'bg-danger bg-opacity-15 text-danger',
+            maintenance: 'bg-warning bg-opacity-15 text-warning',
         };
-        const statusClass = badgeClasses[room.status] || 'bg-secondary bg-opacity-15 text-secondary';
+        const statusClass = statusMap[room.status] || 'bg-secondary bg-opacity-15 text-secondary';
         const hotelInfo = window.isSuperAdminArea && room.hotel_name ? `<small class="text-muted">${escapeHtml(room.hotel_name)}</small>` : '';
         const image = room.main_image_url ? `<img src="${room.main_image_url}" class="room-image-thumb" alt="${escapeHtml(room.name)}">` : '<div class="room-image-thumb d-flex align-items-center justify-content-center bg-light text-muted"><i class="bi bi-door-closed fs-5"></i></div>';
 
         return `
-            <tr data-id="${room.id}" data-status="${escapeHtml(room.status)}" data-type="${escapeHtml(room.type)}" data-floor="${escapeHtml(room.floor)}">
+            <tr data-id="${room.id}" data-status="${escapeHtml(room.status)}" data-type="${escapeHtml(room.type)}">
                 <td class="pe-0">${image}</td>
                 <td>#${escapeHtml(room.room_number)}</td>
                 <td>
@@ -752,23 +651,17 @@
         state.selectedRoomId = room.id;
         document.getElementById('viewMainImage').src = room.main_image_url || 'https://via.placeholder.com/600x400?text=No+Image';
         document.getElementById('viewRoomName').textContent = room.name;
-        document.getElementById('viewRoomSubtitle').textContent = `${room.type} • ${room.bed_type}`;
+        document.getElementById('viewRoomSubtitle').textContent = room.type;
         document.getElementById('viewStatusBadge').textContent = capitalize(room.status);
         document.getElementById('viewStatusBadge').className = `badge rounded-pill px-3 ${badgeClasses(room.status)}`;
         document.getElementById('viewRoomNumber').textContent = `#${room.room_number}`;
         document.getElementById('viewRoomType').textContent = room.type;
-        document.getElementById('viewBedType').textContent = room.bed_type;
         document.getElementById('viewCapacity').textContent = room.capacity;
-        document.getElementById('viewFloor').textContent = room.floor;
-        document.getElementById('viewSize').textContent = room.size ? `${room.size} m²` : '—';
         document.getElementById('viewPrice').textContent = `${room.price_per_night} MAD`;
         if (window.isSuperAdminArea) {
             document.getElementById('viewHotelName').textContent = room.hotel_name || '—';
         }
         document.getElementById('viewDescription').textContent = room.description || 'No description provided.';
-
-        const galleryContainer = document.getElementById('viewGallery');
-        galleryContainer.innerHTML = room.gallery_images && room.gallery_images.length ? room.gallery_images.map(src => `<img src="${src}" class="rounded-4" style="width:98px;height:98px;object-fit:cover;">`).join('') : '<div class="text-muted">No gallery images added.</div>';
         modal.show();
     }
 
@@ -781,14 +674,12 @@
         form.querySelector('[name="name"]').value = room.name;
         form.querySelector('[name="type"]').value = room.type;
         form.querySelector('[name="capacity"]').value = room.capacity;
-        form.querySelector('[name="bed_type"]').value = room.bed_type;
-        form.querySelector('[name="floor"]').value = room.floor;
         form.querySelector('[name="price_per_night"]').value = room.price_per_night;
-        form.querySelector('[name="size"]').value = room.size || '';
         form.querySelector('[name="description"]').value = room.description || '';
         form.querySelector('[name="status"]').value = room.status;
         if (window.isSuperAdminArea) {
-            form.querySelector('[name="hotel_id"]').value = room.hotel_id || '';
+            const hotelSelect = form.querySelector('[name="hotel_id"]');
+            if (hotelSelect) hotelSelect.value = room.hotel_id || '';
         }
         const modal = new bootstrap.Modal(document.getElementById('editRoomModal'));
         modal.show();
@@ -879,13 +770,9 @@
             type: room.type,
             capacity: room.capacity,
             price_per_night: Number(room.price_per_night).toFixed(2),
-            bed_type: room.bed_type,
-            floor: room.floor,
-            size: room.size,
             description: room.description,
             status: room.status,
             main_image_url: room.main_image ? `${window.assetBasePath}/${room.main_image}` : null,
-            gallery_images: Array.isArray(room.gallery_images) ? room.gallery_images.map(path => `${window.assetBasePath}/${path}`) : [],
             hotel_id: room.hotel_id,
             hotel_name: room.hotel_name || '',
             updated_at: `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`,
@@ -894,23 +781,19 @@
 
     function updateStats() {
         const counts = {
-            total: window.rooms.length,
-            available: window.rooms.filter(room => room.status === 'available').length,
-            occupied: window.rooms.filter(room => room.status === 'occupied').length,
-            reserved: window.rooms.filter(room => room.status === 'reserved').length,
-            maintenance: window.rooms.filter(room => room.status === 'maintenance').length,
-            inactive: window.rooms.filter(room => room.status === 'inactive').length,
+            total:       window.rooms.length,
+            available:   window.rooms.filter(r => r.status === 'available').length,
+            occupied:    window.rooms.filter(r => r.status === 'occupied').length,
+            maintenance: window.rooms.filter(r => r.status === 'maintenance').length,
         };
         document.querySelectorAll('.counter').forEach(element => {
             const label = element.closest('.summary-card')?.querySelector('p')?.textContent?.trim().toLowerCase();
             if (!label) return;
             let value = 0;
-            if (label.includes('total')) value = counts.total;
-            if (label.includes('available')) value = counts.available;
-            if (label.includes('occupied')) value = counts.occupied;
-            if (label.includes('reserved')) value = counts.reserved;
+            if (label.includes('total'))       value = counts.total;
+            if (label.includes('available'))   value = counts.available;
+            if (label.includes('occupied'))    value = counts.occupied;
             if (label.includes('maintenance')) value = counts.maintenance;
-            if (label.includes('inactive')) value = counts.inactive;
             element.dataset.count = value;
             element.textContent = value;
         });
@@ -972,11 +855,9 @@
 
     function badgeClasses(status) {
         const classes = {
-            available: 'bg-success bg-opacity-15 text-success',
-            occupied: 'bg-info bg-opacity-15 text-info',
-            reserved: 'bg-warning bg-opacity-15 text-warning',
-            maintenance: 'bg-danger bg-opacity-15 text-danger',
-            inactive: 'bg-secondary bg-opacity-15 text-secondary',
+            available:   'bg-success bg-opacity-15 text-success',
+            occupied:    'bg-danger bg-opacity-15 text-danger',
+            maintenance: 'bg-warning bg-opacity-15 text-warning',
         };
         return classes[status] || 'bg-secondary bg-opacity-15 text-secondary';
     }
