@@ -340,7 +340,7 @@
             <div class="card-body p-4 p-md-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="section-title mb-0"><i class="bi bi-calendar-check-fill text-primary"></i> Recent Reservations</h5>
-                    <a href="#" class="btn btn-sm btn-light border fw-semibold" style="font-size: 0.8rem;">View All</a>
+                    <a href="{{ route('admin.reservations.index') }}" class="btn btn-sm btn-light border fw-semibold" style="font-size: 0.8rem;">View All</a>
                 </div>
                 
                 <div class="table-responsive">
@@ -374,13 +374,25 @@
                                 </td>
                                 <td class="fw-bold" style="color: #0F172A;">{{ number_format($res->total_price, 2) }} MAD</td>
                                 <td>
-                                    @if($res->status === 'confirmed' || $res->status === 'completed')
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill">Confirmed</span>
-                                    @elseif($res->status === 'pending')
-                                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 rounded-pill">Pending</span>
-                                    @else
-                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill">Cancelled</span>
-                                    @endif
+                                    @php
+                                        $badgeClass = match($res->status) {
+                                            'confirmed'   => 'bg-success-subtle text-success border-success-subtle',
+                                            'checked_in'  => 'bg-primary-subtle text-primary border-primary-subtle',
+                                            'checked_out' => 'bg-secondary-subtle text-secondary border-secondary-subtle',
+                                            'pending'     => 'bg-warning-subtle text-warning border-warning-subtle',
+                                            'cancelled'   => 'bg-danger-subtle text-danger border-danger-subtle',
+                                            default       => 'bg-light text-dark',
+                                        };
+                                        $badgeLabel = match($res->status) {
+                                            'confirmed'   => 'Confirmed',
+                                            'checked_in'  => 'Checked In',
+                                            'checked_out' => 'Checked Out',
+                                            'pending'     => 'Pending',
+                                            'cancelled'   => 'Cancelled',
+                                            default       => ucfirst($res->status),
+                                        };
+                                    @endphp
+                                    <span class="badge {{ $badgeClass }} border px-2 py-1 rounded-pill">{{ $badgeLabel }}</span>
                                 </td>
                             </tr>
                             @empty
@@ -402,7 +414,7 @@
                 <h5 class="section-title"><i class="bi bi-lightning-fill text-warning"></i> Quick Actions</h5>
                 <div class="row g-3">
                     <div class="col-6">
-                        <a href="#" class="quick-action-btn">
+                        <a href="{{ route('admin.reservations.index') }}" class="quick-action-btn">
                             <i class="bi bi-calendar-plus quick-action-icon"></i>
                             New Booking
                         </a>

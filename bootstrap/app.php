@@ -29,7 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->redirectTo(
-            guests: '/super-admin/login',
+            guests: '/login',
             users: '/super-admin/dashboard'
         );
         $middleware->alias([

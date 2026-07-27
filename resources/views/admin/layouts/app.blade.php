@@ -437,7 +437,7 @@
                 <i class="bi bi-door-open-fill"></i>
                 <span>Manage Rooms</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.reservations.index') }}" class="sidebar-link {{ request()->routeIs('admin.reservations.*') ? 'active' : '' }}">
                 <i class="bi bi-calendar-check-fill"></i>
                 <span>Reservations</span>
             </a>

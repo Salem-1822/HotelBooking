@@ -35,15 +35,17 @@ class DashboardController extends Controller
         $occupancyRate = $totalRooms > 0 ? round(($occupiedRooms / $totalRooms) * 100) : 0;
 
         // Reservations Stats
-        $today = Carbon::today();
         $reservationsQuery = Reservation::where('hotel_id', $hotelId);
 
-        $pendingReservations = (clone $reservationsQuery)->where('status', 'pending')->count();
-        $confirmedReservations = (clone $reservationsQuery)->where('status', 'confirmed')->count();
-        $cancelledReservations = (clone $reservationsQuery)->where('status', 'cancelled')->count();
+        $pendingReservations    = (clone $reservationsQuery)->where('status', 'pending')->count();
+        $confirmedReservations  = (clone $reservationsQuery)->where('status', 'confirmed')->count();
+        $cancelledReservations  = (clone $reservationsQuery)->where('status', 'cancelled')->count();
+        $checkedInReservations  = (clone $reservationsQuery)->where('status', 'checked_in')->count();
+        $checkedOutReservations = (clone $reservationsQuery)->where('status', 'checked_out')->count();
 
-        $todayCheckIns = (clone $reservationsQuery)->whereDate('check_in', $today)->count();
-        $todayCheckOuts = (clone $reservationsQuery)->whereDate('check_out', $today)->count();
+        // Check-ins/Check-outs: count by reservation STATUS (operational state), not by date column
+        $todayCheckIns  = $checkedInReservations;
+        $todayCheckOuts = $checkedOutReservations;
 
         // Customers
         // Temporary: reservations table currently does not contain a user_id column.
@@ -83,8 +85,8 @@ class DashboardController extends Controller
                 ->get();
 
             $monthlyReservations[] = $monthRes->count();
-            // Revenue only from confirmed/completed
-            $monthlyRevenue[] = $monthRes->whereIn('status', ['confirmed', 'completed'])->sum('total_price');
+            // Revenue from confirmed, checked_in, and checked_out reservations
+            $monthlyRevenue[] = $monthRes->whereIn('status', ['confirmed', 'checked_in', 'checked_out'])->sum('total_price');
         }
 
         // Activity Timeline (Just latest reservations for now, since we don't have an activity log table)
@@ -101,6 +103,8 @@ class DashboardController extends Controller
             'pendingReservations',
             'confirmedReservations',
             'cancelledReservations',
+            'checkedInReservations',
+            'checkedOutReservations',
             'todayCheckIns',
             'todayCheckOuts',
             'totalCustomers',
