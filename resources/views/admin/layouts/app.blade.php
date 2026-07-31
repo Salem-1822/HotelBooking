@@ -441,14 +441,14 @@
                 <i class="bi bi-calendar-check-fill"></i>
                 <span>Reservations</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.customers.index') }}" class="sidebar-link {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
                 <i class="bi bi-people-fill"></i>
                 <span>Customers</span>
             </a>
             
             <div class="nav-section-label">Management</div>
             
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.reports.index') }}" class="sidebar-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                 <i class="bi bi-graph-up-arrow"></i>
                 <span>Reports</span>
             </a>

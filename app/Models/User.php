@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
         'city_id',
         'role',
         'status',
@@ -30,6 +31,11 @@ class User extends Authenticatable
     public function hotels()
     {
         return $this->hasMany(Hotel::class, 'admin_id');
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
     }
 
     public function city()
