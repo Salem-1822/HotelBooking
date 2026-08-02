@@ -604,23 +604,19 @@
         </nav>
 
         <div class="sidebar-footer">
-            @php $footerAdmin = Auth::guard('admin')->user(); @endphp
-            <div class="d-flex align-items-center gap-2">
-                @if($footerAdmin->profile_image && \Storage::disk('public')->exists('profiles/' . $footerAdmin->profile_image))
-                    <img src="{{ asset('storage/profiles/' . $footerAdmin->profile_image) }}"
-                        style="width:36px;height:36px;object-fit:cover;border-radius:50%;border:2px solid rgba(255,255,255,0.15);" alt="">
-                @else
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($footerAdmin->name) }}&background=1E3A8A&color=fff&size=80"
-                        style="width:36px;height:36px;object-fit:cover;border-radius:50%;" alt="">
-                @endif
-                <div class="overflow-hidden">
-                    <div style="font-size:0.8rem;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                        {{ $footerAdmin->name }}
+            <div class="dropdown w-100">
+                <button class="btn w-100 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 0.625rem; padding: 0.625rem 0.875rem; transition: all 0.2s ease;">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-globe" style="font-size: 1.1rem; color: rgba(255,255,255,0.7);"></i>
+                        <span style="font-size: 0.85rem; font-weight: 500;">English</span>
                     </div>
-                    <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:capitalize;">
-                        {{ str_replace('_', ' ', $footerAdmin->role) }}
-                    </div>
-                </div>
+                    <i class="bi bi-chevron-expand" style="font-size: 0.8rem; color: rgba(255,255,255,0.5);"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark w-100 shadow-sm" style="border-radius: 0.625rem; border: 1px solid rgba(255,255,255,0.1); background: #1E293B; margin-bottom: 0.5rem; padding: 0.5rem;">
+                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span class="fs-6">🇺🇸</span> English</a></li>
+                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span class="fs-6">🇫🇷</span> Français</a></li>
+                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span class="fs-6">🇲🇦</span> العربية</a></li>
+                </ul>
             </div>
         </div>
     </aside>
