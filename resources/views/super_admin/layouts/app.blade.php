@@ -9,7 +9,9 @@
     <!-- Fonts: Poppins + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- Bootstrap 5 & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -31,31 +33,31 @@
         ================================================================ */
 
         :root {
-            --brand-primary:       #1E3A8A;
-            --brand-primary-dark:  #1D4ED8;
+            --brand-primary: #1E3A8A;
+            --brand-primary-dark: #1D4ED8;
             --brand-primary-light: #DBEAFE;
-            --brand-accent:        #D4AF37;
-            --brand-accent-dark:   #B8860B;
+            --brand-accent: #D4AF37;
+            --brand-accent-dark: #B8860B;
 
             --brand-success: #10B981;
-            --brand-danger:  #EF4444;
+            --brand-danger: #EF4444;
             --brand-warning: #F59E0B;
-            --brand-info:    #0EA5E9;
+            --brand-info: #0EA5E9;
 
-            --sidebar-bg:      #0F172A;
-            --topbar-height:   70px;
-            --sidebar-width:   265px;
+            --sidebar-bg: #0F172A;
+            --topbar-height: 70px;
+            --sidebar-width: 265px;
 
-            --bg-body:         #F8FAFC;
-            --text-primary:    #1F2937;
-            --border-color:    #E5E7EB;
+            --bg-body: #F8FAFC;
+            --text-primary: #1F2937;
+            --border-color: #E5E7EB;
 
             /* Scoped transitions — never 'all' globally */
             --t-sidebar: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --t-layout:  margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --t-color:   background-color 0.2s ease, color 0.2s ease;
-            --t-btn:     background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-            --t-link:    background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+            --t-layout: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --t-color: background-color 0.2s ease, color 0.2s ease;
+            --t-btn: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+            --t-link: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 
             --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             --card-shadow-hover: 0 20px 40px -8px rgba(30, 58, 138, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.06);
@@ -107,9 +109,18 @@
 
         /* ── Mobile Adjustments ────────────────────── */
         @media (max-width: 991.98px) {
-            .sidebar { left: calc(-1 * var(--sidebar-width)); }
-            .sidebar.show { left: 0; }
-            .main-content { margin-left: 0; width: 100%; }
+            .sidebar {
+                left: calc(-1 * var(--sidebar-width));
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
 
             .sidebar-overlay {
                 position: fixed;
@@ -119,7 +130,10 @@
                 display: none;
                 backdrop-filter: blur(2px);
             }
-            .sidebar.show ~ .sidebar-overlay { display: block; }
+
+            .sidebar.show~.sidebar-overlay {
+                display: block;
+            }
         }
 
         /* ── Sidebar Logo Area ─────────────────────── */
@@ -153,8 +167,15 @@
         }
 
         @keyframes brandFadeIn {
-            0%   { opacity: 0; transform: translateY(6px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ── Sidebar Nav ───────────────────────────── */
@@ -165,9 +186,18 @@
             overflow-x: hidden;
         }
 
-        .sidebar-nav::-webkit-scrollbar { width: 4px; }
-        .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
 
         .nav-section-label {
             font-size: 0.65rem;
@@ -247,6 +277,7 @@
             box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
             text-decoration: none;
         }
+
         .btn-export:hover {
             transform: translateY(-1px);
             box-shadow: 0 8px 20px rgba(212, 175, 55, 0.35);
@@ -271,6 +302,7 @@
             box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
             transition: var(--t-btn);
         }
+
         .btn-primary:hover,
         .btn-primary:focus {
             background-color: var(--brand-primary-dark);
@@ -278,6 +310,7 @@
             transform: translateY(-1px);
             box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3);
         }
+
         .btn-primary:active {
             transform: translateY(0);
         }
@@ -289,7 +322,7 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--border-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .topbar-username {
@@ -338,8 +371,15 @@
         }
 
         @keyframes pageEnter {
-            0%   { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ── Full Page Loader ──────────────────────── */
@@ -354,9 +394,15 @@
             opacity: 1;
             transition: opacity 0.45s ease;
         }
-        #page-loader.fade-out { opacity: 0; pointer-events: none; }
 
-        .loader-content { text-align: center; }
+        #page-loader.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
 
         .loader-brand {
             font-family: 'Poppins', sans-serif;
@@ -374,7 +420,7 @@
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.2em;
-            color: rgba(255,255,255,0.3);
+            color: rgba(255, 255, 255, 0.3);
             font-weight: 600;
             margin-top: 0.5rem;
             display: block;
@@ -383,11 +429,12 @@
         .loader-bar {
             width: 160px;
             height: 3px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 3px;
             margin: 1.25rem auto 0;
             overflow: hidden;
         }
+
         .loader-bar-inner {
             height: 100%;
             width: 0;
@@ -397,12 +444,27 @@
         }
 
         @keyframes loaderScale {
-            0%   { transform: scale(0.88); opacity: 0; filter: blur(4px); }
-            100% { transform: scale(1);    opacity: 1; filter: blur(0); }
+            0% {
+                transform: scale(0.88);
+                opacity: 0;
+                filter: blur(4px);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                filter: blur(0);
+            }
         }
+
         @keyframes loadProgress {
-            0%   { width: 0; }
-            100% { width: 100%; }
+            0% {
+                width: 0;
+            }
+
+            100% {
+                width: 100%;
+            }
         }
 
         /* ── Alert Styling ─────────────────────────── */
@@ -411,11 +473,13 @@
             border: none;
             font-size: 0.875rem;
         }
+
         .alert-success {
             background: #ECFDF5;
             color: #065F46;
             border-left: 4px solid var(--brand-success) !important;
         }
+
         .alert-danger {
             background: #FEF2F2;
             color: #991B1B;
@@ -423,7 +487,8 @@
         }
 
         /* ── Form Controls global improvement ─────── */
-        .form-control, .form-select {
+        .form-control,
+        .form-select {
             border-radius: 0.625rem;
             border-color: var(--border-color);
             font-size: 0.875rem;
@@ -431,10 +496,13 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
             font-family: 'Poppins', 'Inter', sans-serif;
         }
-        .form-control:focus, .form-select:focus {
+
+        .form-control:focus,
+        .form-select:focus {
             border-color: var(--brand-primary);
             box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
         }
+
         .form-label {
             font-size: 0.82rem;
             font-weight: 600;
@@ -452,6 +520,7 @@
         .table {
             font-size: 0.875rem;
         }
+
         .table thead th {
             font-size: 0.75rem;
             font-weight: 700;
@@ -461,14 +530,17 @@
             border-bottom-width: 1px;
             padding: 0.875rem 1rem;
         }
+
         .table tbody td {
             padding: 0.875rem 1rem;
             vertical-align: middle;
             border-color: #F3F4F6;
         }
+
         .table-hover tbody tr {
             transition: background-color 0.15s ease;
         }
+
         .table-hover tbody tr:hover {
             background-color: #F0F7FF;
         }
@@ -479,14 +551,17 @@
             border-radius: 1rem;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.18);
         }
+
         .modal-header {
             border-bottom: 1px solid #F3F4F6;
             padding: 1.25rem 1.5rem;
         }
+
         .modal-footer {
             border-top: 1px solid #F3F4F6;
             padding: 1rem 1.5rem;
         }
+
         .modal-title {
             font-size: 1rem;
             font-weight: 700;
@@ -502,10 +577,12 @@
             font-weight: 500;
             padding: 0.45rem 0.75rem;
         }
+
         .pagination .page-item.active .page-link {
             background-color: var(--brand-primary);
             border-color: var(--brand-primary);
         }
+
         .pagination .page-link:hover {
             background-color: var(--brand-primary-light);
             border-color: var(--brand-primary);
@@ -521,6 +598,7 @@
             box-shadow: var(--card-shadow);
             transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
+
         .stat-card:hover {
             transform: translateY(-3px);
             box-shadow: var(--card-shadow-hover);
@@ -538,10 +616,23 @@
         }
 
         /* ── Scrollbar global ──────────────────────── */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #F1F5F9; }
-        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 6px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
     </style>
 </head>
 
@@ -582,11 +673,11 @@
                 <span>Cities</span>
             </a>
             @if(Auth::guard('admin')->user()->role === 'super_admin')
-            <a href="{{ route('super_admin.admins.index') }}"
-                class="sidebar-link {{ request()->routeIs('super_admin.admins.*') ? 'active' : '' }}">
-                <i class="bi bi-shield-lock-fill"></i>
-                <span>Administrators</span>
-            </a>
+                <a href="{{ route('super_admin.admins.index') }}"
+                    class="sidebar-link {{ request()->routeIs('super_admin.admins.*') ? 'active' : '' }}">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    <span>Administrators</span>
+                </a>
             @endif
             <a href="{{ route('super_admin.reservations.index') }}"
                 class="sidebar-link {{ request()->routeIs('super_admin.reservations.*') ? 'active' : '' }}">
@@ -605,17 +696,26 @@
 
         <div class="sidebar-footer">
             <div class="dropdown w-100">
-                <button class="btn w-100 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 0.625rem; padding: 0.625rem 0.875rem; transition: all 0.2s ease;">
+                <button class="btn w-100 d-flex align-items-center justify-content-between" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false"
+                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 0.625rem; padding: 0.625rem 0.875rem; transition: all 0.2s ease;">
                     <div class="d-flex align-items-center gap-2">
                         <i class="bi bi-globe" style="font-size: 1.1rem; color: rgba(255,255,255,0.7);"></i>
                         <span style="font-size: 0.85rem; font-weight: 500;">English</span>
                     </div>
                     <i class="bi bi-chevron-expand" style="font-size: 0.8rem; color: rgba(255,255,255,0.5);"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-dark w-100 shadow-sm" style="border-radius: 0.625rem; border: 1px solid rgba(255,255,255,0.1); background: #1E293B; margin-bottom: 0.5rem; padding: 0.5rem;">
-                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span class="fs-6">🇺🇸</span> English</a></li>
-                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span class="fs-6">🇫🇷</span> Français</a></li>
-                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span class="fs-6">🇲🇦</span> العربية</a></li>
+                <ul class="dropdown-menu dropdown-menu-dark w-100 shadow-sm"
+                    style="border-radius: 0.625rem; border: 1px solid rgba(255,255,255,0.1); background: #1E293B; margin-bottom: 0.5rem; padding: 0.5rem;">
+                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                            style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
+                                class="fs-6">🇺🇸</span> English</a></li>
+                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                            style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
+                                class="fs-6">🇫🇷</span> Français</a></li>
+                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                            style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
+                                class="fs-6">🇲🇦</span> العربية</a></li>
                 </ul>
             </div>
         </div>
@@ -674,7 +774,9 @@
                                 <i class="bi bi-gear me-2"></i> Settings
                             </a>
                         </li>
-                        <li><hr class="dropdown-divider mx-2 my-1"></li>
+                        <li>
+                            <hr class="dropdown-divider mx-2 my-1">
+                        </li>
                         <li>
                             <form action="{{ route('super_admin.logout') }}" method="POST">
                                 @csrf
@@ -771,7 +873,7 @@
 
             // Step 4: Global Modal Stacking Context Fix
             const modals = document.querySelectorAll('.modal');
-            modals.forEach(function(modal) {
+            modals.forEach(function (modal) {
                 document.body.appendChild(modal);
             });
         });

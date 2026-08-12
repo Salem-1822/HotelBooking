@@ -1151,29 +1151,39 @@
                         </div>
                     </div>
 
-                </div>
-            </div>
+                    <hr class="mt-4 mb-4" style="border-color: var(--border-color); opacity: 1;">
 
-            {{-- ══ CARD 2.5: Hotel Location ════════════════════ --}}
-            <div class="hp-card">
-                <div class="hp-card-head">
-                    <div class="hp-card-icon" style="background:linear-gradient(135deg, #10B981, #047857); color: #fff;">
-                        <i class="bi bi-map-fill"></i>
-                    </div>
-                    <div>
-                        <div class="hp-card-title">Hotel Location</div>
-                        <div class="hp-card-subtitle">Pinpoint exact coordinates on the map</div>
-                    </div>
-                </div>
-                <div class="hp-card-body">
+                    {{-- Map Location --}}
                     <div class="hp-field mb-0">
-                        <label class="hp-label">
-                            <i class="bi bi-crosshair"></i>
-                            Map Location
-                        </label>
-                        <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.75rem;">
-                            Click on the map to set your hotel's exact location. This will be used by clients for navigation.
-                        </p>
+                        <div class="d-flex justify-content-between align-items-end mb-2">
+                            <div>
+                                <label class="hp-label mb-1">
+                                    <i class="bi bi-crosshair"></i>
+                                    Map Location
+                                </label>
+                                <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0;">
+                                    Click on the map to set your hotel's exact location. This will be used by clients for navigation.
+                                </p>
+                            </div>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-2 mb-1" id="btn-use-my-location" style="border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600;">
+                                    <i class="bi bi-geo-alt-fill"></i> 
+                                    @if(old('latitude', $hotel->latitude) && old('longitude', $hotel->longitude))
+                                        Update My Location
+                                    @else
+                                        Use My Current Location
+                                    @endif
+                                </button>
+                                <div id="location-status-msg" style="font-size: 0.7rem; font-weight: 600;" 
+                                     class="{{ old('latitude', $hotel->latitude) ? 'text-success' : 'text-danger' }}">
+                                    @if(old('latitude', $hotel->latitude) && old('longitude', $hotel->longitude))
+                                        <i class="bi bi-check-circle-fill"></i> Hotel location selected
+                                    @else
+                                        Hotel location not set
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
                         
                         <div id="hotelMap" style="height: 300px; border-radius: 0.75rem; border: 1.5px solid var(--border-color); z-index: 1;"></div>
                         
@@ -1186,12 +1196,8 @@
                         @error('longitude')
                             <div class="hp-field-error mt-1"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
                         @enderror
-                        
-                        <div class="mt-2 d-flex align-items-center gap-3 text-muted" style="font-size: 0.75rem; font-family: monospace;">
-                            <div>Lat: <span id="hp_lat_display" class="fw-bold text-dark">{{ old('latitude', $hotel->latitude) ?: 'Not set' }}</span></div>
-                            <div>Lng: <span id="hp_lng_display" class="fw-bold text-dark">{{ old('longitude', $hotel->longitude) ?: 'Not set' }}</span></div>
-                        </div>
                     </div>
+
                 </div>
             </div>
 
@@ -1943,8 +1949,6 @@ document.querySelectorAll('.hp-amenity-chip input[type="checkbox"]').forEach(fun
 
     const latInput = document.getElementById('hp_latitude');
     const lngInput = document.getElementById('hp_longitude');
-    const latDisplay = document.getElementById('hp_lat_display');
-    const lngDisplay = document.getElementById('hp_lng_display');
 
     let initialLat = parseFloat(latInput.value) || 0;
     let initialLng = parseFloat(lngInput.value) || 0;
@@ -1974,10 +1978,68 @@ document.querySelectorAll('.hp-amenity-chip input[type="checkbox"]').forEach(fun
 
         latInput.value = lat.toFixed(8);
         lngInput.value = lng.toFixed(8);
-        latDisplay.textContent = lat.toFixed(8);
-        lngDisplay.textContent = lng.toFixed(8);
+        updateLocationStatus(true);
     });
     
+    function updateLocationStatus(isSelected) {
+        const statusMsg = document.getElementById('location-status-msg');
+        if (statusMsg) {
+            if (isSelected) {
+                statusMsg.className = 'text-success';
+                statusMsg.innerHTML = '<i class="bi bi-check-circle-fill"></i> Hotel location selected';
+            } else {
+                statusMsg.className = 'text-danger';
+                statusMsg.innerHTML = 'Hotel location not set';
+            }
+        }
+        
+        const btnMyLocation = document.getElementById('btn-use-my-location');
+        if (btnMyLocation && isSelected) {
+            btnMyLocation.innerHTML = '<i class="bi bi-geo-alt-fill"></i> Update My Location';
+        }
+    }
+    
+    // Use My Current Location
+    const btnMyLocation = document.getElementById('btn-use-my-location');
+    if (btnMyLocation) {
+        btnMyLocation.addEventListener('click', function() {
+            if ("geolocation" in navigator) {
+                const originalText = btnMyLocation.innerHTML;
+                btnMyLocation.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style="width: 1rem; height: 1rem;"></span> Locating...';
+                btnMyLocation.disabled = true;
+
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+
+                    map.setView([lat, lng], 15);
+
+                    if (marker) {
+                        marker.setLatLng([lat, lng]);
+                    } else {
+                        marker = L.marker([lat, lng]).addTo(map);
+                    }
+
+                    latInput.value = lat.toFixed(8);
+                    lngInput.value = lng.toFixed(8);
+                    updateLocationStatus(true);
+
+                    btnMyLocation.disabled = false;
+                }, function(error) {
+                    let msg = "Unable to determine your current location. Please try again.";
+                    if (error.code === error.PERMISSION_DENIED) {
+                        msg = "Location permission was denied. Please allow location access in your browser settings and try again.";
+                    }
+                    alert(msg);
+                    btnMyLocation.innerHTML = originalText;
+                    btnMyLocation.disabled = false;
+                });
+            } else {
+                alert("Your browser does not support location detection.");
+            }
+        });
+    }
+
     // Fix leaflet map display within hidden or flex containers
     setTimeout(() => {
         map.invalidateSize();
