@@ -9,6 +9,7 @@ use App\Models\Hotel;
 use App\Models\Room;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Models\Customer;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -48,12 +49,7 @@ class DashboardController extends Controller
         $todayCheckOuts = $checkedOutReservations;
 
         // Customers
-        // Temporary: reservations table currently does not contain a user_id column.
-        // To keep the dashboard stable until reservations are linked to authenticated users,
-        // we compute customer count based on unique guests (guest_name + guest_phone).
-        $totalCustomers = (clone $reservationsQuery)
-            ->selectRaw('COUNT(DISTINCT CONCAT(COALESCE(guest_name, ""), "|", COALESCE(guest_phone, ""))) as aggregate')
-            ->value('aggregate');
+        $totalCustomers = Customer::where('hotel_id', $hotelId)->count();
 
 
         // Recent Reservations (Latest 5)
@@ -64,10 +60,12 @@ class DashboardController extends Controller
             ->get();
 
 
-        // Recent Customers
-        // Temporary: reservations table is not currently linked to users via a user_id column.
-        // Avoid querying users with whereHas('reservations') until the schema/relationships are updated.
-        $latestCustomers = collect();
+        // Top Customers
+        $latestCustomers = Customer::where('hotel_id', $hotelId)
+            ->withCount('reservations')
+            ->orderByDesc('reservations_count')
+            ->take(5)
+            ->get();
 
 
         // Chart Data: Reservations Per Month (Last 6 months)

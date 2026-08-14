@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\Reservation;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
@@ -105,7 +107,14 @@ class ReservationController extends Controller
         $nights = $nights > 0 ? $nights : 1;
         $data['total_price'] = $room->price_per_night * $nights;
 
-        Reservation::create($data);
+        DB::transaction(function () use ($data, $hotelId, $request) {
+            // Resolve or create the customer for this guest
+            $customer = $this->resolveCustomer($hotelId, $request->guest_phone, $request->guest_name);
+            if ($customer) {
+                $data['customer_id'] = $customer->id;
+            }
+            Reservation::create($data);
+        });
 
         return redirect()->route('admin.reservations.index')->with('success', 'Reservation created successfully.');
     }
@@ -137,7 +146,14 @@ class ReservationController extends Controller
         $nights = $nights > 0 ? $nights : 1;
         $data['total_price'] = $room->price_per_night * $nights;
 
-        $reservation->update($data);
+        DB::transaction(function () use ($data, $hotelId, $request, $reservation) {
+            // Re-resolve customer if the phone changed
+            $customer = $this->resolveCustomer($hotelId, $request->guest_phone, $request->guest_name);
+            if ($customer) {
+                $data['customer_id'] = $customer->id;
+            }
+            $reservation->update($data);
+        });
 
         return redirect()->route('admin.reservations.index')->with('success', 'Reservation updated successfully.');
     }
@@ -152,5 +168,27 @@ class ReservationController extends Controller
         $reservation->delete();
 
         return redirect()->route('admin.reservations.index')->with('success', 'Reservation deleted successfully.');
+    }
+
+    /**
+     * Resolve the Customer record for a given hotel + phone combination.
+     * Uses a normalized phone to prevent duplicates from formatting differences.
+     * Returns null if the phone is empty/invalid.
+     */
+    private function resolveCustomer(int $hotelId, ?string $rawPhone, string $guestName): ?Customer
+    {
+        if (empty($rawPhone)) {
+            return null;
+        }
+
+        $normalizedPhone = Customer::normalizePhone($rawPhone);
+        if (empty($normalizedPhone)) {
+            return null;
+        }
+
+        return Customer::firstOrCreate(
+            ['hotel_id' => $hotelId, 'phone' => $normalizedPhone],
+            ['name' => $guestName]
+        );
     }
 }

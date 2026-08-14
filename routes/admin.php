@@ -15,7 +15,9 @@ Route::middleware(['auth:admin', 'role:admin'])->group(function () {
 
     // Customers Management
     Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
-    Route::get('customers/{user}', [CustomerController::class, 'show'])->name('customers.show');
+    Route::get('customers/{customer}', [CustomerController::class, 'show'])->name('customers.show');
+    Route::patch('customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+    Route::delete('customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
 
     // Reports Management
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');

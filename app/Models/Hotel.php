@@ -65,4 +65,9 @@ class Hotel extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
 }
