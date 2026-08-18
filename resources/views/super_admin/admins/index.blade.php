@@ -27,6 +27,7 @@
         </ul>
     </div>
 @endif
+
 <!-- Stats -->
 <div class="row g-4 mb-4">
     <div class="col-md-6">
@@ -63,7 +64,7 @@
         <form action="{{ route('super_admin.admins.index') }}" method="GET" class="row g-3 align-items-center">
             <div class="col-md-8 position-relative">
                 <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-4 text-muted"></i>
-                <input type="text" name="search" class="form-control form-control-lg bg-light border-0 ps-5 py-2 rounded-3" placeholder="Search admins by name or email..." value="{{ request('search') }}" oninput="if(this.value.length >= 3 || this.value.length === 0) { clearTimeout(window.searchTimeout); window.searchTimeout = setTimeout(() => this.form.submit(), 500); }">
+                <input type="text" name="search" class="form-control bg-light border-0 ps-5 py-2 rounded-3" placeholder="Search admins by name or email..." value="{{ request('search') }}" oninput="if(this.value.length >= 3 || this.value.length === 0) { clearTimeout(window.searchTimeout); window.searchTimeout = setTimeout(() => this.form.submit(), 500); }">
             </div>
             <div class="col-md-4 text-end">
                 @if(request('search'))
@@ -77,7 +78,7 @@
 </div>
 
 <!-- Table -->
-<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0 border-0">
@@ -135,12 +136,13 @@
                                 @endif
                             </td>
                             <td class="py-3 border-light">
-                                <div class="text-muted small fw-medium">
-                                    <i class="bi bi-calendar-event me-1"></i> {{ $admin->created_at->format('M d, Y') }}
-                                </div>
+                                <small class="text-muted fw-medium"><i class="bi bi-calendar-event me-1"></i> {{ $admin->created_at->format('M d, Y') }}</small>
                             </td>
                             <td class="px-4 py-3 border-light text-end">
                                 <div class="d-flex justify-content-end gap-2">
+                                    <button class="btn btn-light btn-sm text-info px-3 rounded-3 shadow-sm border" data-bs-toggle="modal" data-bs-target="#viewAdminModal{{ $admin->id }}" title="View Details">
+                                        <i class="bi bi-eye"></i> View
+                                    </button>
                                     <button class="btn btn-light btn-sm text-primary px-3 rounded-3 shadow-sm border" data-bs-toggle="modal" data-bs-target="#editAdminModal{{ $admin->id }}">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </button>
@@ -202,19 +204,19 @@
                 <div class="modal-body p-4">
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Full Name <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control form-control-lg bg-white border" placeholder="John Doe" required value="{{ old('name') }}">
+                        <input type="text" name="name" class="form-control bg-white border" placeholder="John Doe" required value="{{ old('name') }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Email Address <span class="text-danger">*</span></label>
-                        <input type="email" name="email" class="form-control form-control-lg bg-white border" placeholder="admin@example.com" required value="{{ old('email') }}">
+                        <input type="email" name="email" class="form-control bg-white border" placeholder="admin@example.com" required value="{{ old('email') }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Password <span class="text-danger">*</span></label>
-                        <input type="password" name="password" class="form-control form-control-lg bg-white border" placeholder="Min 8 characters" required minlength="8">
+                        <input type="password" name="password" class="form-control bg-white border" placeholder="Min 8 characters" required minlength="8">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Assign City <span class="text-danger">*</span></label>
-                        <select name="city_id" id="create_city_id" class="form-select form-select-lg bg-white border" required>
+                        <select name="city_id" id="create_city_id" class="form-select bg-white border" required>
                             <option value="">-- Select City --</option>
                             @foreach($cities as $c)
                                 <option value="{{ $c->id }}" {{ old('city_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
@@ -223,14 +225,14 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Assign Hotel <span class="text-danger">*</span></label>
-                        <select name="hotel_id" id="create_hotel_id" class="form-select form-select-lg bg-white border" required>
+                        <select name="hotel_id" id="create_hotel_id" class="form-select bg-white border" required>
                             <option value="">-- Select Hotel --</option>
                         </select>
                         <div class="form-text mt-1"><i class="bi bi-info-circle me-1"></i>Administrator manages ONLY this hotel.</div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Profile Image</label>
-                        <input type="file" name="image_file" class="form-control form-control-lg bg-white border" accept=".jpg,.jpeg,.png,.webp">
+                        <input type="file" name="image_file" class="form-control bg-white border" accept=".jpg,.jpeg,.png,.webp">
                         <div class="form-text mt-1"><i class="bi bi-info-circle me-1"></i>Optional. Max 2MB (JPG, PNG, WEBP).</div>
                     </div>
                 </div>
@@ -245,6 +247,61 @@
 
 <!-- Extracted Edit & Delete Modals -->
 @foreach($admins as $admin)
+<!-- View Modal -->
+<div class="modal fade" id="viewAdminModal{{ $admin->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-bottom-0 bg-light px-4 py-3">
+                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-person-circle text-primary me-2"></i>Administrator Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                @php
+                    $adminViewImg = Str::startsWith($admin->profile_image, ['http://', 'https://']) ? $admin->profile_image : ($admin->profile_image ? asset('storage/' . $admin->profile_image) : 'https://ui-avatars.com/api/?name='.urlencode($admin->name).'&color=7F9CF5&background=EBF4FF&size=140');
+                @endphp
+                <div class="text-center mb-4">
+                    <img src="{{ $adminViewImg }}" alt="{{ $admin->name }}" class="rounded-circle shadow-sm border mb-3" style="width: 70px; height: 70px; object-fit: cover;">
+                    <h4 class="fw-bold mb-1">{{ $admin->name }}</h4>
+                    <p class="text-muted small mb-0 fw-medium">{{ $admin->email }}</p>
+                </div>
+                <div class="bg-light rounded-4 p-4 border shadow-sm">
+                    <div class="row g-4">
+                        <div class="col-6">
+                            <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Status</span>
+                            @if($admin->status === 'active')
+                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold border border-success border-opacity-25">Active</span>
+                            @else
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2 rounded-pill fw-semibold border border-secondary border-opacity-25">Inactive</span>
+                            @endif
+                        </div>
+                        <div class="col-6">
+                            <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Date Added</span>
+                            <span class="fw-medium text-dark"><i class="bi bi-calendar-event text-primary me-1"></i>{{ $admin->created_at->format('M d, Y') }}</span>
+                        </div>
+                        <div class="col-12">
+                            <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Assigned City</span>
+                            @if($admin->city)
+                                <span class="fw-medium text-dark"><i class="bi bi-geo-alt text-primary me-1"></i>{{ $admin->city->name }}</span>
+                            @else
+                                <span class="text-muted small">Unassigned</span>
+                            @endif
+                        </div>
+                        @if($admin->hotel)
+                        <div class="col-12">
+                            <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Assigned Hotel</span>
+                            <span class="fw-medium text-dark"><i class="bi bi-building text-primary me-1"></i>{{ $admin->hotel->name }}</span>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 bg-light px-4 py-3">
+                <button type="button" class="btn btn-primary px-4 rounded-3 shadow-sm fw-medium w-100" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Edit Modal -->
 <div class="modal fade" id="editAdminModal{{ $admin->id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -259,19 +316,19 @@
                 <div class="modal-body p-4">
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Full Name <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control form-control-lg bg-white border" value="{{ $admin->name }}" required>
+                        <input type="text" name="name" class="form-control bg-white border" value="{{ $admin->name }}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Email Address <span class="text-danger">*</span></label>
-                        <input type="email" name="email" class="form-control form-control-lg bg-white border" value="{{ $admin->email }}" required>
+                        <input type="email" name="email" class="form-control bg-white border" value="{{ $admin->email }}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">New Password</label>
-                        <input type="password" name="password" class="form-control form-control-lg bg-white border" placeholder="Leave empty to keep current" minlength="8">
+                        <input type="password" name="password" class="form-control bg-white border" placeholder="Leave empty to keep current" minlength="8">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Assign City <span class="text-danger">*</span></label>
-                        <select name="city_id" id="edit_city_{{ $admin->id }}" class="form-select form-select-lg bg-white border city-select" data-admin-id="{{ $admin->id }}" required>
+                        <select name="city_id" id="edit_city_{{ $admin->id }}" class="form-select bg-white border city-select" data-admin-id="{{ $admin->id }}" required>
                             <option value="">-- Select City --</option>
                             @foreach($cities as $c)
                                 <option value="{{ $c->id }}" {{ $admin->city_id == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
@@ -280,13 +337,13 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Assign Hotel <span class="text-danger">*</span></label>
-                        <select name="hotel_id" id="edit_hotel_{{ $admin->id }}" class="form-select form-select-lg bg-white border" data-current-hotel="{{ $admin->hotel_id }}" required>
+                        <select name="hotel_id" id="edit_hotel_{{ $admin->id }}" class="form-select bg-white border" data-current-hotel="{{ $admin->hotel_id }}" required>
                             <option value="">-- Select Hotel --</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Update Profile Image</label>
-                        <input type="file" name="image_file" class="form-control form-control-lg bg-white border" accept=".jpg,.jpeg,.png,.webp">
+                        <input type="file" name="image_file" class="form-control bg-white border" accept=".jpg,.jpeg,.png,.webp">
                         <div class="form-text mt-1"><i class="bi bi-info-circle me-1"></i>Optional. Leave empty to keep current. Max 2MB.</div>
                     </div>
                 </div>

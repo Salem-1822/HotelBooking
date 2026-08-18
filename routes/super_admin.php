@@ -8,7 +8,6 @@ use App\Http\Controllers\SuperAdmin\ReservationController;
 use App\Http\Controllers\SuperAdmin\LoginController;
 use App\Http\Controllers\SuperAdmin\SystemConfigController;
 use App\Http\Controllers\SuperAdmin\ProfileController;
-use App\Http\Controllers\SuperAdmin\RoomController;
 use App\Http\Controllers\SuperAdmin\AdminUserController;
 
 // Auth Routes
@@ -33,9 +32,6 @@ Route::middleware(['auth:admin'])->group(function () {
         // Admins Management
         Route::resource('admins', AdminUserController::class)->except(['create', 'edit', 'show']);
 
-        // Rooms Management
-        Route::resource('rooms', RoomController::class)->except(['create', 'edit', 'show']);
-        
         // System Configuration
         Route::get('/settings', [SystemConfigController::class, 'index'])->name('settings');
         Route::post('/settings', [SystemConfigController::class, 'update'])->name('settings.update');

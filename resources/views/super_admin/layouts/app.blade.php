@@ -366,7 +366,7 @@
         }
 
         /* ── Page content animation ────────────────── */
-        .page-content-wrapper {
+        .page-content-wrapper.animate-page-enter {
             animation: pageEnter 0.22s ease-out both;
         }
 
@@ -727,9 +727,9 @@
     <main class="main-content">
         <header class="topbar d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-light border d-lg-none"
+                <button class="btn btn-light border d-flex d-lg-none"
                     onclick="document.getElementById('sidebar').classList.toggle('show')"
-                    style="border-radius:0.625rem;width:38px;height:38px;padding:0;display:flex!important;align-items:center;justify-content:center;">
+                    style="border-radius:0.625rem;width:38px;height:38px;padding:0;align-items:center;justify-content:center;">
                     <i class="bi bi-list fs-5"></i>
                 </button>
                 <div class="d-none d-md-block">
@@ -740,11 +740,7 @@
             </div>
 
             <div class="d-flex align-items-center gap-3">
-                <!-- Notification Bell (decorative) -->
-                <button class="btn btn-light border d-none d-sm-flex align-items-center justify-content-center"
-                    style="border-radius:0.625rem;width:38px;height:38px;padding:0;position:relative;" disabled>
-                    <i class="bi bi-bell" style="font-size:1rem;"></i>
-                </button>
+
 
                 <!-- User Dropdown -->
                 <div class="dropdown">
@@ -833,9 +829,21 @@
         document.addEventListener('DOMContentLoaded', function () {
             const loader = document.getElementById('page-loader');
 
-            // Step 1: Fade out the loader on every page arrival
-            if (loader) {
-                setTimeout(() => loader.classList.add('fade-out'), 220);
+            // Step 1: Fade out the loader and trigger animation on every page arrival ONLY IF navigated via sidebar
+            const arrivedViaSidebar = sessionStorage.getItem('sidebar_nav') === '1';
+            sessionStorage.removeItem('sidebar_nav'); // clear immediately
+
+            const wrapper = document.querySelector('.page-content-wrapper');
+            if (arrivedViaSidebar) {
+                if (wrapper) wrapper.classList.add('animate-page-enter');
+                if (loader) {
+                    setTimeout(() => loader.classList.add('fade-out'), 220);
+                }
+            } else {
+                if (loader) {
+                    loader.style.display = 'none';
+                }
+                // No animation class added
             }
 
             // Step 2: Attach loader ONLY to sidebar navigation links
@@ -856,7 +864,11 @@
                     if (href === window.location.href || href === window.location.pathname) return;
 
                     e.preventDefault();
-                    if (loader) loader.classList.remove('fade-out');
+                    sessionStorage.setItem('sidebar_nav', '1');
+                    if (loader) {
+                        loader.style.display = '';
+                        loader.classList.remove('fade-out');
+                    }
 
                     setTimeout(function () {
                         window.location.href = href;

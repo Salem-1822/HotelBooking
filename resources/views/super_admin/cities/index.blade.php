@@ -64,7 +64,7 @@
         <form action="{{ route('super_admin.cities.index') }}" method="GET" class="row g-3 align-items-center">
             <div class="col-md-8 position-relative">
                 <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-4 text-muted"></i>
-                <input type="text" name="search" class="form-control form-control-lg bg-light border-0 ps-5 py-2 rounded-3" placeholder="Search cities by name..." value="{{ request('search') }}" oninput="if(this.value.length >= 3 || this.value.length === 0) { clearTimeout(window.searchTimeout); window.searchTimeout = setTimeout(() => this.form.submit(), 500); }">
+                <input type="text" name="search" class="form-control bg-light border-0 ps-5 py-2 rounded-3" placeholder="Search cities by name..." value="{{ request('search') }}" oninput="if(this.value.length >= 3 || this.value.length === 0) { clearTimeout(window.searchTimeout); window.searchTimeout = setTimeout(() => this.form.submit(), 500); }">
             </div>
             <div class="col-md-4 text-end">
                 @if(request('search'))
@@ -78,7 +78,7 @@
 </div>
 
 <!-- Table -->
-<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0 border-0">
@@ -98,7 +98,7 @@
                                     @php
                                         $img = Str::startsWith($city->image, ['http://', 'https://']) ? $city->image : ($city->image ? asset('storage/' . $city->image) : 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=100&h=100&fit=crop');
                                     @endphp
-                                    <img src="{{ $img }}" alt="{{ $city->name }}" class="rounded-4 shadow-sm me-3" style="width: 55px; height: 55px; object-fit: cover; border: 2px solid #fff;">
+                                    <img src="{{ $img }}" alt="{{ $city->name }}" class="rounded-4 shadow-sm me-3" style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #fff;">
                                     <div>
                                         <h6 class="mb-0 fw-bold text-dark">{{ $city->name }}</h6>
                                         <small class="text-muted">Slug: {{ $city->slug }}</small>
@@ -111,12 +111,13 @@
                                 </span>
                             </td>
                             <td class="py-3 border-light">
-                                <div class="text-muted small fw-medium">
-                                    <i class="bi bi-calendar-event me-1"></i> {{ $city->created_at->format('M d, Y') }}
-                                </div>
+                                <small class="text-muted fw-medium"><i class="bi bi-calendar-event me-1"></i> {{ $city->created_at->format('M d, Y') }}</small>
                             </td>
                             <td class="px-4 py-3 border-light text-end">
                                 <div class="d-flex justify-content-end gap-2">
+                                    <button class="btn btn-light btn-sm text-info px-3 rounded-3 shadow-sm border" data-bs-toggle="modal" data-bs-target="#viewCityModal{{ $city->id }}" title="View Details">
+                                        <i class="bi bi-eye"></i> View
+                                    </button>
                                     <button class="btn btn-light btn-sm text-primary px-3 rounded-3 shadow-sm border" data-bs-toggle="modal" data-bs-target="#editCityModal{{ $city->id }}">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </button>
@@ -170,13 +171,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">City Name <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control form-control-lg bg-white border" placeholder="e.g. Paris" required>
+                        <input type="text" name="name" class="form-control bg-white border" placeholder="e.g. Paris" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Upload Image</label>
-                        <input type="file" name="image_file" class="form-control form-control-lg bg-white border" accept=".jpg,.jpeg,.png,.webp">
+                        <input type="file" name="image_file" class="form-control bg-white border" accept=".jpg,.jpeg,.png,.webp">
                         <div class="form-text mt-2"><i class="bi bi-info-circle me-1"></i>Optional. Max 2MB (JPG, PNG, WEBP).</div>
                     </div>
                 </div>
@@ -190,6 +191,43 @@
 </div>
 
 @foreach($cities as $city)
+<!-- View Modal -->
+<div class="modal fade" id="viewCityModal{{ $city->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-bottom-0 bg-light px-4 py-3">
+                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-geo-alt-fill text-primary me-2"></i>City Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                @php
+                    $viewImg = Str::startsWith($city->image, ['http://', 'https://']) ? $city->image : ($city->image ? asset('storage/' . $city->image) : 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=300&h=200&fit=crop');
+                @endphp
+                <div class="text-center mb-4">
+                    <img src="{{ $viewImg }}" alt="{{ $city->name }}" class="rounded-4 shadow-sm mb-3" style="width: 100%; max-height: 160px; object-fit: cover;">
+                    <h4 class="fw-bold mb-1">{{ $city->name }}</h4>
+                    <p class="text-muted small mb-0 fw-medium">Slug: {{ $city->slug }}</p>
+                </div>
+                <div class="bg-light rounded-4 p-4 border shadow-sm">
+                    <div class="row g-4">
+                        <div class="col-6">
+                            <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Hotels Active</span>
+                            <span class="fw-medium text-dark"><i class="bi bi-building text-primary me-1"></i>{{ $city->hotels_count ?? 0 }} Hotels</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Date Added</span>
+                            <span class="fw-medium text-dark"><i class="bi bi-calendar-event text-primary me-1"></i>{{ $city->created_at->format('M d, Y') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 bg-light px-4 py-3">
+                <button type="button" class="btn btn-primary px-4 rounded-3 shadow-sm fw-medium w-100" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Edit Modal -->
 <div class="modal fade" id="editCityModal{{ $city->id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -202,13 +240,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">City Name <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control form-control-lg bg-white border" value="{{ $city->name }}" required>
+                        <input type="text" name="name" class="form-control bg-white border" value="{{ $city->name }}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Upload New Image</label>
-                        <input type="file" name="image_file" class="form-control form-control-lg bg-white border" accept=".jpg,.jpeg,.png,.webp">
+                        <input type="file" name="image_file" class="form-control bg-white border" accept=".jpg,.jpeg,.png,.webp">
                         <div class="form-text mt-2"><i class="bi bi-info-circle me-1"></i>Optional. Leave empty to keep the current image. Max 2MB (JPG, PNG, WEBP).</div>
                     </div>
                 </div>
@@ -246,4 +284,3 @@
 @endforeach
 
 @endsection
-

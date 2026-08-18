@@ -12,8 +12,8 @@
         </div>
     </div>
     <div class="d-flex gap-2">
-        <a href="{{ route('super_admin.reservations.export') }}" class="btn-export">
-            <i class="bi bi-file-earmark-pdf"></i> <span class="d-none d-sm-inline">Export PDF</span>
+        <a href="{{ route('super_admin.reservations.export') }}" class="btn btn-light px-4 py-2 rounded-3 shadow-sm border text-danger">
+            <i class="bi bi-file-pdf me-2"></i> Export PDF
         </a>
     </div>
 </div>
@@ -39,7 +39,8 @@
                         <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
                         <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                        <option value="checked_in"  {{ request('status') == 'checked_in'  ? 'selected' : '' }}>Checked In</option>
+                        <option value="checked_out" {{ request('status') == 'checked_out' ? 'selected' : '' }}>Checked Out</option>
                     </select>
                 </div>
                 <div class="col-12 col-md-8 col-lg-4">
@@ -169,7 +170,6 @@
 
     /* Custom Mobile Styling */
     @media (max-width: 767.98px) {
-        .btn-export { width: 100%; justify-content: center; }
         .card-body.p-4 { padding: 1.5rem !important; }
     }
 </style>

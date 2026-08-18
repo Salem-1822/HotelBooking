@@ -483,9 +483,9 @@
     <main class="main-content">
         <header class="topbar d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-light border d-lg-none"
+                <button class="btn btn-light border d-flex d-lg-none"
                     onclick="document.getElementById('sidebar').classList.toggle('show')"
-                    style="border-radius:0.625rem;width:38px;height:38px;padding:0;display:flex!important;align-items:center;justify-content:center;">
+                    style="border-radius:0.625rem;width:38px;height:38px;padding:0;align-items:center;justify-content:center;">
                     <i class="bi bi-list fs-5"></i>
                 </button>
                 <div class="d-none d-md-block">
