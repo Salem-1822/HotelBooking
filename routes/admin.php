@@ -26,4 +26,10 @@ Route::middleware(['auth:admin', 'role:admin'])->group(function () {
     // Hotel Profile
     Route::get('hotel-profile', [HotelProfileController::class, 'show'])->name('hotel-profile');
     Route::put('hotel-profile', [HotelProfileController::class, 'update'])->name('hotel-profile.update');
+
+    // Admin Profile
+    Route::get('profile', [App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile');
+    Route::put('profile', [App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('profile/password', [App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::delete('profile/photo', [App\Http\Controllers\Admin\ProfileController::class, 'removePhoto'])->name('profile.photo.destroy');
 });

@@ -153,9 +153,9 @@
                         @endif
                     </td>
                     <td class="text-end pe-4">
-                        <a href="{{ route('admin.customers.show', $customer->id) }}" class="btn btn-sm btn-outline-dark px-3 mb-1">
+                        <button type="button" class="btn btn-sm btn-outline-dark px-3 mb-1" data-bs-toggle="modal" data-bs-target="#viewCustomerModal{{ $customer->id }}">
                             <i class="bi bi-eye-fill me-1"></i> View
-                        </a>
+                        </button>
                         <button type="button" class="btn btn-sm btn-outline-primary px-3 mb-1" data-bs-toggle="modal" data-bs-target="#editCustomerModal{{ $customer->id }}">
                             <i class="bi bi-pencil-fill me-1"></i> Edit
                         </button>
@@ -166,6 +166,154 @@
                                 <i class="bi bi-trash-fill me-1"></i> Delete
                             </button>
                         </form>
+
+                        <!-- View Customer Modal -->
+                        <div class="modal fade" id="viewCustomerModal{{ $customer->id }}" tabindex="-1" aria-labelledby="viewCustomerModalLabel{{ $customer->id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                                <div class="modal-content bg-light">
+                                    <div class="modal-header border-0 pb-0">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-4 p-md-5 pt-0">
+                                        <div class="page-title-bar mb-4">
+                                            <div class="title-group">
+                                                <h4 class="fw-bold mb-1">Customer Detail: {{ $customer->name }}</h4>
+                                                <p class="mb-0 text-muted">Detailed view and reservation history</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="row g-4 mb-4">
+                                            <!-- Customer Information -->
+                                            <div class="col-md-6">
+                                                <div class="card info-card h-100 border-0 shadow-sm p-4" style="border-radius: 1rem;">
+                                                    <h6 class="fw-bold text-uppercase mb-4" style="letter-spacing: 0.05em; font-size: 0.85rem;">
+                                                        <i class="bi bi-person-fill text-primary me-2"></i> Customer Information
+                                                    </h6>
+                                                    <div class="row g-3">
+                                                        <div class="col-sm-6">
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Full Name</div>
+                                                            <div class="fw-medium text-dark">{{ $customer->name }}</div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Phone</div>
+                                                            <div class="fw-medium text-dark">{{ $customer->phone }}</div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Email</div>
+                                                            <div class="fw-medium text-dark">{{ $customer->email ?? '—' }}</div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Created</div>
+                                                            <div class="fw-medium text-dark">{{ $customer->created_at->format('M d, Y') }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Reservation Summary -->
+                                            <div class="col-md-6">
+                                                <div class="card info-card h-100 border-0 shadow-sm p-4" style="border-radius: 1rem;">
+                                                    <h6 class="fw-bold text-uppercase mb-4" style="letter-spacing: 0.05em; font-size: 0.85rem;">
+                                                        <i class="bi bi-pie-chart-fill text-success me-2"></i> Reservation Summary
+                                                    </h6>
+                                                    <div class="row g-3">
+                                                        <div class="col-sm-6">
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Total Reservations</div>
+                                                            <div><span class="badge bg-light text-dark border">{{ $customer->reservations_count }}</span></div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Status</div>
+                                                            <div>
+                                                                @if($customer->reservations_count >= 5)
+                                                                    <span class="badge bg-danger bg-opacity-10 text-danger px-2 py-1">VIP</span>
+                                                                @elseif($customer->reservations_count >= 2)
+                                                                    <span class="badge bg-success bg-opacity-10 text-success px-2 py-1">Returning</span>
+                                                                @else
+                                                                    <span class="badge bg-info bg-opacity-10 text-info px-2 py-1">New</span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">First Reservation</div>
+                                                            <div class="fw-medium text-dark">{{ $customer->reservations->last()?->check_in ? \Carbon\Carbon::parse($customer->reservations->last()->check_in)->format('M d, Y') : '—' }}</div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Last Reservation</div>
+                                                            <div class="fw-medium text-dark">{{ $customer->reservations->first()?->check_in ? \Carbon\Carbon::parse($customer->reservations->first()->check_in)->format('M d, Y') : '—' }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Reservation History -->
+                                        <div class="card border-0 shadow-sm" style="border-radius: 1rem; overflow: hidden;">
+                                            <div class="card-header bg-white border-bottom py-3">
+                                                <h6 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.85rem;">
+                                                    <i class="bi bi-clock-history text-muted me-2"></i> Reservation History
+                                                </h6>
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table class="table table-hover align-middle mb-0">
+                                                    <thead class="table-light text-uppercase small text-muted">
+                                                        <tr>
+                                                            <th class="ps-4">ID</th>
+                                                            <th>Date Created</th>
+                                                            <th>Check-in</th>
+                                                            <th>Check-out</th>
+                                                            <th>Room</th>
+                                                            <th>Status</th>
+                                                            <th class="text-end pe-4">Total Price</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse($customer->reservations as $res)
+                                                        <tr>
+                                                            <td class="ps-4"><span class="fw-bold text-dark">#{{ str_pad($res->id, 5, '0', STR_PAD_LEFT) }}</span></td>
+                                                            <td>{{ $res->created_at->format('M d, Y') }}</td>
+                                                            <td><span class="text-success fw-medium">{{ \Carbon\Carbon::parse($res->check_in)->format('M d, Y') }}</span></td>
+                                                            <td><span class="text-danger fw-medium">{{ \Carbon\Carbon::parse($res->check_out)->format('M d, Y') }}</span></td>
+                                                            <td>
+                                                                <span class="badge bg-light text-dark border">
+                                                                    <i class="bi bi-door-closed me-1"></i>{{ $res->room ? $res->room->room_number : 'N/A' }}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                @php
+                                                                    $badgeClass = match($res->status) {
+                                                                        'confirmed'   => 'bg-success bg-opacity-10 text-success',
+                                                                        'checked_in'  => 'bg-primary bg-opacity-10 text-primary',
+                                                                        'checked_out' => 'bg-secondary bg-opacity-10 text-secondary',
+                                                                        'pending'     => 'bg-warning bg-opacity-10 text-warning',
+                                                                        'cancelled'   => 'bg-danger bg-opacity-10 text-danger',
+                                                                        default       => 'bg-light text-dark',
+                                                                    };
+                                                                    $badgeLabel = match($res->status) {
+                                                                        'confirmed'   => 'Confirmed',
+                                                                        'checked_in'  => 'Checked In',
+                                                                        'checked_out' => 'Checked Out',
+                                                                        'pending'     => 'Pending',
+                                                                        'cancelled'   => 'Cancelled',
+                                                                        default       => ucfirst($res->status),
+                                                                    };
+                                                                @endphp
+                                                                <span class="badge {{ $badgeClass }} px-2.5 py-1.5 fw-bold">{{ $badgeLabel }}</span>
+                                                            </td>
+                                                            <td class="text-end pe-4 fw-bold" style="color: #0F172A;">{{ number_format($res->total_price, 2) }} MAD</td>
+                                                        </tr>
+                                                        @empty
+                                                        <tr>
+                                                            <td colspan="7" class="text-center py-4 text-muted">No reservations found.</td>
+                                                        </tr>
+                                                        @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Edit Customer Modal -->
                         <div class="modal fade" id="editCustomerModal{{ $customer->id }}" tabindex="-1" aria-labelledby="editCustomerModalLabel{{ $customer->id }}" aria-hidden="true">
@@ -186,6 +334,10 @@
                                             <div class="mb-3">
                                                 <label for="phone{{ $customer->id }}" class="form-label">Phone</label>
                                                 <input type="text" class="form-control" id="phone{{ $customer->id }}" name="phone" value="{{ $customer->phone }}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="email{{ $customer->id }}" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="email{{ $customer->id }}" name="email" value="{{ $customer->email }}">
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -210,4 +362,5 @@
         </table>
     </div>
 </div>
+
 @endsection

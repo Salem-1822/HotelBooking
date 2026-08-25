@@ -68,6 +68,7 @@ class ReservationController extends Controller
         $reservations = $query->latest()->paginate(10)->withQueryString();
         
         $rooms = Room::where('hotel_id', $hotelId)->get();
+        $customers = Customer::where('hotel_id', $hotelId)->orderBy('name')->get();
 
         return view('admin.reservations.index', [
             'reservations'       => $reservations,
@@ -78,6 +79,7 @@ class ReservationController extends Controller
             'statusOptions'      => $this->statusOptions,
             'createStatusOptions' => $this->createStatusOptions,
             'rooms'              => $rooms,
+            'customers'          => $customers,
         ]);
     }
 
@@ -85,10 +87,33 @@ class ReservationController extends Controller
     {
         $hotelId = Auth::guard('admin')->user()->hotel_id;
         
+        if ($request->filled('guest_phone')) {
+            $request->merge([
+                'guest_phone' => Customer::normalizePhone($request->guest_phone)
+            ]);
+        }
+        
         $rules = [
             'room_id'      => ['required', 'exists:rooms,id,hotel_id,' . $hotelId],
-            'guest_name'   => 'required|string|max:255',
-            'guest_phone'  => 'required|string|max:50',
+            'customer_id'  => ['nullable', 'exists:customers,id,hotel_id,' . $hotelId],
+            'guest_name'   => 'required_without:customer_id|nullable|string|max:255',
+            'guest_phone'  => [
+                'required_without:customer_id',
+                'nullable',
+                'string',
+                'max:50',
+                function ($attribute, $value, $fail) use ($hotelId, $request) {
+                    if (empty($request->customer_id)) {
+                        $exists = Customer::where('hotel_id', $hotelId)
+                                          ->where('phone', $value)
+                                          ->exists();
+                        if ($exists) {
+                            $fail('A customer with this phone number already exists. Please select them from the dropdown.');
+                        }
+                    }
+                }
+            ],
+            'guest_email'  => 'nullable|email|max:255',
             'guests_count' => 'required|integer|min:1',
             'check_in'     => 'required|date',
             'check_out'    => 'required|date|after:check_in',
@@ -106,12 +131,15 @@ class ReservationController extends Controller
         $nights = $checkIn->diffInDays($checkOut);
         $nights = $nights > 0 ? $nights : 1;
         $data['total_price'] = $room->price_per_night * $nights;
+        unset($data['guest_email']); // Remove from reservation data array
 
-        DB::transaction(function () use ($data, $hotelId, $request) {
-            // Resolve or create the customer for this guest
-            $customer = $this->resolveCustomer($hotelId, $request->guest_phone, $request->guest_name);
-            if ($customer) {
-                $data['customer_id'] = $customer->id;
+        DB::transaction(function () use (&$data, $hotelId, $request) {
+            // Resolve or create the customer for this guest if not selected
+            if (empty($data['customer_id'])) {
+                $customer = $this->resolveCustomer($hotelId, $request->guest_phone, $request->guest_name, $request->guest_email);
+                if ($customer) {
+                    $data['customer_id'] = $customer->id;
+                }
             }
             Reservation::create($data);
         });
@@ -126,10 +154,33 @@ class ReservationController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        if ($request->filled('guest_phone')) {
+            $request->merge([
+                'guest_phone' => Customer::normalizePhone($request->guest_phone)
+            ]);
+        }
+
         $rules = [
             'room_id' => ['required', 'exists:rooms,id,hotel_id,' . $hotelId],
-            'guest_name' => 'required|string|max:255',
-            'guest_phone' => 'required|string|max:50',
+            'customer_id'  => ['nullable', 'exists:customers,id,hotel_id,' . $hotelId],
+            'guest_name' => 'required_without:customer_id|nullable|string|max:255',
+            'guest_phone'  => [
+                'required_without:customer_id',
+                'nullable',
+                'string',
+                'max:50',
+                function ($attribute, $value, $fail) use ($hotelId, $request) {
+                    if (empty($request->customer_id)) {
+                        $exists = Customer::where('hotel_id', $hotelId)
+                                          ->where('phone', $value)
+                                          ->exists();
+                        if ($exists) {
+                            $fail('A customer with this phone number already exists. Please select them from the dropdown.');
+                        }
+                    }
+                }
+            ],
+            'guest_email'  => 'nullable|email|max:255',
             'guests_count' => 'required|integer|min:1',
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
@@ -145,12 +196,15 @@ class ReservationController extends Controller
         $nights = $checkIn->diffInDays($checkOut);
         $nights = $nights > 0 ? $nights : 1;
         $data['total_price'] = $room->price_per_night * $nights;
+        unset($data['guest_email']);
 
-        DB::transaction(function () use ($data, $hotelId, $request, $reservation) {
-            // Re-resolve customer if the phone changed
-            $customer = $this->resolveCustomer($hotelId, $request->guest_phone, $request->guest_name);
-            if ($customer) {
-                $data['customer_id'] = $customer->id;
+        DB::transaction(function () use (&$data, $hotelId, $request, $reservation) {
+            if (empty($data['customer_id'])) {
+                // Re-resolve customer if the phone changed and no customer selected
+                $customer = $this->resolveCustomer($hotelId, $request->guest_phone, $request->guest_name, $request->guest_email);
+                if ($customer) {
+                    $data['customer_id'] = $customer->id;
+                }
             }
             $reservation->update($data);
         });
@@ -175,7 +229,7 @@ class ReservationController extends Controller
      * Uses a normalized phone to prevent duplicates from formatting differences.
      * Returns null if the phone is empty/invalid.
      */
-    private function resolveCustomer(int $hotelId, ?string $rawPhone, string $guestName): ?Customer
+    private function resolveCustomer(int $hotelId, ?string $rawPhone, ?string $guestName, ?string $email = null): ?Customer
     {
         if (empty($rawPhone)) {
             return null;
@@ -188,7 +242,7 @@ class ReservationController extends Controller
 
         return Customer::firstOrCreate(
             ['hotel_id' => $hotelId, 'phone' => $normalizedPhone],
-            ['name' => $guestName]
+            ['name' => $guestName ?? 'Unknown Guest', 'email' => $email]
         );
     }
 }

@@ -33,17 +33,7 @@
     .reservation-table th {
         vertical-align: middle;
     }
-    .status-badge {
-        padding: 0.35em 0.75em;
-        font-size: 0.75rem;
-        font-weight: 600;
-        border-radius: 50rem;
-    }
-    .status-pending { background-color: #fef9c3; color: #a16207; border: 1px solid #fef08a; }
-    .status-confirmed { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-    .status-checked_in { background-color: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
-    .status-checked_out { background-color: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
-    .status-cancelled { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
 
     .modal {
         z-index: 9999 !important;
@@ -142,13 +132,6 @@
     </div>
 </div>
 
-{{-- Alerts --}}
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show border-0 shadow-xs mb-4" role="alert">
-        <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
 
 {{-- Data Table --}}
 <div class="card border-0 shadow-sm">
@@ -201,32 +184,38 @@
                         <span class="fw-bold text-primary">{{ number_format($res->total_price, 0) }} MAD</span>
                     </td>
                     <td>
-                        <span class="status-badge status-{{ $res->status }}">
+                        @php
+                            $badgeClass = match($res->status) {
+                                'confirmed'   => 'bg-success bg-opacity-10 text-success',
+                                'checked_in'  => 'bg-primary bg-opacity-10 text-primary',
+                                'checked_out' => 'bg-secondary bg-opacity-10 text-secondary',
+                                'pending'     => 'bg-warning bg-opacity-10 text-warning',
+                                'cancelled'   => 'bg-danger bg-opacity-10 text-danger',
+                                default       => 'bg-light text-dark',
+                            };
+                        @endphp
+                        <span class="badge {{ $badgeClass }} px-2.5 py-1.5 fw-bold">
                             {{ $statusOptions[$res->status] ?? ucfirst($res->status) }}
                         </span>
                     </td>
                     <td class="text-end pe-4">
-                        <div class="d-flex justify-content-end gap-2">
-                            <button class="btn btn-sm btn-light border text-primary" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#viewModal{{ $res->id }}" 
-                                    title="View Details">
-                                <i class="bi bi-eye"></i>
+                        <button class="btn btn-sm btn-outline-dark px-3 mb-1" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#viewModal{{ $res->id }}">
+                            <i class="bi bi-eye-fill me-1"></i> View
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary px-3 mb-1" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#editModal{{ $res->id }}">
+                            <i class="bi bi-pencil-fill me-1"></i> Edit
+                        </button>
+                        <form action="{{ route('admin.reservations.destroy', $res) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this reservation?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-outline-danger px-3 mb-1">
+                                <i class="bi bi-trash-fill me-1"></i> Delete
                             </button>
-                            <button class="btn btn-sm btn-light border text-dark" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#editModal{{ $res->id }}" 
-                                    title="Edit Reservation">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <form action="{{ route('admin.reservations.destroy', $res) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this reservation?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-light border text-danger" title="Delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                        </div>
+                        </form>
                     </td>
                 </tr>
 
@@ -242,7 +231,7 @@
                                 <div class="mb-4 d-flex justify-content-between align-items-center">
                                     <div>
                                         <p class="text-muted small mb-1 text-uppercase ls-1" style="font-size:0.7rem;">Status</p>
-                                        <span class="status-badge status-{{ $res->status }}">
+                                        <span class="badge {{ $badgeClass }} px-2.5 py-1.5 fw-bold">
                                             {{ $statusOptions[$res->status] ?? ucfirst($res->status) }}
                                         </span>
                                     </div>
@@ -261,6 +250,12 @@
                                         <label class="text-muted small fw-bold text-uppercase d-block mb-1">Guest Phone</label>
                                         <span class="text-dark fw-semibold">{{ $res->guest_phone }}</span>
                                     </div>
+                                    @if($res->customer && $res->customer->email)
+                                    <div class="col-6">
+                                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">Guest Email</label>
+                                        <span class="text-dark fw-semibold">{{ $res->customer->email }}</span>
+                                    </div>
+                                    @endif
                                     <div class="col-6">
                                         <label class="text-muted small fw-bold text-uppercase d-block mb-1">Room Number</label>
                                         <span class="text-dark fw-semibold">Room {{ $res->room?->room_number ?? 'N/A' }}</span>
@@ -307,12 +302,41 @@
                                 </div>
                                 <div class="modal-body p-4">
                                     <div class="mb-3">
-                                        <label class="form-label text-dark fw-bold">Guest Name</label>
-                                        <input type="text" name="guest_name" class="form-control" value="{{ $res->guest_name }}" required>
+                                        <label class="form-label text-dark fw-bold">Select Customer</label>
+                                        <select name="customer_id" class="form-select customer-select">
+                                            <option value="">-- New / Custom Guest Details --</option>
+                                            @foreach($customers as $customer)
+                                                <option value="{{ $customer->id }}" 
+                                                    {{ $res->customer_id == $customer->id ? 'selected' : '' }}
+                                                    data-name="{{ $customer->name }}" 
+                                                    data-phone="{{ $customer->phone }}" 
+                                                    data-email="{{ $customer->email ?? '—' }}">
+                                                    {{ $customer->name }} ({{ $customer->phone }})
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
-                                    <div class="mb-3">
-                                        <label class="form-label text-dark fw-bold">Guest Phone</label>
-                                        <input type="text" name="guest_phone" class="form-control" value="{{ $res->guest_phone }}" required>
+                                    <div class="customer-preview card bg-light border-0 mb-3 {{ $res->customer_id ? '' : 'd-none' }}">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold mb-2">Customer Details</h6>
+                                            <p class="mb-1"><i class="bi bi-person text-primary me-2"></i><span class="preview-name">{{ $res->customer?->name }}</span></p>
+                                            <p class="mb-1"><i class="bi bi-telephone text-primary me-2"></i><span class="preview-phone">{{ $res->customer?->phone }}</span></p>
+                                            <p class="mb-0"><i class="bi bi-envelope text-primary me-2"></i><span class="preview-email">{{ $res->customer?->email ?? '—' }}</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="new-customer-fields {{ $res->customer_id ? 'd-none' : '' }}">
+                                        <div class="mb-3">
+                                            <label class="form-label text-dark fw-bold">Guest Name</label>
+                                            <input type="text" name="guest_name" class="form-control guest-name-input" value="{{ $res->guest_name }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-dark fw-bold">Guest Phone</label>
+                                            <input type="text" name="guest_phone" class="form-control guest-phone-input" value="{{ $res->guest_phone }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-dark fw-bold">Guest Email (Optional)</label>
+                                            <input type="email" name="guest_email" class="form-control guest-email-input" value="">
+                                        </div>
                                     </div>
                                     <div class="row g-3 mb-3">
                                         <div class="col-6">
@@ -387,12 +411,40 @@
                 </div>
                 <div class="modal-body p-4">
                     <div class="mb-3">
-                        <label class="form-label text-dark fw-bold">Guest Name</label>
-                        <input type="text" name="guest_name" class="form-control" placeholder="John Doe" required>
+                        <label class="form-label text-dark fw-bold">Select Customer</label>
+                        <select name="customer_id" class="form-select customer-select">
+                            <option value="">-- Create New Customer --</option>
+                            @foreach($customers as $customer)
+                                <option value="{{ $customer->id }}" 
+                                    data-name="{{ $customer->name }}" 
+                                    data-phone="{{ $customer->phone }}" 
+                                    data-email="{{ $customer->email ?? '—' }}">
+                                    {{ $customer->name }} ({{ $customer->phone }})
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label text-dark fw-bold">Guest Phone</label>
-                        <input type="text" name="guest_phone" class="form-control" placeholder="+212 600-000000" required>
+                    <div class="customer-preview card bg-light border-0 mb-3 d-none">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-2">Customer Details</h6>
+                            <p class="mb-1"><i class="bi bi-person text-primary me-2"></i><span class="preview-name"></span></p>
+                            <p class="mb-1"><i class="bi bi-telephone text-primary me-2"></i><span class="preview-phone"></span></p>
+                            <p class="mb-0"><i class="bi bi-envelope text-primary me-2"></i><span class="preview-email"></span></p>
+                        </div>
+                    </div>
+                    <div class="new-customer-fields">
+                        <div class="mb-3">
+                            <label class="form-label text-dark fw-bold">Guest Name</label>
+                            <input type="text" name="guest_name" class="form-control guest-name-input" placeholder="John Doe">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-dark fw-bold">Guest Phone</label>
+                            <input type="text" name="guest_phone" class="form-control guest-phone-input" placeholder="+212 600-000000">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-dark fw-bold">Guest Email (Optional)</label>
+                            <input type="email" name="guest_email" class="form-control guest-email-input" placeholder="john@example.com">
+                        </div>
                     </div>
                     <div class="row g-3 mb-3">
                         <div class="col-6">
@@ -443,6 +495,39 @@
 @push('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // Handle Customer Select changes
+        document.querySelectorAll('.customer-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const modal = this.closest('.modal-body');
+                const preview = modal.querySelector('.customer-preview');
+                const newFields = modal.querySelector('.new-customer-fields');
+                
+                if (this.value) {
+                    // Existing customer selected
+                    const option = this.options[this.selectedIndex];
+                    preview.querySelector('.preview-name').textContent = option.dataset.name;
+                    preview.querySelector('.preview-phone').textContent = option.dataset.phone;
+                    preview.querySelector('.preview-email').textContent = option.dataset.email;
+                    
+                    preview.classList.remove('d-none');
+                    newFields.classList.add('d-none');
+                    
+                    // Disable required on inputs so form can submit
+                    modal.querySelectorAll('.new-customer-fields input').forEach(input => input.removeAttribute('required'));
+                } else {
+                    // New customer
+                    preview.classList.add('d-none');
+                    newFields.classList.remove('d-none');
+                    
+                    // Enable required on name and phone
+                    modal.querySelector('.guest-name-input').setAttribute('required', 'required');
+                    modal.querySelector('.guest-phone-input').setAttribute('required', 'required');
+                }
+            });
+            // Trigger change event to set initial state correctly
+            select.dispatchEvent(new Event('change'));
+        });
+
         // Animate Counters
         document.querySelectorAll('.counter').forEach(el => {
             const target = Number(el.dataset.count || 0);

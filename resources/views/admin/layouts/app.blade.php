@@ -457,6 +457,11 @@
                 <i class="bi bi-building-fill"></i>
                 <span>Hotel Profile</span>
             </a>
+            <a href="{{ route('admin.profile') }}"
+               class="sidebar-link {{ request()->routeIs('admin.profile') ? 'active' : '' }}">
+                <i class="bi bi-person-badge-fill"></i>
+                <span>My Profile</span>
+            </a>
         </nav>
 
         <div class="sidebar-footer">
@@ -515,7 +520,7 @@
                     </a>
                     <ul class="dropdown-menu premium-dropdown dropdown-menu-end mt-2">
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="{{ route('admin.profile') }}">
                                 <i class="bi bi-person-circle me-2"></i> My Profile
                             </a>
                         </li>

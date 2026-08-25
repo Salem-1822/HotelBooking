@@ -32,8 +32,7 @@ class CustomerController extends Controller
                 $q->whereIn('status', self::ACTIVE_STATUSES);
             }])
             ->with(['reservations' => function ($q) {
-                // Only the latest reservation's check_in date — used for "Last Reservation" display
-                $q->orderByDesc('check_in')->select('id', 'customer_id', 'check_in');
+                $q->orderByDesc('check_in')->with('room');
             }])
             ->get();
 
@@ -96,6 +95,7 @@ class CustomerController extends Controller
         $data = $request->validate([
             'name'  => 'required|string|max:255',
             'phone' => 'required|string|max:50',
+            'email' => 'nullable|email|max:255',
         ]);
 
         $normalizedPhone = Customer::normalizePhone($data['phone']);
@@ -117,6 +117,7 @@ class CustomerController extends Controller
         $customer->update([
             'name'  => $data['name'],
             'phone' => $normalizedPhone,
+            'email' => $data['email'] ?? null,
         ]);
 
         return redirect()->route('admin.customers.index')

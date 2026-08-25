@@ -102,9 +102,12 @@
         to { opacity: 1; transform: translateX(0); }
     }
 </style>
+
 @endpush
 
 @section('content')
+<div id="alertContainer"></div>
+
 <div class="page-title-bar mb-4">
     <div class="title-group">
         <h4 class="fw-bold mb-1">Manage Rooms</h4>
@@ -156,33 +159,37 @@
 
 <div class="card border-0 shadow-sm mb-4">
     <div class="card-body">
-        <div class="row gx-3 gy-3 align-items-center">
-            <div class="col-lg-4">
-                <div class="input-group shadow-sm rounded overflow-hidden border border-1 border-light">
-                    <span class="input-group-text bg-white border-0"><i class="bi bi-search"></i></span>
-                    <input id="roomSearchInput" type="search" class="form-control border-0" placeholder="Search room number, name or type">
+        <form id="roomsFilterForm">
+            <div class="row gx-3 gy-3 align-items-center">
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0 text-muted"><i class="bi bi-search"></i></span>
+                        <input type="text" id="roomSearchInput" class="form-control bg-light border-0" 
+                               placeholder="Search room number, name or type...">
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <select id="filterStatus" class="form-select bg-light border-0">
+                        <option value="">All Statuses</option>
+                        @foreach($statusOptions as $key => $label)
+                        <option value="{{ $key }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <select id="filterType" class="form-select bg-light border-0">
+                        <option value="">All Types</option>
+                        @foreach($roomTypes as $type)
+                        <option value="{{ $type }}">{{ $type }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-lg-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-dark w-100">Filter</button>
+                    <button type="button" id="clearFilters" class="btn btn-light border"><i class="bi bi-arrow-clockwise"></i></button>
                 </div>
             </div>
-            <div class="col-sm-4 col-lg-3">
-                <select id="filterStatus" class="form-select">
-                    <option value="">All Statuses</option>
-                    @foreach($statusOptions as $key => $label)
-                    <option value="{{ $key }}">{{ $label }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-sm-4 col-lg-3">
-                <select id="filterType" class="form-select">
-                    <option value="">All Types</option>
-                    @foreach($roomTypes as $type)
-                    <option value="{{ $type }}">{{ $type }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-sm-12 col-lg-2 text-end ms-auto">
-                <button id="clearFilters" class="btn btn-light border">Clear Filters</button>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -199,7 +206,11 @@
                     <th>Price</th>
                     <th>Status</th>
                     <th>Updated At</th>
-                    <th class="text-end">Actions</th>
+                    @if($routePrefix === 'super_admin.')
+                        <th class="text-end">Actions</th>
+                    @else
+                        <th class="text-end pe-4">Actions</th>
+                    @endif
                 </tr>
             </thead>
             <tbody id="roomsTableBody">
@@ -238,6 +249,7 @@
                         </span>
                     </td>
                     <td>{{ $room->updated_at->format('Y-m-d H:i') }}</td>
+                    @if($routePrefix === 'super_admin.')
                     <td class="text-end">
                         <div class="d-flex justify-content-end gap-2">
                             <button type="button" class="btn btn-sm btn-light border" data-action="view" data-id="{{ $room->id }}" title="View Room">
@@ -251,6 +263,19 @@
                             </button>
                         </div>
                     </td>
+                    @else
+                    <td class="text-end pe-4">
+                        <button type="button" class="btn btn-sm btn-outline-dark px-3 mb-1" data-action="view" data-id="{{ $room->id }}" title="View Room">
+                            <i class="bi bi-eye-fill me-1"></i> View
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary px-3 mb-1" data-action="edit" data-id="{{ $room->id }}" title="Edit Room">
+                            <i class="bi bi-pencil-fill me-1"></i> Edit
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger px-3 mb-1" data-action="delete" data-id="{{ $room->id }}" title="Delete Room">
+                            <i class="bi bi-trash-fill me-1"></i> Delete
+                        </button>
+                    </td>
+                    @endif
                 </tr>
                 @empty
                 <tr>
@@ -513,18 +538,14 @@
     });
 
     function initControls() {
-        document.getElementById('roomSearchInput').addEventListener('input', function () {
-            state.search = this.value.trim().toLowerCase();
+        document.getElementById('roomsFilterForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            state.search = document.getElementById('roomSearchInput').value.trim().toLowerCase();
+            state.status = document.getElementById('filterStatus').value;
+            state.type = document.getElementById('filterType').value;
             renderRooms();
         });
-        document.getElementById('filterStatus').addEventListener('change', function () {
-            state.status = this.value;
-            renderRooms();
-        });
-        document.getElementById('filterType').addEventListener('change', function () {
-            state.type = this.value;
-            renderRooms();
-        });
+
         document.getElementById('clearFilters').addEventListener('click', function () {
             state.search = '';
             state.status = '';
@@ -589,6 +610,34 @@
         const hotelInfo = window.isSuperAdminArea && room.hotel_name ? `<small class="text-muted">${escapeHtml(room.hotel_name)}</small>` : '';
         const image = room.main_image_url ? `<img src="${room.main_image_url}" class="room-image-thumb" alt="${escapeHtml(room.name)}">` : '<div class="room-image-thumb d-flex align-items-center justify-content-center bg-light text-muted"><i class="bi bi-door-closed fs-5"></i></div>';
 
+        const actionButtons = window.isSuperAdminArea ? `
+            <td class="text-end">
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-sm btn-light border" data-action="view" data-id="${room.id}" title="View Room">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-light border" data-action="edit" data-id="${room.id}" title="Edit Room">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-light border text-danger" data-action="delete" data-id="${room.id}" title="Delete Room">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </td>
+        ` : `
+            <td class="text-end pe-4">
+                <button type="button" class="btn btn-sm btn-outline-dark px-3 mb-1" data-action="view" data-id="${room.id}" title="View Room">
+                    <i class="bi bi-eye-fill me-1"></i> View
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-primary px-3 mb-1" data-action="edit" data-id="${room.id}" title="Edit Room">
+                    <i class="bi bi-pencil-fill me-1"></i> Edit
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger px-3 mb-1" data-action="delete" data-id="${room.id}" title="Delete Room">
+                    <i class="bi bi-trash-fill me-1"></i> Delete
+                </button>
+            </td>
+        `;
+
         return `
             <tr data-id="${room.id}" data-status="${escapeHtml(room.status)}" data-type="${escapeHtml(room.type)}">
                 <td class="pe-0">${image}</td>
@@ -604,19 +653,7 @@
                     <span class="badge rounded-pill px-3 badge-animate ${statusClass}">${escapeHtml(capitalize(room.status))}</span>
                 </td>
                 <td>${escapeHtml(room.updated_at || '')}</td>
-                <td class="text-end">
-                    <div class="d-flex justify-content-end gap-2">
-                        <button type="button" class="btn btn-sm btn-light border" data-action="view" data-id="${room.id}" title="View Room">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                        <button type="button" class="btn btn-sm btn-light border" data-action="edit" data-id="${room.id}" title="Edit Room">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button type="button" class="btn btn-sm btn-light border text-danger" data-action="delete" data-id="${room.id}" title="Delete Room">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                </td>
+                ${actionButtons}
             </tr>
         `;
     }
@@ -835,14 +872,43 @@
     }
 
     function showToast(message, type = 'success') {
-        const shell = document.getElementById('toastShell');
-        const toast = document.createElement('div');
-        toast.className = `toast-item ${type}`;
-        toast.innerHTML = `<span>${escapeHtml(message)}</span><button type="button" class="btn btn-sm btn-close btn-close-white ms-3"></button>`;
-        toast.querySelector('button').addEventListener('click', () => toast.remove());
-        shell.appendChild(toast);
-        setTimeout(() => toast.classList.add('fade-out'), 3200);
-        setTimeout(() => toast.remove(), 3800);
+        if (window.isSuperAdminArea) {
+            const shell = document.getElementById('toastShell');
+            const toast = document.createElement('div');
+            toast.className = `toast-item ${type}`;
+            toast.innerHTML = `<span>${escapeHtml(message)}</span><button type="button" class="btn-close btn-close-white ms-3"></button>`;
+            toast.querySelector('button').addEventListener('click', () => toast.remove());
+            shell.appendChild(toast);
+            setTimeout(() => toast.classList.add('fade-out'), 3200);
+            setTimeout(() => toast.remove(), 3800);
+        } else {
+            const container = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+            const iconClass = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
+            const borderColor = type === 'success' ? 'var(--brand-success)' : 'var(--brand-danger)';
+            
+            const alert = document.createElement('div');
+            alert.className = `alert ${alertClass} alert-dismissible fade show shadow-sm mb-4`;
+            alert.setAttribute('role', 'alert');
+            alert.style.borderRadius = '0.875rem';
+            alert.style.border = 'none';
+            alert.style.borderLeft = `4px solid ${borderColor}`;
+            
+            alert.innerHTML = `
+                <i class="bi ${iconClass} me-2"></i> ${escapeHtml(message)}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            container.innerHTML = '';
+            container.appendChild(alert);
+            
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alert);
+                if (alert.parentNode) {
+                    bsAlert.close();
+                }
+            }, 5000);
+        }
     }
 
     function escapeHtml(value) {
