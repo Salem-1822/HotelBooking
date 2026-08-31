@@ -3,13 +3,13 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\SuperAdmin\LoginController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\HotelController;
 
-// Client module routes will be added here
-
-Route::get('/', function () {
-    // For now, redirect to shared login. Later this will be the client home page.
-    return redirect()->route('login');
-});
+// Client public routes
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
+Route::get('/hotels/{hotel}', [HotelController::class, 'show'])->name('hotels.show');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
