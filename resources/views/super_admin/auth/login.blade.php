@@ -257,6 +257,12 @@
             </div>
 
             <div class="login-body">
+                @if(session('success'))
+                    <div class="mb-4" style="border-radius: 0.75rem; font-size: 0.85rem; background: #F0FDF4; color: #166534; border-left: 4px solid #22C55E; padding: 0.9rem 1rem;">
+                        <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+                    </div>
+                @endif
+
                 @if($errors->any())
                     <div class="alert mb-4">
                         <ul class="mb-0 list-unstyled">
@@ -309,6 +315,11 @@
                         Secured by HotelBooking IDP &mdash; All sessions are encrypted
                     </div>
                 </form>
+
+                <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #E5E7EB;">
+                    <span style="font-size: 0.83rem; color: #6B7280;">Don't have an account?</span>
+                    <a href="{{ route('client.register') }}" style="font-size: 0.83rem; font-weight: 600; color: var(--brand-primary); text-decoration: none; margin-left: 0.3rem;">Create Account</a>
+                </div>
             </div>
         </div>
     </div>

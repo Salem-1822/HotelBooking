@@ -76,20 +76,40 @@
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div class="text-truncate me-2">
                         <span class="badge bg-light text-muted border mb-2 fs-8">#MOR-RSV-{{ $res->id }}</span>
+                        @if($res->user)
+                            <span class="badge mb-2 ms-1" style="font-size:.65rem; background:#EFF6FF; color:#1E40AF; border:1px solid #BFDBFE;">
+                                <i class="bi bi-person-check-fill"></i> Client Portal
+                            </span>
+                        @endif
                         <h6 class="fw-bold mb-0 text-dark text-truncate" title="{{ $res->guest_name }}">{{ $res->guest_name }}</h6>
-                        <small class="text-muted"><i class="bi bi-telephone text-primary me-1"></i> {{ $res->guest_phone }}</small>
+                        @if($res->user)
+                            <small class="text-muted"><i class="bi bi-envelope text-primary me-1"></i> {{ $res->user->email }}</small>
+                        @else
+                            <small class="text-muted"><i class="bi bi-telephone text-primary me-1"></i> {{ $res->guest_phone ?? '—' }}</small>
+                        @endif
                     </div>
                     @php
                         $statusClass = match($res->status) {
-                            'confirmed' => 'status-confirmed',
-                            'pending' => 'status-pending',
-                            'cancelled' => 'status-cancelled',
-                            'completed' => 'status-completed',
-                            default => 'bg-secondary text-white'
+                            'confirmed'   => 'status-confirmed',
+                            'pending'     => 'status-pending',
+                            'cancelled'   => 'status-cancelled',
+                            'completed'   => 'status-completed',
+                            'checked_in'  => 'status-confirmed',
+                            'checked_out' => 'status-completed',
+                            default       => 'bg-secondary text-white'
+                        };
+                        $statusLabel = match($res->status) {
+                            'pending'     => 'Pending',
+                            'confirmed'   => 'Confirmed',
+                            'cancelled'   => 'Cancelled',
+                            'completed'   => 'Completed',
+                            'checked_in'  => 'Checked In',
+                            'checked_out' => 'Checked Out',
+                            default       => ucfirst($res->status)
                         };
                     @endphp
                     <span class="badge {{ $statusClass }} border px-3 py-2 rounded-pill text-capitalize shadow-xs" style="font-size: 0.7rem;">
-                        {{ $res->status }}
+                        {{ $statusLabel }}
                     </span>
                 </div>
 

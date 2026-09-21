@@ -12,7 +12,7 @@ class ReservationController extends Controller
     public function index(Request $request)
     {
         // 1. Initialize query with eager loading
-        $query = Reservation::with(['hotel.city']);
+        $query = Reservation::with(['hotel.city', 'user']);
 
         // 2. Apply Dynamic Filters (Search removed)
         // Filter by Status

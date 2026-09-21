@@ -388,14 +388,14 @@
         <!-- Inline Search Bar -->
         <form method="GET" action="{{ route('hotels.index') }}" class="search-bar-wrap" id="searchForm">
             <div class="row g-3 align-items-end">
-                <div class="col-lg-5 col-md-6">
+                <div class="col-lg-3 col-md-6">
                     <span class="search-bar-label">Search by name or location</span>
                     <input type="text" name="search" class="form-control"
                            placeholder="Hotel name, city, address…"
                            value="{{ $validated['search'] ?? '' }}"
                            autocomplete="off">
                 </div>
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-2 col-md-6">
                     <span class="search-bar-label">Destination</span>
                     <select name="city_id" class="form-select">
                         <option value="">All destinations</option>
@@ -407,13 +407,22 @@
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-4">
-                    <span class="search-bar-label">Star rating</span>
-                    <select name="stars" class="form-select">
-                        <option value="">Any stars</option>
-                        @for($s = 5; $s >= 1; $s--)
-                            <option value="{{ $s }}" {{ ($validated['stars'] ?? '') == $s ? 'selected' : '' }}>
-                                {{ $s }} Star{{ $s > 1 ? 's' : '' }}
-                            </option>
+                    <span class="search-bar-label"><i class="bi bi-calendar-check me-1"></i> Check-in</span>
+                    <input type="date" name="check_in" class="form-control"
+                           value="{{ $validated['check_in'] ?? '' }}"
+                           min="{{ date('Y-m-d') }}">
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <span class="search-bar-label"><i class="bi bi-calendar-x me-1"></i> Check-out</span>
+                    <input type="date" name="check_out" class="form-control"
+                           value="{{ $validated['check_out'] ?? '' }}"
+                           min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                </div>
+                <div class="col-lg-1 col-md-4">
+                    <span class="search-bar-label">Guests</span>
+                    <select name="guests" class="form-select">
+                        @for($g = 1; $g <= 8; $g++)
+                            <option value="{{ $g }}" {{ ($validated['guests'] ?? 1) == $g ? 'selected' : '' }}>{{ $g }}</option>
                         @endfor
                     </select>
                 </div>
@@ -426,6 +435,9 @@
                 @endif
                 @if(!empty($validated['price_max']))
                     <input type="hidden" name="price_max" value="{{ $validated['price_max'] }}">
+                @endif
+                @if(!empty($validated['stars']))
+                    <input type="hidden" name="stars" value="{{ $validated['stars'] }}">
                 @endif
                 <div class="col-lg-2 col-md-4">
                     <button type="submit" class="btn btn-accent w-100 py-2">
@@ -446,7 +458,8 @@
     @php
         $hasFilters = !empty($validated['search']) || !empty($validated['city_id'])
             || !empty($validated['stars']) || !empty($validated['price_min'])
-            || !empty($validated['price_max']);
+            || !empty($validated['price_max']) || !empty($validated['check_in'])
+            || !empty($validated['check_out']) || !empty($validated['guests']);
     @endphp
     @if($hasFilters)
     <div class="active-filters mb-3">
@@ -463,6 +476,18 @@
             </a>
             @endif
         @endif
+        @if(!empty($validated['check_in']) && !empty($validated['check_out']))
+            <a href="{{ request()->fullUrlWithQuery(['check_in' => null, 'check_out' => null, 'page' => null]) }}" class="filter-pill">
+                <i class="bi bi-x"></i>
+                {{ \Carbon\Carbon::parse($validated['check_in'])->format('d M') }}
+                → {{ \Carbon\Carbon::parse($validated['check_out'])->format('d M Y') }}
+            </a>
+        @endif
+        @if(!empty($validated['guests']))
+            <a href="{{ request()->fullUrlWithQuery(['guests' => null, 'page' => null]) }}" class="filter-pill">
+                <i class="bi bi-x"></i> {{ $validated['guests'] }} Guest{{ $validated['guests'] != 1 ? 's' : '' }}
+            </a>
+        @endif
         @if(!empty($validated['stars']))
             <a href="{{ request()->fullUrlWithQuery(['stars' => null, 'page' => null]) }}" class="filter-pill">
                 <i class="bi bi-x"></i> {{ $validated['stars'] }} Stars
@@ -471,7 +496,7 @@
         @if(!empty($validated['price_min']) || !empty($validated['price_max']))
             <a href="{{ request()->fullUrlWithQuery(['price_min' => null, 'price_max' => null, 'page' => null]) }}" class="filter-pill">
                 <i class="bi bi-x"></i>
-                ${{ number_format($validated['price_min'] ?? 0) }} – ${{ number_format($validated['price_max'] ?? ($priceRange->max_price ?? 9999)) }}
+                {{ number_format($validated['price_min'] ?? 0) }} MAD – {{ number_format($validated['price_max'] ?? ($priceRange->max_price ?? 9999)) }} MAD
             </a>
         @endif
         <a href="{{ route('hotels.index') }}" class="filter-pill" style="color:#EF4444; border-color:rgba(239,68,68,0.3);">
@@ -491,7 +516,16 @@
                 @if(!empty($validated['sort']))
                     <input type="hidden" name="sort" value="{{ $validated['sort'] }}">
                 @endif
-
+                {{-- carry through date & guest context --}}
+                @if(!empty($validated['check_in']))
+                    <input type="hidden" name="check_in" value="{{ $validated['check_in'] }}">
+                @endif
+                @if(!empty($validated['check_out']))
+                    <input type="hidden" name="check_out" value="{{ $validated['check_out'] }}">
+                @endif
+                @if(!empty($validated['guests']))
+                    <input type="hidden" name="guests" value="{{ $validated['guests'] }}">
+                @endif
                 <!-- City -->
                 <p class="filter-section-title">Destination</p>
                 <div class="mb-4">
@@ -552,8 +586,8 @@
                         $curMax = (int) ($validated['price_max'] ?? $absMax);
                     @endphp
                     <div class="price-range-display">
-                        <span id="displayMin">${{ number_format($curMin) }}</span>
-                        <span id="displayMax">${{ number_format($curMax) }}</span>
+                        <span id="displayMin">{{ number_format($curMin) }} MAD</span>
+                        <span id="displayMax">{{ number_format($curMax) }} MAD</span>
                     </div>
                     <input type="range" id="rangeMin" name="price_min"
                            min="{{ $absMin }}" max="{{ $absMax }}"
@@ -629,6 +663,14 @@
                 <!-- Hotel Grid -->
                 <div class="row g-4">
                     @foreach($hotels as $hotel)
+                    @php
+                        $hotelParams = array_filter([
+                            'check_in'  => $validated['check_in'] ?? null,
+                            'check_out' => $validated['check_out'] ?? null,
+                            'guests'    => $validated['guests'] ?? null,
+                        ]);
+                        $hotelUrl = route('hotels.show', $hotel) . (count($hotelParams) ? '?' . http_build_query($hotelParams) : '');
+                    @endphp
                     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
                         <article class="hotel-card" aria-label="{{ $hotel->name }}">
                             <!-- Image -->
@@ -652,7 +694,7 @@
 
                             <!-- Body -->
                             <div class="hotel-body">
-                                <a href="{{ route('hotels.show', $hotel) }}" class="hotel-name" title="{{ $hotel->name }}">
+                                <a href="{{ $hotelUrl }}" class="hotel-name" title="{{ $hotel->name }}">
                                     {{ $hotel->name }}
                                 </a>
                                 <div class="hotel-location">
@@ -683,14 +725,14 @@
                                 <div class="hotel-footer">
                                     <div>
                                         <div class="hotel-price">
-                                            <sup>$</sup>{{ number_format($hotel->starting_price ?? $hotel->price_per_night, 2) }}
+                                            {{ number_format($hotel->starting_price ?? $hotel->price_per_night, 2) }} MAD
                                             <small>/ night</small>
                                         </div>
                                         @if(!$hotel->starting_price && $hotel->rooms()->count() === 0)
                                             <div style="font-size:0.75rem; color:var(--text-muted);">No rooms listed</div>
                                         @endif
                                     </div>
-                                    <a href="{{ route('hotels.show', $hotel) }}" class="btn-view-hotel" aria-label="View {{ $hotel->name }}">
+                                    <a href="{{ $hotelUrl }}" class="btn-view-hotel" aria-label="View {{ $hotel->name }}">
                                         View Hotel
                                     </a>
                                 </div>
@@ -730,6 +772,16 @@
         @if(!empty($validated['sort']))
             <input type="hidden" name="sort" value="{{ $validated['sort'] }}">
         @endif
+        {{-- carry through date & guest context --}}
+        @if(!empty($validated['check_in']))
+            <input type="hidden" name="check_in" value="{{ $validated['check_in'] }}">
+        @endif
+        @if(!empty($validated['check_out']))
+            <input type="hidden" name="check_out" value="{{ $validated['check_out'] }}">
+        @endif
+        @if(!empty($validated['guests']))
+            <input type="hidden" name="guests" value="{{ $validated['guests'] }}">
+        @endif
 
         <!-- Destination -->
         <p class="filter-section-title">Destination</p>
@@ -765,17 +817,17 @@
         <p class="filter-section-title">Price per Night</p>
         <div class="mb-4">
             <div class="price-range-display">
-                <span id="mDisplayMin">${{ number_format($curMin ?? 0) }}</span>
-                <span id="mDisplayMax">${{ number_format($curMax ?? $absMax) }}</span>
+                <span id="mDisplayMin">{{ number_format($curMin ?? 0) }} MAD</span>
+                <span id="mDisplayMax">{{ number_format($curMax ?? $absMax) }} MAD</span>
             </div>
             <input type="range" name="price_min" id="mRangeMin"
                    min="{{ $absMin }}" max="{{ $absMax }}"
                    value="{{ $curMin ?? $absMin }}"
-                   oninput="document.getElementById('mDisplayMin').textContent='$'+parseInt(this.value).toLocaleString()">
+                   oninput="document.getElementById('mDisplayMin').textContent=parseInt(this.value).toLocaleString() + ' MAD'">
             <input type="range" name="price_max" id="mRangeMax"
                    min="{{ $absMin }}" max="{{ $absMax }}"
                    value="{{ $curMax ?? $absMax }}"
-                   oninput="document.getElementById('mDisplayMax').textContent='$'+parseInt(this.value).toLocaleString()"
+                   oninput="document.getElementById('mDisplayMax').textContent=parseInt(this.value).toLocaleString() + ' MAD'"
                    style="margin-top:0.5rem;">
         </div>
         @endif
@@ -815,10 +867,10 @@ function updateRange(which, val) {
 
     if (which === 'min') {
         if (parseInt(val) > maxVal) { minInput.value = maxVal; val = maxVal; }
-        minEl.textContent = '$' + parseInt(val).toLocaleString();
+        minEl.textContent = parseInt(val).toLocaleString() + ' MAD';
     } else {
         if (parseInt(val) < minVal) { maxInput.value = minVal; val = minVal; }
-        maxEl.textContent = '$' + parseInt(val).toLocaleString();
+        maxEl.textContent = parseInt(val).toLocaleString() + ' MAD';
     }
 }
 

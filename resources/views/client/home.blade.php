@@ -333,7 +333,7 @@
     <!-- Search Widget -->
     <div class="container">
         <div class="search-widget">
-            <form action="{{ route('home') }}" method="GET">
+            <form action="{{ route('hotels.index') }}" method="GET">
                 <div class="row g-0 align-items-center">
                     <div class="col-lg-3 col-md-6 px-3 search-input-group">
                         <label class="search-label"><i class="bi bi-geo-alt-fill me-1 text-accent"></i> Destination</label>
@@ -362,7 +362,7 @@
                         </select>
                     </div>
                     <div class="col-lg-1 px-3 mt-3 mt-lg-0 text-center text-lg-end">
-                        <button type="button" class="btn btn-accent w-100 py-3" style="border-radius: 0.875rem;">
+                        <button type="submit" class="btn btn-accent w-100 py-3" style="border-radius: 0.875rem;">
                             <i class="bi bi-search fs-5"></i>
                         </button>
                     </div>
@@ -451,7 +451,7 @@
                                     
                                     <div class="hotel-footer">
                                         <div class="hotel-price">
-                                            ${{ number_format($hotel->starting_price ?? $hotel->price_per_night, 2) }} <span>/ night</span>
+                                            {{ number_format($hotel->starting_price ?? $hotel->price_per_night, 2) }} MAD <span>/ night</span>
                                         </div>
                                         <a href="{{ route('hotels.show', $hotel) }}" class="btn btn-sm btn-accent" style="border-radius: 0.5rem;">View Hotel</a>
                                     </div>

@@ -1631,10 +1631,10 @@
                     </div>
                     <div>
                         <div class="hp-revenue-label">This Month's Revenue</div>
-                        <div class="hp-revenue-value">${{ number_format($monthlyRevenue, 0) }}</div>
+                        <div class="hp-revenue-value">{{ number_format($monthlyRevenue, 0) }} MAD</div>
                         @if($totalRevenue > 0)
                             <div style="font-size:0.7rem;color:rgba(255,255,255,0.4);margin-top:2px;">
-                                All-time: ${{ number_format($totalRevenue, 0) }}
+                                All-time: {{ number_format($totalRevenue, 0) }} MAD
                             </div>
                         @endif
                     </div>

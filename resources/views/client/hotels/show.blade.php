@@ -539,9 +539,31 @@
             </section>
             @endif
 
-            <!-- ── ROOMS ────────────────────────────────────── -->
             <section class="mb-5" aria-label="Available rooms" id="rooms">
                 <h2 class="section-heading">Available Rooms</h2>
+
+                {{-- Show date context if dates were provided --}}
+                @if(!empty($validated['check_in']) && !empty($validated['check_out']))
+                    @php
+                        $ci = \Carbon\Carbon::parse($validated['check_in']);
+                        $co = \Carbon\Carbon::parse($validated['check_out']);
+                        $nights = $ci->diffInDays($co);
+                    @endphp
+                    <div class="alert d-flex align-items-center gap-2 mb-3"
+                         style="background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.25); border-radius:0.75rem; font-size:0.875rem;">
+                        <i class="bi bi-calendar-range-fill" style="color:#3B82F6;"></i>
+                        <span>
+                            Showing availability for <strong>{{ $ci->format('d M Y') }}</strong> → <strong>{{ $co->format('d M Y') }}</strong>
+                            ({{ $nights }} night{{ $nights != 1 ? 's' : '' }})
+                            @if(!empty($validated['guests']))
+                                · <strong>{{ $validated['guests'] }}</strong> guest{{ $validated['guests'] != 1 ? 's' : '' }}
+                            @endif
+                        </span>
+                        <a href="{{ route('hotels.show', $hotel) }}" class="ms-auto text-muted" style="font-size:0.78rem; text-decoration:none; white-space:nowrap;">
+                            <i class="bi bi-x"></i> Clear dates
+                        </a>
+                    </div>
+                @endif
 
                 @if($rooms->isEmpty())
                     <div class="empty-box">
@@ -557,7 +579,20 @@
                     <div class="alert d-flex align-items-center gap-2 mb-3"
                          style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:0.75rem; font-size:0.875rem;">
                         <i class="bi bi-check-circle-fill text-success"></i>
-                        <span><strong>{{ $availableCount }}</strong> room{{ $availableCount !== 1 ? 's' : '' }} available right now</span>
+                        <span>
+                            <strong>{{ $availableCount }}</strong> room{{ $availableCount !== 1 ? 's' : '' }} available
+                            @if(!empty($validated['check_in']) && !empty($validated['check_out']))
+                                for your selected dates
+                            @else
+                                right now
+                            @endif
+                        </span>
+                    </div>
+                    @elseif(!empty($validated['check_in']) && !empty($validated['check_out']))
+                    <div class="alert d-flex align-items-center gap-2 mb-3"
+                         style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:0.75rem; font-size:0.875rem;">
+                        <i class="bi bi-x-circle-fill text-danger"></i>
+                        <span>No rooms are available for your selected dates. Try different dates.</span>
                     </div>
                     @endif
 
@@ -565,8 +600,12 @@
                     <article class="room-card" aria-label="{{ $room->name ?? 'Room '.$room->room_number }}">
                         {{-- Room image --}}
                         <div class="room-card-img">
-                            <div class="room-status-badge {{ $room->status }}">
-                                {{ ucfirst($room->status) }}
+                            @php
+                                $displayStatus = $room->is_bookable ? 'available' : ($room->status === 'available' ? 'reserved' : $room->status);
+                                $displayLabel  = $room->is_bookable ? 'Available' : (!empty($validated['check_in']) && !empty($validated['check_out']) ? 'Taken' : ucfirst($room->status));
+                            @endphp
+                            <div class="room-status-badge {{ $displayStatus }}">
+                                {{ $displayLabel }}
                             </div>
                             @if($room->main_image)
                                 <img src="{{ asset('storage/' . $room->main_image) }}"
@@ -626,19 +665,33 @@
                             <div class="room-footer">
                                 <div>
                                     <div class="room-price">
-                                        <sup>$</sup>{{ number_format($room->price_per_night, 2) }}
+                                        {{ number_format($room->price_per_night, 2) }} MAD
                                         <small>/ night</small>
                                     </div>
                                 </div>
                                 @if($room->is_bookable)
-                                    {{-- Phase 4 will add the booking route; for now we anchor to the booking section --}}
-                                    <a href="#booking-cta" class="btn-book-now" role="button"
-                                       data-room-id="{{ $room->id }}"
-                                       data-room-name="{{ $room->name ?? 'Room '.$room->room_number }}"
-                                       data-room-price="{{ $room->price_per_night }}"
-                                       onclick="selectRoom(this)">
-                                        <i class="bi bi-calendar-check me-1"></i> Book Now
-                                    </a>
+                                    @auth('web')
+                                        @php
+                                            $bookParams = array_filter([
+                                                'check_in'  => $validated['check_in'] ?? null,
+                                                'check_out' => $validated['check_out'] ?? null,
+                                                'guests'    => $validated['guests'] ?? null,
+                                            ]);
+                                        @endphp
+                                        <a href="{{ route('client.reserve.create', [$hotel, $room]) }}{{ count($bookParams) ? '?' . http_build_query($bookParams) : '' }}"
+                                           class="btn-book-now"
+                                           data-room-id="{{ $room->id }}"
+                                           data-room-name="{{ $room->name ?? 'Room '.$room->room_number }}"
+                                           data-room-price="{{ $room->price_per_night }}">
+                                            <i class="bi bi-calendar-check me-1"></i> Book Now
+                                        </a>
+                                    @else
+                                        <a href="{{ route('login') }}"
+                                           class="btn-book-now"
+                                           title="Please log in to reserve this room">
+                                            <i class="bi bi-lock me-1"></i> Login to Book
+                                        </a>
+                                    @endauth
                                 @else
                                     <span class="btn-book-now unavailable" aria-disabled="true">
                                         <i class="bi bi-x-circle me-1"></i> Unavailable
@@ -749,7 +802,7 @@
                                 @endif
                                 @if($rh->starting_price)
                                 <div style="font-size:0.9rem; font-weight:700; color:var(--brand-primary); margin-top:0.5rem;">
-                                    From ${{ number_format($rh->starting_price, 0) }}<small style="font-weight:400; font-size:0.75rem; color:var(--text-muted);">/night</small>
+                                    From {{ number_format($rh->starting_price, 0) }} MAD<small style="font-weight:400; font-size:0.75rem; color:var(--text-muted);">/night</small>
                                 </div>
                                 @endif
                             </div>
@@ -774,7 +827,7 @@
                     @if($minRoomPrice)
                     <div class="price-from-label">Rooms starting from</div>
                     <div class="price-hero">
-                        <sup>$</sup>{{ number_format($minRoomPrice, 2) }}
+                        {{ number_format($minRoomPrice, 2) }} MAD
                         <small>/ night</small>
                     </div>
                     @endif
@@ -862,7 +915,7 @@
         @if($minRoomPrice ?? null)
         <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">From</div>
         <div style="font-size:1.25rem; font-weight:800; color:var(--brand-primary);">
-            ${{ number_format($minRoomPrice, 2) }}<small style="font-size:0.72rem; font-weight:400; color:var(--text-muted);">/night</small>
+            {{ number_format($minRoomPrice, 2) }} MAD<small style="font-size:0.72rem; font-weight:400; color:var(--text-muted);">/night</small>
         </div>
         @endif
     </div>
@@ -895,7 +948,7 @@ function selectRoom(btn) {
     const panel = document.getElementById('selectedRoomInfo');
     if (!panel) return;
     document.getElementById('selectedRoomName').textContent  = name;
-    document.getElementById('selectedRoomPrice').textContent = '$' + price.toFixed(2) + ' / night';
+    document.getElementById('selectedRoomPrice').textContent = price.toFixed(2) + ' MAD / night';
     panel.style.display = 'block';
     // Highlight all book-now buttons; dim others
     document.querySelectorAll('.btn-book-now:not(.unavailable)').forEach(b => {

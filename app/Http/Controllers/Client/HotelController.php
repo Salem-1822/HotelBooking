@@ -22,7 +22,13 @@ class HotelController extends Controller
             'price_min' => 'nullable|numeric|min:0',
             'price_max' => 'nullable|numeric|min:0',
             'sort'      => 'nullable|in:price_asc,price_desc,stars_desc,name_asc',
+            'check_in'  => 'nullable|date|after_or_equal:today',
+            'check_out' => 'nullable|date|after:check_in',
+            'guests'    => 'nullable|integer|min:1|max:20',
         ]);
+
+        $checkIn = $validated['check_in'] ?? null;
+        $checkOut = $validated['check_out'] ?? null;
 
         $query = Hotel::query()
             ->with(['city', 'reviews'])
@@ -60,6 +66,24 @@ class HotelController extends Controller
             $query->where('hotels.price_per_night', '<=', $validated['price_max']);
         }
 
+        if ($checkIn && $checkOut) {
+            $query->whereHas('rooms', function ($q) use ($checkIn, $checkOut, $validated) {
+                $q->where('status', 'available')
+                  ->when(!empty($validated['guests']), fn ($rq) => $rq->where('capacity', '>=', $validated['guests']))
+                  ->whereDoesntHave('reservations', function ($rq) use ($checkIn, $checkOut) {
+                      $rq->whereNotIn('status', ['cancelled'])
+                         ->where('check_in', '<', $checkOut)
+                         ->where('check_out', '>', $checkIn);
+                  });
+            });
+        } elseif (!empty($validated['guests'])) {
+            // Even without dates, filter hotels that have at least one room fitting the guest count
+            $query->whereHas('rooms', function ($q) use ($validated) {
+                $q->where('status', 'available')
+                  ->where('capacity', '>=', $validated['guests']);
+            });
+        }
+
         switch ($validated['sort'] ?? 'name_asc') {
             case 'price_asc':  $query->orderBy('hotels.price_per_night', 'asc');  break;
             case 'price_desc': $query->orderBy('hotels.price_per_night', 'desc'); break;
@@ -90,8 +114,17 @@ class HotelController extends Controller
     // ────────────────────────────────────────────────────────────────────────────
     // Hotel Detail  (Phase 3)
     // ────────────────────────────────────────────────────────────────────────────
-    public function show(Hotel $hotel)
+    public function show(Request $request, Hotel $hotel)
     {
+        $validated = $request->validate([
+            'check_in'  => 'nullable|date|after_or_equal:today',
+            'check_out' => 'nullable|date|after:check_in',
+            'guests'    => 'nullable|integer|min:1|max:20',
+        ]);
+
+        $checkIn = $validated['check_in'] ?? null;
+        $checkOut = $validated['check_out'] ?? null;
+
         // Only active hotels are visible publicly
         if ($hotel->status !== 'active') {
             abort(404);
@@ -102,17 +135,36 @@ class HotelController extends Controller
 
         // ── Rooms ────────────────────────────────────────────────────────────
         // Order: available first, then by price ascending
-        // Availability: we use the admin-managed `status` column.
-        // Full date-overlap availability (check_in/check_out) requires the visitor
-        // to supply dates — that belongs to the Phase 4 booking flow.
         $rooms = $hotel->rooms()
             ->orderByRaw("FIELD(status, 'available', 'reserved', 'occupied', 'maintenance', 'inactive')")
             ->orderBy('price_per_night', 'asc')
             ->get();
 
         // Annotate each room with a simple is_bookable flag
+        $requestedGuests = !empty($validated['guests']) ? (int) $validated['guests'] : null;
+
         foreach ($rooms as $room) {
-            $room->is_bookable = ($room->status === 'available');
+            $isAvailable = ($room->status === 'available');
+
+            // Capacity gate: room cannot serve the requested guest count
+            if ($isAvailable && $requestedGuests && $room->capacity < $requestedGuests) {
+                $isAvailable = false;
+            }
+
+            // Date-overlap gate: room has an active reservation in the requested window
+            if ($isAvailable && $checkIn && $checkOut) {
+                $conflict = \App\Models\Reservation::where('room_id', $room->id)
+                    ->whereNotIn('status', ['cancelled'])
+                    ->where('check_in', '<', $checkOut)
+                    ->where('check_out', '>', $checkIn)
+                    ->exists();
+
+                if ($conflict) {
+                    $isAvailable = false;
+                }
+            }
+
+            $room->is_bookable = $isAvailable;
         }
 
         // ── Reviews ──────────────────────────────────────────────────────────
@@ -159,7 +211,8 @@ class HotelController extends Controller
             'reviewCount',
             'avgRating',
             'ratingBreakdown',
-            'relatedHotels'
+            'relatedHotels',
+            'validated'
         ));
     }
 }

@@ -248,8 +248,17 @@
                                     </div>
                                     <div class="col-6">
                                         <label class="text-muted small fw-bold text-uppercase d-block mb-1">Guest Phone</label>
-                                        <span class="text-dark fw-semibold">{{ $res->guest_phone }}</span>
+                                        <span class="text-dark fw-semibold">{{ $res->guest_phone ?? '—' }}</span>
                                     </div>
+                                    @if($res->user)
+                                    <div class="col-12">
+                                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">Booking Source</label>
+                                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1" style="font-size:.72rem;">
+                                            <i class="bi bi-person-check-fill me-1"></i>Client Portal
+                                        </span>
+                                        <div class="text-muted small mt-1">{{ $res->user->email }}</div>
+                                    </div>
+                                    @endif
                                     @if($res->customer && $res->customer->email)
                                     <div class="col-6">
                                         <label class="text-muted small fw-bold text-uppercase d-block mb-1">Guest Email</label>
@@ -297,47 +306,79 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="modal-header border-0 bg-light p-4">
-                                    <h5 class="modal-title fw-bold text-dark">Edit Reservation</h5>
+                                    <h5 class="modal-title fw-bold text-dark">
+                                        Edit Reservation #MOR-RSV-{{ $res->id }}
+                                    </h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body p-4">
-                                    <div class="mb-3">
-                                        <label class="form-label text-dark fw-bold">Select Customer</label>
-                                        <select name="customer_id" class="form-select customer-select">
-                                            <option value="">-- New / Custom Guest Details --</option>
-                                            @foreach($customers as $customer)
-                                                <option value="{{ $customer->id }}" 
-                                                    {{ $res->customer_id == $customer->id ? 'selected' : '' }}
-                                                    data-name="{{ $customer->name }}" 
-                                                    data-phone="{{ $customer->phone }}" 
-                                                    data-email="{{ $customer->email ?? '—' }}">
-                                                    {{ $customer->name }} ({{ $customer->phone }})
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="customer-preview card bg-light border-0 mb-3 {{ $res->customer_id ? '' : 'd-none' }}">
-                                        <div class="card-body">
-                                            <h6 class="fw-bold mb-2">Customer Details</h6>
-                                            <p class="mb-1"><i class="bi bi-person text-primary me-2"></i><span class="preview-name">{{ $res->customer?->name }}</span></p>
-                                            <p class="mb-1"><i class="bi bi-telephone text-primary me-2"></i><span class="preview-phone">{{ $res->customer?->phone }}</span></p>
-                                            <p class="mb-0"><i class="bi bi-envelope text-primary me-2"></i><span class="preview-email">{{ $res->customer?->email ?? '—' }}</span></p>
+
+                                    @if($res->user)
+                                        {{-- ── CLIENT PORTAL RESERVATION ── --}}
+                                        <div class="alert alert-info border-0 rounded-3 mb-3 py-2 px-3" style="font-size:.82rem; background:#EFF6FF; color:#1E40AF;">
+                                            <i class="bi bi-person-check-fill me-1"></i>
+                                            <strong>Client Portal Booking</strong> — Guest info comes from the registered client account.
                                         </div>
-                                    </div>
-                                    <div class="new-customer-fields {{ $res->customer_id ? 'd-none' : '' }}">
+                                        {{-- Read-only client info --}}
+                                        <div class="card border-0 bg-light mb-3">
+                                            <div class="card-body py-3">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($res->user->name) }}&background=0F172A&color=fff&size=40"
+                                                         class="rounded-circle" width="40" height="40" alt="">
+                                                    <div>
+                                                        <div class="fw-bold text-dark">{{ $res->user->name }}</div>
+                                                        <div class="text-muted small">{{ $res->user->email }}</div>
+                                                        @if($res->guest_phone)
+                                                            <div class="text-muted small"><i class="bi bi-telephone me-1"></i>{{ $res->guest_phone }}</div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{-- Hidden fields to satisfy server validation for client reservations --}}
+                                        <input type="hidden" name="guest_name" value="{{ $res->guest_name }}">
+                                        <input type="hidden" name="guest_phone" value="{{ $res->guest_phone ?? '' }}">
+                                    @else
+                                        {{-- ── ADMIN-MANAGED RESERVATION ── --}}
                                         <div class="mb-3">
-                                            <label class="form-label text-dark fw-bold">Guest Name</label>
-                                            <input type="text" name="guest_name" class="form-control guest-name-input" value="{{ $res->guest_name }}">
+                                            <label class="form-label text-dark fw-bold">Select Customer</label>
+                                            <select name="customer_id" class="form-select customer-select">
+                                                <option value="">-- New / Custom Guest Details --</option>
+                                                @foreach($customers as $customer)
+                                                    <option value="{{ $customer->id }}"
+                                                        {{ $res->customer_id == $customer->id ? 'selected' : '' }}
+                                                        data-name="{{ $customer->name }}"
+                                                        data-phone="{{ $customer->phone }}"
+                                                        data-email="{{ $customer->email ?? '—' }}">
+                                                        {{ $customer->name }} ({{ $customer->phone }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
-                                        <div class="mb-3">
-                                            <label class="form-label text-dark fw-bold">Guest Phone</label>
-                                            <input type="text" name="guest_phone" class="form-control guest-phone-input" value="{{ $res->guest_phone }}">
+                                        <div class="customer-preview card bg-light border-0 mb-3 {{ $res->customer_id ? '' : 'd-none' }}">
+                                            <div class="card-body">
+                                                <h6 class="fw-bold mb-2">Customer Details</h6>
+                                                <p class="mb-1"><i class="bi bi-person text-primary me-2"></i><span class="preview-name">{{ $res->customer?->name }}</span></p>
+                                                <p class="mb-1"><i class="bi bi-telephone text-primary me-2"></i><span class="preview-phone">{{ $res->customer?->phone }}</span></p>
+                                                <p class="mb-0"><i class="bi bi-envelope text-primary me-2"></i><span class="preview-email">{{ $res->customer?->email ?? '—' }}</span></p>
+                                            </div>
                                         </div>
-                                        <div class="mb-3">
-                                            <label class="form-label text-dark fw-bold">Guest Email (Optional)</label>
-                                            <input type="email" name="guest_email" class="form-control guest-email-input" value="">
+                                        <div class="new-customer-fields {{ $res->customer_id ? 'd-none' : '' }}">
+                                            <div class="mb-3">
+                                                <label class="form-label text-dark fw-bold">Guest Name</label>
+                                                <input type="text" name="guest_name" class="form-control guest-name-input" value="{{ $res->guest_name }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label text-dark fw-bold">Guest Phone</label>
+                                                <input type="text" name="guest_phone" class="form-control guest-phone-input" value="{{ $res->guest_phone }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label text-dark fw-bold">Guest Email (Optional)</label>
+                                                <input type="email" name="guest_email" class="form-control guest-email-input" value="">
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
+
                                     <div class="row g-3 mb-3">
                                         <div class="col-6">
                                             <label class="form-label text-dark fw-bold">Room</label>

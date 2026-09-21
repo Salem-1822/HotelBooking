@@ -34,7 +34,7 @@ class ReservationController extends Controller
         $hotelId = Auth::guard('admin')->user()->hotel_id;
 
         // Base query for this admin's hotel
-        $query = Reservation::where('hotel_id', $hotelId)->with('room');
+        $query = Reservation::where('hotel_id', $hotelId)->with(['room', 'user']);
 
         // Stats calculation (before filters are applied)
         $statsQuery = Reservation::where('hotel_id', $hotelId);
@@ -154,57 +154,72 @@ class ReservationController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        // ── Detect whether this is a client-portal reservation ────────────────
+        // Client reservations have user_id set; guest phone may be null.
+        // For these we relax the phone requirement and skip customer resolution.
+        $isClientReservation = !is_null($reservation->user_id);
+
         if ($request->filled('guest_phone')) {
             $request->merge([
                 'guest_phone' => Customer::normalizePhone($request->guest_phone)
             ]);
         }
 
-        $rules = [
-            'room_id' => ['required', 'exists:rooms,id,hotel_id,' . $hotelId],
-            'customer_id'  => ['nullable', 'exists:customers,id,hotel_id,' . $hotelId],
-            'guest_name' => 'required_without:customer_id|nullable|string|max:255',
-            'guest_phone'  => [
+        // Build validation rules — phone is optional for client reservations
+        $phoneRules = $isClientReservation
+            ? ['nullable', 'string', 'max:50']
+            : [
                 'required_without:customer_id',
                 'nullable',
                 'string',
                 'max:50',
-                function ($attribute, $value, $fail) use ($hotelId, $request) {
+                function ($attribute, $value, $fail) use ($hotelId, $request, $reservation) {
                     if (empty($request->customer_id)) {
                         $exists = Customer::where('hotel_id', $hotelId)
                                           ->where('phone', $value)
+                                          ->where('id', '!=', $reservation->customer_id ?? 0)
                                           ->exists();
                         if ($exists) {
                             $fail('A customer with this phone number already exists. Please select them from the dropdown.');
                         }
                     }
                 }
-            ],
+            ];
+
+        $rules = [
+            'room_id'      => ['required', 'exists:rooms,id,hotel_id,' . $hotelId],
+            'customer_id'  => ['nullable', 'exists:customers,id,hotel_id,' . $hotelId],
+            'guest_name'   => 'required_without:customer_id|nullable|string|max:255',
+            'guest_phone'  => $phoneRules,
             'guest_email'  => 'nullable|email|max:255',
             'guests_count' => 'required|integer|min:1',
-            'check_in' => 'required|date',
-            'check_out' => 'required|date|after:check_in',
-            'status' => ['required', Rule::in(array_keys($this->statusOptions))],
+            'check_in'     => 'required|date',
+            'check_out'    => 'required|date|after:check_in',
+            'status'       => ['required', Rule::in(array_keys($this->statusOptions))],
         ];
 
         $data = $request->validate($rules);
 
         // Calculate total price based on room price and number of nights
         $room = Room::findOrFail($data['room_id']);
-        $checkIn = Carbon::parse($data['check_in']);
+        $checkIn  = Carbon::parse($data['check_in']);
         $checkOut = Carbon::parse($data['check_out']);
-        $nights = $checkIn->diffInDays($checkOut);
-        $nights = $nights > 0 ? $nights : 1;
+        $nights   = $checkIn->diffInDays($checkOut);
+        $nights   = $nights > 0 ? $nights : 1;
         $data['total_price'] = $room->price_per_night * $nights;
         unset($data['guest_email']);
 
-        DB::transaction(function () use (&$data, $hotelId, $request, $reservation) {
-            if (empty($data['customer_id'])) {
-                // Re-resolve customer if the phone changed and no customer selected
+        DB::transaction(function () use (&$data, $hotelId, $request, $reservation, $isClientReservation) {
+            if (!$isClientReservation && empty($data['customer_id'])) {
+                // Only resolve/create Customer for admin-managed (non-client) reservations
                 $customer = $this->resolveCustomer($hotelId, $request->guest_phone, $request->guest_name, $request->guest_email);
                 if ($customer) {
                     $data['customer_id'] = $customer->id;
                 }
+            }
+            // Preserve user_id for client reservations — do not overwrite it
+            if ($isClientReservation) {
+                $data['user_id'] = $reservation->user_id;
             }
             $reservation->update($data);
         });

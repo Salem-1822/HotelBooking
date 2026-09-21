@@ -30,7 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->redirectTo(
             guests: '/login',
-            users: '/super-admin/dashboard'
+            users: '/client/dashboard'
         );
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
