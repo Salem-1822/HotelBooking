@@ -28,4 +28,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::patch('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
     
     Route::get('/reservations/{reservation}/confirmation', [ReservationController::class, 'confirmation'])->name('reservations.confirmation');
+    
+    // Reviews
+    Route::post('/reservations/{reservation}/reviews', [\App\Http\Controllers\Client\ReviewController::class, 'store'])->name('reservations.reviews.store');
 });

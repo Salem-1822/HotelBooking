@@ -1,193 +1,136 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | HotelBooking Admin</title>
-    <meta name="description" content="HotelBooking Admin Control Center — Secure Login">
+@extends('client.layouts.app')
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+@section('title', 'Login')
 
-    <!-- Bootstrap 5 & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
+@push('styles')
     <style>
-        :root {
-            --brand-primary:      #1E3A8A;
-            --brand-primary-dark: #1D4ED8;
-            --brand-accent:       #D4AF37;
-            --sidebar-bg:         #0F172A;
-            --bg-body:            #F0F5FF;
-            --border-color:       #E5E7EB;
-            --text-primary:       #1F2937;
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 40%, #1E293B 100%);
-            font-family: 'Poppins', 'Inter', sans-serif;
-            min-height: 100vh;
+        /* ✨ Auth Page Container ✨ */
+        .auth-section {
+            min-height: calc(100vh - 76px);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
-            position: relative;
+            padding: 3rem 1rem;
+            background: linear-gradient(160deg,
+                    var(--bg-body) 0%,
+                    #EEF2FF 100%);
+        }
+
+        /* ✨ Auth Card ✨ */
+        .auth-card {
+            background: #fff;
+            border-radius: 1.25rem;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08), 0 4px 16px rgba(15, 23, 42, 0.04);
             overflow: hidden;
-        }
-
-        /* Decorative background shapes */
-        body::before {
-            content: '';
-            position: absolute;
-            top: -30%;
-            right: -15%;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        body::after {
-            content: '';
-            position: absolute;
-            bottom: -20%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(30, 58, 138, 0.4) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        /* Login Card */
-        .login-wrapper {
             width: 100%;
-            max-width: 440px;
-            position: relative;
-            z-index: 1;
-            animation: cardEntry 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            max-width: 480px;
+            border: 1px solid var(--border-color);
         }
 
-        @keyframes cardEntry {
-            0%   { opacity: 0; transform: translateY(24px) scale(0.97); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 1.5rem;
-            overflow: hidden;
-            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Header */
-        .login-header {
-            padding: 2.5rem 2.5rem 2rem;
-            background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
+        /* ✨ Card Header ✨ */
+        .auth-card-header {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #1E3A8A 100%);
+            padding: 2.25rem 2.5rem 2rem;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .login-header::before {
+        .auth-card-header::before {
             content: '';
             position: absolute;
-            top: -40px;
-            right: -40px;
-            width: 150px;
-            height: 150px;
+            top: -50px;
+            right: -50px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
-            background: rgba(212, 175, 55, 0.08);
+            background: rgba(212, 175, 55, 0.07);
+            pointer-events: none;
         }
 
-        .login-brand {
-            font-size: 1.9rem;
+        .auth-brand {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.75rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #ffffff 0%, #D4AF37 100%);
+            background: linear-gradient(135deg, #fff 0%, var(--brand-accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.25rem;
             letter-spacing: -0.02em;
-            position: relative;
+            margin-bottom: 0.5rem;
         }
 
-        .login-brand-sub {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 600;
+        .auth-card-header h5 {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0;
         }
 
-        .login-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            background: rgba(212, 175, 55, 0.15);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            color: #D4AF37;
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 0.3rem 0.85rem;
-            border-radius: 50px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-top: 1rem;
+        .auth-card-header p {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.83rem;
+            margin: 0.35rem 0 0;
         }
 
-        /* Body */
-        .login-body {
-            padding: 2.25rem 2.5rem 2.5rem;
+        /* ✨ Card Body ✨ */
+        .auth-card-body {
+            padding: 2rem 2.5rem 2.5rem;
         }
 
-        .form-label {
+        /* ✨ Form Controls ✨ */
+        .auth-label {
             font-weight: 600;
             font-size: 0.8rem;
             color: #374151;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.35rem;
             letter-spacing: 0.01em;
         }
 
-        .input-group-premium {
+        .input-icon-wrap {
             position: relative;
         }
 
-        .input-group-premium .input-icon {
+        .input-icon-wrap .input-icon {
             position: absolute;
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
             color: #9CA3AF;
             font-size: 1rem;
-            z-index: 2;
             pointer-events: none;
+            z-index: 2;
         }
 
-        .form-control {
-            padding: 0.75rem 1rem 0.75rem 2.75rem;
+        .input-icon-wrap .form-control {
+            padding-left: 2.75rem;
             border-radius: 0.75rem;
             border: 1.5px solid var(--border-color);
-            background-color: #F9FAFB;
+            background: #F9FAFB;
             font-size: 0.875rem;
-            font-family: 'Poppins', sans-serif;
-            color: var(--text-primary);
             transition: all 0.2s ease;
         }
 
-        .form-control:focus {
+        .input-icon-wrap .form-control:focus {
             border-color: var(--brand-primary);
-            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
-            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.08);
+            background: #fff;
         }
 
-        .btn-login {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
+        .input-icon-wrap .form-control.is-invalid {
+            border-color: #EF4444;
+            background: #FFF5F5;
+        }
+
+        .invalid-feedback {
+            font-size: 0.78rem;
+            color: #DC2626;
+            margin-top: 0.3rem;
+        }
+
+        /* ✨ Submit Button ✨ */
+        .btn-auth {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #1E3A8A 100%);
             color: #fff;
             border: none;
             padding: 0.8rem;
@@ -196,40 +139,86 @@
             font-size: 0.95rem;
             width: 100%;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 16px rgba(30, 58, 138, 0.3);
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.2);
             letter-spacing: 0.01em;
             font-family: 'Poppins', sans-serif;
         }
 
-        .btn-login:hover {
+        .btn-auth:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(30, 58, 138, 0.4);
-            filter: brightness(1.05);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.28);
+            filter: brightness(1.07);
         }
 
-        .btn-login:active { transform: translateY(0); }
+        .btn-auth:active {
+            transform: translateY(0);
+        }
 
-        .alert {
+        /* ✨ Footer Link ✨ */
+        .auth-footer-text {
+            text-align: center;
+            font-size: 0.855rem;
+            color: var(--text-muted);
+            margin-top: 1.5rem;
+        }
+
+        .auth-footer-text a {
+            color: var(--brand-primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .auth-footer-text a:hover {
+            color: #1E3A8A;
+            text-decoration: underline;
+        }
+
+        /* ✨ Success Alert ✨ */
+        .alert-success-custom {
+            border-radius: 0.75rem;
+            font-size: 0.85rem;
+            border: none;
+            background: #F0FDF4;
+            color: #166534;
+            border-left: 4px solid #22C55E;
+            padding: 0.9rem 1rem;
+        }
+
+        /* ✨ Error Alert ✨ */
+        .alert-error-custom {
             border-radius: 0.75rem;
             font-size: 0.85rem;
             border: none;
             background: #FEF2F2;
             color: #991B1B;
             border-left: 4px solid #EF4444;
+            padding: 0.9rem 1rem;
         }
 
-        .form-check-input:checked {
-            background-color: var(--brand-primary);
-            border-color: var(--brand-primary);
+        /* ✨ Divider ✨ */
+        .auth-divider {
+            border-color: var(--border-color);
+            margin: 1.5rem 0;
         }
 
+        /* ✨ Links ✨ */
         .forgot-link {
             color: var(--brand-primary);
             font-weight: 600;
             text-decoration: none;
             font-size: 0.8rem;
         }
-        .forgot-link:hover { color: var(--brand-primary-dark); }
+
+        .forgot-link:hover {
+            color: #1E3A8A;
+            text-decoration: underline;
+        }
+
+        /* Checkbox */
+        .form-check-input:checked {
+            background-color: var(--brand-primary);
+            border-color: var(--brand-primary);
+        }
 
         .security-note {
             text-align: center;
@@ -242,29 +231,30 @@
             gap: 0.35rem;
         }
     </style>
-</head>
-<body>
+@endpush
 
-    <div class="login-wrapper">
-        <div class="login-card">
-            <div class="login-header">
-                <div class="login-brand">HotelBooking</div>
-                <div class="login-brand-sub">Management Platform</div>
-                <div class="login-badge">
-                    <i class="bi bi-shield-lock-fill"></i>
-                    Admin Control Center
-                </div>
+@section('content')
+    <section class="auth-section">
+        <div class="auth-card">
+
+            {{-- Card Header --}}
+            <div class="auth-card-header">
+                <div class="auth-brand">HotelBooking</div>
+                <h5>Welcome back</h5>
+                <p>Sign in to your account to continue.</p>
             </div>
 
-            <div class="login-body">
+            {{-- Card Body --}}
+            <div class="auth-card-body">
+
                 @if(session('success'))
-                    <div class="mb-4" style="border-radius: 0.75rem; font-size: 0.85rem; background: #F0FDF4; color: #166534; border-left: 4px solid #22C55E; padding: 0.9rem 1rem;">
+                    <div class="alert-success-custom mb-4">
                         <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
                     </div>
                 @endif
 
                 @if($errors->any())
-                    <div class="alert mb-4">
+                    <div class="alert-error-custom mb-4">
                         <ul class="mb-0 list-unstyled">
                             @foreach($errors->all() as $error)
                                 <li><i class="bi bi-exclamation-circle-fill me-2"></i>{{ $error }}</li>
@@ -273,27 +263,31 @@
                     </div>
                 @endif
 
-                <form action="{{ route('super_admin.login') }}" method="POST">
+                <form method="POST" action="{{ route('super_admin.login') }}" novalidate>
                     @csrf
+
+                    {{-- Email Address --}}
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email Address</label>
-                        <div class="input-group-premium">
+                        <label for="email" class="auth-label">Email Address</label>
+                        <div class="input-icon-wrap">
                             <i class="bi bi-envelope input-icon"></i>
-                            <input type="email" name="email" id="email" class="form-control"
-                                placeholder="admin@hotelbooking.com"
-                                value="{{ old('email') }}" required autofocus>
+                            <input type="email" name="email" id="email"
+                                class="form-control @error('email') is-invalid @enderror" placeholder="you@example.com"
+                                value="{{ old('email') }}" autocomplete="email" required autofocus>
                         </div>
                     </div>
 
+                    {{-- Password --}}
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <label for="password" class="form-label mb-0">Password</label>
+                            <label for="password" class="auth-label mb-0">Password</label>
                             <a href="#" class="forgot-link">Forgot password?</a>
                         </div>
-                        <div class="input-group-premium">
+                        <div class="input-icon-wrap">
                             <i class="bi bi-lock input-icon"></i>
-                            <input type="password" name="password" id="password" class="form-control"
-                                placeholder="••••••••" required>
+                            <input type="password" name="password" id="password"
+                                class="form-control @error('password') is-invalid @enderror" placeholder="••••••••"
+                                autocomplete="current-password" required>
                         </div>
                     </div>
 
@@ -306,8 +300,9 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-login">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In to Portal
+                    {{-- Submit --}}
+                    <button type="submit" class="btn-auth">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
                     </button>
 
                     <div class="security-note">
@@ -316,13 +311,14 @@
                     </div>
                 </form>
 
-                <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #E5E7EB;">
-                    <span style="font-size: 0.83rem; color: #6B7280;">Don't have an account?</span>
-                    <a href="{{ route('client.register') }}" style="font-size: 0.83rem; font-weight: 600; color: var(--brand-primary); text-decoration: none; margin-left: 0.3rem;">Create Account</a>
-                </div>
-            </div>
-        </div>
-    </div>
+                <hr class="auth-divider">
 
-</body>
-</html>
+                <p class="auth-footer-text">
+                    Don't have an account?
+                    <a href="{{ route('client.register') }}">Create Account</a>
+                </p>
+
+            </div>{{-- /.auth-card-body --}}
+        </div>{{-- /.auth-card --}}
+    </section>
+@endsection

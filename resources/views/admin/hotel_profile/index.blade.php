@@ -416,53 +416,6 @@
     margin-top: 0.5rem;
 }
 
-/* ── Gallery ──────────────────────────────────────────────── */
-.hp-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 0.625rem;
-    margin-bottom: 0.875rem;
-}
-.hp-gallery-item {
-    position: relative;
-    aspect-ratio: 1;
-    border-radius: 0.625rem;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    background: #F8FAFC;
-}
-.hp-gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.2s ease;
-}
-.hp-gallery-item:hover img { transform: scale(1.05); }
-.hp-gallery-remove {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: rgba(239,68,68,0.9);
-    color: #fff;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.6rem;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-    padding: 0;
-}
-.hp-gallery-item:hover .hp-gallery-remove { opacity: 1; }
-.hp-gallery-item.removing {
-    opacity: 0.35;
-    pointer-events: none;
-}
 
 /* ── Amenity chips ────────────────────────────────────────── */
 .hp-amenity-grid {
@@ -852,7 +805,6 @@
     $admin          = Auth::guard('admin')->user();
     $cityName       = $hotel->city?->name ?? '—';
     $selectedAmens  = $hotel->amenities ?? [];
-    $gallery        = $hotel->gallery_images ?? [];
     $currentStars   = (int) ($hotel->stars ?? 0);
 @endphp
 
@@ -1201,24 +1153,24 @@
                 </div>
             </div>
 
-            {{-- ══ CARD 3: Cover Image & Gallery ════════════════ --}}
+            {{-- ══ CARD 3: Hotel Photo ═════════════════════════ --}}
             <div class="hp-card">
                 <div class="hp-card-head">
                     <div class="hp-card-icon hp-card-icon-purple">
-                        <i class="bi bi-images"></i>
+                        <i class="bi bi-image-fill"></i>
                     </div>
                     <div>
-                        <div class="hp-card-title">Photos & Media</div>
-                        <div class="hp-card-subtitle">JPG, PNG or WebP — max 5 MB each</div>
+                        <div class="hp-card-title">Hotel Photo</div>
+                        <div class="hp-card-subtitle">JPG, PNG or WebP — max 5 MB</div>
                     </div>
                 </div>
                 <div class="hp-card-body">
 
-                    {{-- Cover Image --}}
-                    <div class="hp-field">
+                    {{-- Main Photo --}}
+                    <div class="hp-field mb-0">
                         <label class="hp-label">
                             <i class="bi bi-image-fill"></i>
-                            Cover Photo
+                            Main Hotel Photo
                         </label>
                         <div class="hp-upload-zone" id="coverDropZone"
                              onclick="document.getElementById('coverFileInput2').click()">
@@ -1228,75 +1180,20 @@
                                    onchange="hpPreviewCover(this)">
                             <i class="bi bi-cloud-arrow-up hp-upload-zone-icon"></i>
                             <div class="hp-upload-zone-text">
-                                <strong>Click to upload</strong> or drag & drop a cover image<br>
-                                <span style="font-size:0.75rem;">Recommended size: 1920 × 600 px</span>
+                                <strong>Click to upload</strong> or drag &amp; drop<br>
+                                <span style="font-size:0.75rem;">JPG, PNG or WebP &mdash; max 5 MB</span>
                             </div>
                         </div>
                         @if($hotel->image)
                             <div class="hp-img-current">
-                                <i class="bi bi-check-circle-fill"></i> Current cover saved
+                                <i class="bi bi-check-circle-fill"></i> Current photo saved
                             </div>
                         @endif
                         <img id="hpCoverPreview" class="hp-cover-preview
                             @if($hotel->image) show @endif"
                             @if($hotel->image) src="{{ asset('storage/' . $hotel->image) }}" @endif
-                            alt="Cover preview">
+                            alt="Hotel photo preview">
                         @error('image')
-                            <div class="hp-field-error mt-1"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    {{-- Gallery Images --}}
-                    <div class="hp-field mb-0">
-                        <label class="hp-label">
-                            <i class="bi bi-grid-3x3-gap-fill"></i>
-                            Gallery Images
-                            @if(!empty($gallery))
-                                <span style="color:var(--text-muted);font-weight:400;">
-                                    ({{ count($gallery) }} saved)
-                                </span>
-                            @endif
-                        </label>
-
-                        {{-- Existing gallery --}}
-                        @if(!empty($gallery))
-                            <div class="hp-gallery" id="hpExistingGallery">
-                                @foreach($gallery as $idx => $img)
-                                    <div class="hp-gallery-item" id="hpGallItem{{ $idx }}">
-                                        <img src="{{ asset('storage/' . $img) }}"
-                                             alt="Gallery {{ $idx + 1 }}">
-                                        <button type="button"
-                                                class="hp-gallery-remove"
-                                                onclick="hpRemoveGallery({{ $idx }})"
-                                                title="Remove image">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                        <input type="hidden"
-                                               name="remove_gallery[]"
-                                               id="hpRemFlag{{ $idx }}"
-                                               value="{{ $idx }}"
-                                               disabled>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
-
-                        {{-- Upload new --}}
-                        <div class="hp-upload-zone mt-2">
-                            <input type="file" name="gallery_images[]"
-                                   id="hpGalleryInput"
-                                   accept="image/jpeg,image/png,image/webp"
-                                   multiple
-                                   onchange="hpPreviewGallery(this)">
-                            <i class="bi bi-plus-circle hp-upload-zone-icon"></i>
-                            <div class="hp-upload-zone-text">
-                                <strong>Add gallery photos</strong><br>
-                                <span style="font-size:0.75rem;">Select multiple images at once</span>
-                            </div>
-                        </div>
-                        <div class="hp-gallery mt-2" id="hpNewGallery"></div>
-
-                        @error('gallery_images.*')
                             <div class="hp-field-error mt-1"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
                         @enderror
                     </div>
@@ -1351,54 +1248,6 @@
                     </div>
                 </div>
                 <div class="hp-card-body">
-
-                    {{-- Check-in / Check-out --}}
-                    <div class="hp-field">
-                        <label class="hp-label">
-                            <i class="bi bi-clock-history"></i>
-                            Check-in & Check-out Times
-                        </label>
-                        <div class="hp-time-row">
-                            <div class="hp-time-card">
-                                <div class="hp-time-icon"
-                                     style="background:linear-gradient(135deg,#22C55E,#15803D);">
-                                    <i class="bi bi-box-arrow-in-right"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:2px;">
-                                        Check-in
-                                    </div>
-                                    <input type="time"
-                                           id="hp_check_in"
-                                           name="check_in_time"
-                                           class="hp-time-input @error('check_in_time') is-invalid @enderror"
-                                           value="{{ old('check_in_time', $hotel->check_in_time) }}">
-                                </div>
-                            </div>
-                            <div class="hp-time-card">
-                                <div class="hp-time-icon"
-                                     style="background:linear-gradient(135deg,#F59E0B,#D97706);">
-                                    <i class="bi bi-box-arrow-right"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:2px;">
-                                        Check-out
-                                    </div>
-                                    <input type="time"
-                                           id="hp_check_out"
-                                           name="check_out_time"
-                                           class="hp-time-input @error('check_out_time') is-invalid @enderror"
-                                           value="{{ old('check_out_time', $hotel->check_out_time) }}">
-                                </div>
-                            </div>
-                        </div>
-                        @error('check_in_time')
-                            <div class="hp-field-error mt-1"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
-                        @enderror
-                        @error('check_out_time')
-                            <div class="hp-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
-                        @enderror
-                    </div>
 
                     {{-- Children / Pets / Smoking --}}
                     <div class="hp-field">
@@ -1693,12 +1542,7 @@
                         <span class="dd">{{ count($selectedAmens) }} selected</span>
                     </li>
                     @endif
-                    @if(!empty($gallery))
-                    <li>
-                        <span class="dt">Gallery</span>
-                        <span class="dd">{{ count($gallery) }} photo{{ count($gallery) !== 1 ? 's' : '' }}</span>
-                    </li>
-                    @endif
+
                     <li>
                         <span class="dt">Created</span>
                         <span class="dd">{{ $hotel->created_at->format('M d, Y') }}</span>

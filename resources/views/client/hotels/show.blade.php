@@ -3,6 +3,7 @@
 @section('title', $hotel->name)
 
 @push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <style>
 /* ══════════════════════════════════════════
    Hero / Gallery
@@ -39,38 +40,6 @@
     color: #fff;
     z-index: 2;
 }
-/* Gallery strip */
-.gallery-strip {
-    display: flex;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    background: var(--brand-primary);
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-.gallery-strip::-webkit-scrollbar { display: none; }
-.gallery-thumb {
-    flex-shrink: 0;
-    width: 100px; height: 70px;
-    border-radius: 0.375rem;
-    overflow: hidden;
-    cursor: pointer;
-    opacity: 0.65;
-    transition: opacity 0.2s, transform 0.2s;
-    border: 2px solid transparent;
-}
-.gallery-thumb.active, .gallery-thumb:hover {
-    opacity: 1;
-    border-color: var(--brand-accent);
-    transform: scale(1.04);
-}
-.gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.gallery-thumb-placeholder {
-    width: 100%; height: 100%;
-    background: rgba(255,255,255,0.07);
-    display: flex; align-items: center; justify-content: center;
-}
-.gallery-thumb-placeholder i { color: rgba(255,255,255,0.25); }
 
 /* ══════════════════════════════════════════
    Breadcrumb + stars badge
@@ -349,18 +318,11 @@
 ════════════════════════════════════════════ -->
 <div class="hotel-hero">
     <div class="hero-gallery-wrap" id="heroGallery">
-        @php
-            $allImages = [];
-            if ($hotel->image) $allImages[] = $hotel->image;
-            if (!empty($hotel->gallery_images)) {
-                foreach ($hotel->gallery_images as $gi) { if ($gi && $gi !== $hotel->image) $allImages[] = $gi; }
-            }
-        @endphp
 
-        {{-- Main image --}}
-        @if(count($allImages) > 0)
+        {{-- Main hotel photo --}}
+        @if($hotel->image)
             <img id="heroMainImg"
-                 src="{{ asset('storage/' . $allImages[0]) }}"
+                 src="{{ asset('storage/' . $hotel->image) }}"
                  class="hero-main-img"
                  alt="{{ $hotel->name }}"
                  onerror="this.parentElement.innerHTML='<div class=\'hero-placeholder\'><i class=\'bi bi-building\'></i></div>'">
@@ -400,22 +362,6 @@
             @endif
         </div>
     </div>
-
-    {{-- Thumbnail strip for multiple images --}}
-    @if(count($allImages) > 1)
-    <div class="gallery-strip" id="galleryStrip">
-        @foreach($allImages as $idx => $img)
-            <div class="gallery-thumb {{ $idx === 0 ? 'active' : '' }}"
-                 data-img="{{ asset('storage/' . $img) }}"
-                 data-idx="{{ $idx }}"
-                 onclick="switchHeroImage(this)"
-                 role="button" aria-label="Image {{ $idx + 1 }}">
-                <img src="{{ asset('storage/' . $img) }}" alt="Gallery image {{ $idx + 1 }}"
-                     onerror="this.parentElement.classList.add('d-none')">
-            </div>
-        @endforeach
-    </div>
-    @endif
 </div>
 
 <!-- ══════════════════════════════════════════
@@ -538,6 +484,38 @@
                 @endif
             </section>
             @endif
+
+            <!-- Location Section -->
+            <section class="mb-5" aria-label="Location" id="location">
+                <h2 class="section-heading">Localisation</h2>
+                @if($hotel->latitude && $hotel->longitude)
+                    <div class="mb-3" style="font-size: 0.95rem; color: #475569;">
+                        <i class="bi bi-geo-alt-fill text-accent me-1"></i>
+                        {{ $hotel->address ?? 'Location coordinates provided' }}
+                    </div>
+                    <div id="hotelMap" style="height: 350px; border-radius: 1rem; border: 1px solid var(--border-color); z-index: 1;"></div>
+                    <div class="mt-3 text-end">
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ $hotel->latitude }},{{ $hotel->longitude }}" 
+                           target="_blank" rel="noopener noreferrer" 
+                           class="btn btn-outline-secondary btn-sm" 
+                           style="border-radius:0.5rem; font-weight: 500;">
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i> Voir sur Google Maps
+                        </a>
+                    </div>
+                @elseif($hotel->address)
+                    <div class="mb-3" style="font-size: 0.95rem; color: #475569;">
+                        <i class="bi bi-geo-alt-fill text-accent me-1"></i>
+                        {{ $hotel->address }}
+                    </div>
+                    <div class="alert" style="background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.25); border-radius:0.75rem; font-size:0.875rem;">
+                        <i class="bi bi-info-circle-fill me-2 text-secondary"></i> Location map is not available.
+                    </div>
+                @else
+                    <div class="alert" style="background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.25); border-radius:0.75rem; font-size:0.875rem;">
+                        <i class="bi bi-info-circle-fill me-2 text-secondary"></i> Location information is not available.
+                    </div>
+                @endif
+            </section>
 
             <section class="mb-5" aria-label="Available rooms" id="rooms">
                 <h2 class="section-heading">Available Rooms</h2>
@@ -931,16 +909,8 @@
 @endsection
 
 @push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
-/* ── Gallery switcher ──────────────────────────────────────── */
-function switchHeroImage(thumbEl) {
-    const mainImg = document.getElementById('heroMainImg');
-    if (!mainImg) return;
-    mainImg.src = thumbEl.dataset.img;
-    document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
-    thumbEl.classList.add('active');
-}
-
 /* ── Room selection feedback ───────────────────────────────── */
 function selectRoom(btn) {
     const name  = btn.dataset.roomName;
@@ -955,5 +925,25 @@ function selectRoom(btn) {
         b.style.opacity = b === btn ? '1' : '0.5';
     });
 }
+
+/* ── Location Map ─────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+    const mapEl = document.getElementById('hotelMap');
+    if (mapEl) {
+        const lat = {{ $hotel->latitude ?? 'null' }};
+        const lng = {{ $hotel->longitude ?? 'null' }};
+        
+        if (lat !== null && lng !== null) {
+            const map = L.map('hotelMap').setView([lat, lng], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+            
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup("<b>{{ addslashes($hotel->name) }}</b>")
+                .openPopup();
+        }
+    }
+});
 </script>
 @endpush

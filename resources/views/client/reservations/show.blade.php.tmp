@@ -1,0 +1,197 @@
+@extends('client.layouts.app')
+
+@section('title', 'Reservation Details')
+
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+@endpush
+
+@section('content')
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 style="font-family: 'Poppins', sans-serif; font-weight: 700;">Reservation Details</h2>
+        <a href="{{ route('client.reservations.index') }}" class="btn btn-outline-secondary" style="border-radius: 0.625rem;">Back to Reservations</a>
+    </div><!--REPLACEME-->
+
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div><!--REPLACEME-->
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div><!--REPLACEME-->
+    @endif
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4" style="border-radius: 1rem; border: 1px solid var(--border-color);">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4" style="font-family: 'Poppins', sans-serif; font-weight: 600;">Booking Information</h5>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Reference</div><!--REPLACEME-->
+                        <div class="col-sm-8 font-weight-bold">#MOR-RSV-{{ $reservation->id }}</div><!--REPLACEME-->
+                    </div><!--REPLACEME-->
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Hotel</div><!--REPLACEME-->
+                        <div class="col-sm-8">{{ $reservation->hotel->name ?? '—' }}</div><!--REPLACEME-->
+                    </div><!--REPLACEME-->
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Room</div><!--REPLACEME-->
+                        <div class="col-sm-8">@if($reservation->room) Room {{ $reservation->room->room_number }} @else — @endif</div><!--REPLACEME-->
+                    </div><!--REPLACEME-->
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Check-in</div><!--REPLACEME-->
+                        <div class="col-sm-8">{{ \Carbon\Carbon::parse($reservation->check_in)->format('l, d M Y') }}</div><!--REPLACEME-->
+                    </div><!--REPLACEME-->
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Check-out</div><!--REPLACEME-->
+                        <div class="col-sm-8">{{ \Carbon\Carbon::parse($reservation->check_out)->format('l, d M Y') }}</div><!--REPLACEME-->
+                    </div><!--REPLACEME-->
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Duration</div><!--REPLACEME-->
+                        <div class="col-sm-8">
+                            @php
+                                $nights = \Carbon\Carbon::parse($reservation->check_in)->diffInDays(\Carbon\Carbon::parse($reservation->check_out));
+                            @endphp
+                            {{ $nights }} night{{ $nights !== 1 ? 's' : '' }}
+                        </div><!--REPLACEME-->
+                    </div><!--REPLACEME-->
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Guests</div><!--REPLACEME-->
+                        <div class="col-sm-8">{{ $reservation->guests_count }} guest{{ $reservation->guests_count !== 1 ? 's' : '' }}</div><!--REPLACEME-->
+                    </div><!--REPLACEME-->
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Total Price</div><!--REPLACEME-->
+                        <div class="col-sm-8 font-weight-bold text-success">{{ number_format($reservation->total_price, 2) }} MAD</div><!--REPLACEME-->
+                    </div><!--REPLACEME-->
+                </div><!--REPLACEME-->
+            </div><!--REPLACEME-->
+            
+            <div class="card shadow-sm mb-4" style="border-radius: 1rem; border: 1px solid var(--border-color);">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4" style="font-family: 'Poppins', sans-serif; font-weight: 600;">Hotel Information</h5>
+                    
+                    @if($reservation->hotel)
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Hotel Name</div><!--REPLACEME-->
+                            <div class="col-sm-8 font-weight-bold">{{ $reservation->hotel->name }}</div><!--REPLACEME-->
+                        </div><!--REPLACEME-->
+                        <div class="row mb-4">
+                            <div class="col-sm-4 text-muted">Location</div><!--REPLACEME-->
+                            <div class="col-sm-8">
+                                @if($reservation->hotel->latitude && $reservation->hotel->longitude)
+                                    <div class="mb-2">
+                                        <i class="bi bi-geo-alt-fill text-accent me-1"></i>
+                                        {{ $reservation->hotel->address ?? 'Location coordinates provided' }}
+                                    </div><!--REPLACEME-->
+                                    <div id="hotelMap" style="height: 300px; border-radius: 0.75rem; border: 1px solid var(--border-color); z-index: 1;"></div><!--REPLACEME-->
+                                    <div class="mt-3 text-end">
+                                        <a href="https://www.google.com/maps/search/?api=1&query={{ $reservation->hotel->latitude }},{{ $reservation->hotel->longitude }}" 
+                                           target="_blank" rel="noopener noreferrer" 
+                                           class="btn btn-outline-secondary btn-sm" 
+                                           style="border-radius:0.5rem; font-weight: 500;">
+                                            <i class="bi bi-geo-alt-fill text-danger me-1"></i> Voir sur Google Maps
+                                        </a>
+                                    </div><!--REPLACEME-->
+                                @elseif($reservation->hotel->address)
+                                    <div class="mb-2">
+                                        <i class="bi bi-geo-alt-fill text-accent me-1"></i>
+                                        {{ $reservation->hotel->address }}
+                                    </div><!--REPLACEME-->
+                                    <div class="alert" style="background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.25); border-radius:0.75rem; font-size:0.875rem; margin-bottom:0;">
+                                        <i class="bi bi-info-circle-fill me-2 text-secondary"></i> Location map is not available.
+                                    </div><!--REPLACEME-->
+                                @else
+                                    <div class="alert" style="background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.25); border-radius:0.75rem; font-size:0.875rem; margin-bottom:0;">
+                                        <i class="bi bi-info-circle-fill me-2 text-secondary"></i> Location information is not available.
+                                    </div><!--REPLACEME-->
+                                @endif
+                            </div><!--REPLACEME-->
+                        </div><!--REPLACEME-->
+                    @else
+                        <div class="alert" style="background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.25); border-radius:0.75rem; font-size:0.875rem; margin-bottom:0;">
+                            <i class="bi bi-info-circle-fill me-2 text-secondary"></i> Hotel information is not available.
+                        </div><!--REPLACEME-->
+                    @endif
+                </div><!--REPLACEME-->
+            </div><!--REPLACEME-->
+        </div><!--REPLACEME-->
+
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4" style="border-radius: 1rem; border: 1px solid var(--border-color);">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4" style="font-family: 'Poppins', sans-serif; font-weight: 600;">Status</h5>
+                    
+                    @php
+                        [$statusBg, $statusColor, $statusBorder, $statusLabel] = match($reservation->status) {
+                            'pending'     => ['rgba(245,158,11,.1)',  '#92400E', 'rgba(245,158,11,.3)', 'Pending'],
+                            'confirmed'   => ['rgba(34,197,94,.1)',   '#166534', 'rgba(34,197,94,.3)',  'Confirmed'],
+                            'cancelled'   => ['rgba(239,68,68,.1)',   '#991B1B', 'rgba(239,68,68,.3)',  'Cancelled'],
+                            'checked_in'  => ['rgba(59,130,246,.1)', '#1E3A8A', 'rgba(59,130,246,.3)', 'Checked In'],
+                            'checked_out' => ['rgba(100,116,139,.1)','#374151', 'rgba(100,116,139,.3)','Checked Out'],
+                            default       => ['rgba(156,163,175,.1)', '#6B7280', 'rgba(156,163,175,.3)', ucfirst($reservation->status)],
+                        };
+                    @endphp
+                    
+                    <div class="mb-4">
+                        <span style="display:inline-flex; align-items:center; background:{{ $statusBg }}; color:{{ $statusColor }}; border:1px solid {{ $statusBorder }}; padding:.5rem 1rem; border-radius:50px; font-size:.85rem; font-weight:700; letter-spacing:.04em;">
+                            {{ $statusLabel }}
+                        </span>
+                    </div><!--REPLACEME-->
+
+                    @if(in_array($reservation->status, ['pending', 'confirmed']))
+                        <hr>
+                        <h6 class="text-danger mt-3">Cancel Reservation</h6>
+                        <p class="text-muted small">You can cancel your reservation before check-in. This action cannot be undone.</p>
+                        
+                        <form action="{{ route('client.reservations.cancel', $reservation) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-outline-danger w-100" style="border-radius: 0.625rem;">Cancel Booking</button>
+                        </form>
+                    @endif
+
+                    @if($reservation->status === 'checked_out')
+                        <hr>
+                        @if(!$reservation->review)
+                            <h6 class="mt-3" style="color: var(--brand-primary);"><i class="bi bi-star-fill text-warning me-1"></i> Rate Your Stay</h6>
+                            <p class="text-muted small">Share your experience with others by leaving a review.</p>
+                            <button type="button" class="btn btn-accent w-100" data-bs-toggle="modal" data-bs-target="#reviewModal" style="border-radius: 0.625rem; font-weight: 600;">
+                                Leave a Review
+                            </button>
+                        @else
+                            <div class="mt-3 p-3 text-center" style="background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 0.625rem; color: #166534;">
+                                <i class="bi bi-check-circle-fill me-2"></i><strong>Reviewed</strong>
+                                <div class="small mt-1 text-muted">Thank you for your feedback!</div><!--REPLACEME-->
+                            </div><!--REPLACEME-->
+                        @endif
+                    @endif
+                </div><!--REPLACEME-->
+            </div><!--REPLACEME-->
+        </div><!--REPLACEME-->
+    </div><!--REPLACEME-->
+</div><!--REPLACEME-->
+@endsection
+
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mapEl = document.getElementById('hotelMap');
+    if (mapEl) {
+        const lat = {{ $reservation->hotel->latitude ?? 'null' }};
+        const lng = {{ $reservation->hotel->longitude ?? 'null' }};
+        
+        if (lat !== null && lng !== null) {
+            const map = L.map('hotelMap').setView([lat, lng], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+            
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup("<b>{{ addslashes($reservation->hotel->name ?? '') }}</b>")
+                .openPopup();
+        }
+    }
+});
+</script>
+@endpush

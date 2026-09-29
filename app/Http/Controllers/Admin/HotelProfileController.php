@@ -146,8 +146,6 @@ class HotelProfileController extends Controller
             'address'             => 'required|string|max:500',
             'phone'               => 'nullable|string|max:50',
             'email'               => 'nullable|email|max:255',
-            'check_in_time'       => 'nullable|date_format:H:i',
-            'check_out_time'      => 'nullable|date_format:H:i',
             'cancellation_policy' => 'nullable|string|max:1000',
             'children_policy'     => 'nullable|string|max:100',
             'pets_policy'         => 'nullable|string|max:100',
@@ -156,9 +154,6 @@ class HotelProfileController extends Controller
             'amenities.*'         => 'string|max:50',
             // Images
             'image'               => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
-            'gallery_images.*'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
-            'remove_gallery'      => 'nullable|array',
-            'remove_gallery.*'    => 'integer',
             'latitude'            => 'nullable|numeric|between:-90,90',
             'longitude'           => 'nullable|numeric|between:-180,180',
         ], [
@@ -170,8 +165,6 @@ class HotelProfileController extends Controller
             'image.image'            => 'Cover image must be a valid image file.',
             'image.max'              => 'Cover image must not exceed 5 MB.',
             'image.mimes'            => 'Cover image must be JPG, PNG or WebP.',
-            'check_in_time.date_format'  => 'Check-in time must be a valid time (e.g. 14:00).',
-            'check_out_time.date_format' => 'Check-out time must be a valid time (e.g. 11:00).',
         ]);
 
         // ── Cover Image (existing 'image' column) ─────────────────────────
@@ -184,28 +177,6 @@ class HotelProfileController extends Controller
             // Do not overwrite image with null if no new file was uploaded
             unset($validated['image']);
         }
-
-        // ── Gallery: remove marked images first ───────────────────────────
-        $gallery = $hotel->gallery_images ?? [];
-
-        if ($request->filled('remove_gallery')) {
-            foreach ($request->input('remove_gallery') as $idx) {
-                if (isset($gallery[$idx])) {
-                    Storage::disk('public')->delete($gallery[$idx]);
-                    unset($gallery[$idx]);
-                }
-            }
-            $gallery = array_values($gallery);
-        }
-
-        // ── Gallery: add new uploads ──────────────────────────────────────
-        if ($request->hasFile('gallery_images')) {
-            foreach ($request->file('gallery_images') as $file) {
-                $gallery[] = $file->store('hotels/gallery', 'public');
-            }
-        }
-
-        $validated['gallery_images'] = !empty($gallery) ? $gallery : null;
 
         // ── Amenities ─────────────────────────────────────────────────────
         $validated['amenities'] = $request->input('amenities') ?: null;
