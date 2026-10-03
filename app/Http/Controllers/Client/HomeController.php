@@ -21,27 +21,33 @@ class HomeController extends Controller
             ->get();
 
         // 2. Fetch Featured Hotels
-        $featuredHotels = Hotel::with(['city', 'reviews'])
+        $featuredHotels = Hotel::with(['city'])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->withMin(['rooms' => function ($query) {
+                $query->where('status', 'available');
+            }], 'price_per_night')
             ->where('status', 'active')
             ->inRandomOrder()
             ->take(6)
             ->get();
             
-        // Calculate average rating for hotels manually
+        // Assign expected properties for the view
         foreach ($featuredHotels as $hotel) {
-            $hotel->avg_rating = $hotel->reviews->count() > 0 ? $hotel->reviews->avg('rating') : null;
-            $hotel->reviews_count = $hotel->reviews->count();
-            // Get a starting price (min price of its rooms)
-            $minPriceRoom = $hotel->rooms()->where('status', 'available')->orderBy('price_per_night', 'asc')->first();
-            $hotel->starting_price = $minPriceRoom ? $minPriceRoom->price_per_night : $hotel->price_per_night;
+            $hotel->avg_rating = $hotel->reviews_avg_rating ? (float)$hotel->reviews_avg_rating : null;
+            $hotel->starting_price = $hotel->rooms_min_price_per_night ?? $hotel->price_per_night;
         }
 
         // 3. Platform Statistics
         $stats = [
             'total_hotels' => Hotel::where('status', 'active')->count(),
-            'total_cities' => City::has('hotels')->count(),
-            'total_rooms'  => Room::count(),
-            'total_reviews' => Review::count(),
+            'total_cities' => City::whereHas('hotels', function($q) {
+                $q->where('status', 'active');
+            })->count(),
+            'total_rooms'  => Room::whereHas('hotel', function($q) {
+                $q->where('status', 'active');
+            })->where('status', '!=', 'inactive')->count(),
+            'total_guests' => (int) \App\Models\Reservation::where('status', 'checked_out')->sum('guests_count'),
         ];
 
         // 4. Guest Reviews

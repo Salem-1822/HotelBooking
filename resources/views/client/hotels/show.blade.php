@@ -648,15 +648,16 @@
                                     </div>
                                 </div>
                                 @if($room->is_bookable)
+                                    @php
+                                        $bookParams = array_filter([
+                                            'check_in'  => $validated['check_in'] ?? null,
+                                            'check_out' => $validated['check_out'] ?? null,
+                                            'guests'    => $validated['guests'] ?? null,
+                                        ]);
+                                        $queryStr = count($bookParams) > 0 ? '?' . http_build_query($bookParams) : '';
+                                    @endphp
                                     @auth('web')
-                                        @php
-                                            $bookParams = array_filter([
-                                                'check_in'  => $validated['check_in'] ?? null,
-                                                'check_out' => $validated['check_out'] ?? null,
-                                                'guests'    => $validated['guests'] ?? null,
-                                            ]);
-                                        @endphp
-                                        <a href="{{ route('client.reserve.create', [$hotel, $room]) }}{{ count($bookParams) ? '?' . http_build_query($bookParams) : '' }}"
+                                        <a href="{{ route('client.reserve.create', [$hotel, $room]) }}{{ $queryStr }}"
                                            class="btn-book-now"
                                            data-room-id="{{ $room->id }}"
                                            data-room-name="{{ $room->name ?? 'Room '.$room->room_number }}"
@@ -664,7 +665,7 @@
                                             <i class="bi bi-calendar-check me-1"></i> Book Now
                                         </a>
                                     @else
-                                        <a href="{{ route('login') }}"
+                                        <a href="{{ route('client.reserve.create', [$hotel, $room]) }}{{ $queryStr }}"
                                            class="btn-book-now"
                                            title="Please log in to reserve this room">
                                             <i class="bi bi-lock me-1"></i> Login to Book

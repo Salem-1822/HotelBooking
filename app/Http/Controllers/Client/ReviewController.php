@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ReviewController extends Controller
 {
@@ -21,9 +22,7 @@ class ReviewController extends Controller
         }
 
         // 2. Reservation ownership
-        if ($reservation->user_id !== $userId) {
-            abort(403, 'Unauthorized access to this reservation.');
-        }
+        Gate::authorize('view', $reservation);
 
         // 3. Completed stay check
         if ($reservation->status !== 'checked_out') {

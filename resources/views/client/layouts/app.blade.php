@@ -160,6 +160,33 @@
         .text-accent {
             color: var(--brand-accent);
         }
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: opacity, transform;
+        }
+
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+        .delay-5 { transition-delay: 0.5s; }
+        .delay-6 { transition-delay: 0.6s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal, .delay-1, .delay-2, .delay-3, .delay-4, .delay-5, .delay-6 {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
     </style>
     @stack('styles')
 </head>
@@ -186,10 +213,10 @@
                             href="{{ route('hotels.index') }}">Hotels</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                        <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}">Contact</a>
                     </li>
                 </ul>
                 <div class="d-flex gap-3 mt-3 mt-lg-0">
@@ -255,15 +282,16 @@
                 </div>
                 <div class="col-lg-2 col-md-6">
                     <h5 class="footer-heading">Quick Links</h5>
-                    <a href="#" class="footer-link">Home</a>
-                    <a href="#" class="footer-link">All Hotels</a>
+                    <a href="{{ route('home') }}" class="footer-link">Home</a>
+                    <a href="{{ route('about') }}" class="footer-link">About Us</a>
+                    <a href="{{ route('hotels.index') }}" class="footer-link">All Hotels</a>
                     <a href="#" class="footer-link">Destinations</a>
                     <a href="#" class="footer-link">Offers & Promos</a>
                 </div>
                 <div class="col-lg-2 col-md-6">
                     <h5 class="footer-heading">Support</h5>
                     <a href="#" class="footer-link">Help Center</a>
-                    <a href="#" class="footer-link">Contact Us</a>
+                    <a href="{{ route('contact') }}" class="footer-link">Contact Us</a>
                     <a href="#" class="footer-link">Privacy Policy</a>
                     <a href="#" class="footer-link">Terms of Service</a>
                 </div>
@@ -298,6 +326,42 @@
                 navbar.style.padding = '1rem 0';
                 navbar.style.backgroundColor = 'var(--brand-primary)';
                 navbar.style.backdropFilter = 'none';
+            }
+        });
+
+        // Shared scroll reveal observer
+        document.addEventListener('DOMContentLoaded', function() {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            
+            if (!prefersReducedMotion) {
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.15
+                };
+
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, observerOptions);
+
+                const revealElements = document.querySelectorAll('.reveal');
+                revealElements.forEach(el => observer.observe(el));
+                
+                // Immediately reveal items already in viewport
+                setTimeout(() => {
+                    revealElements.forEach(el => {
+                        const rect = el.getBoundingClientRect();
+                        if (rect.top < window.innerHeight && rect.bottom > 0) {
+                            el.classList.add('is-visible');
+                            observer.unobserve(el);
+                        }
+                    });
+                }, 50);
             }
         });
     </script>

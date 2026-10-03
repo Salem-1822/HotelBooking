@@ -684,6 +684,12 @@
                 <i class="bi bi-calendar-check-fill"></i>
                 <span>Reservations</span>
             </a>
+            
+            <a href="{{ route('super_admin.messages.index') }}"
+                class="sidebar-link {{ request()->routeIs('super_admin.messages.*') ? 'active' : '' }}">
+                <i class="bi bi-envelope-fill"></i>
+                <span>Messages</span>
+            </a>
 
             <div class="nav-section-label">Account</div>
 

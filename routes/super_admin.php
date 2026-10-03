@@ -39,6 +39,11 @@ Route::middleware(['auth:admin'])->group(function () {
         // Profile
         Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
         Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+        // Messages
+        Route::get('/messages', [\App\Http\Controllers\SuperAdmin\ContactMessageController::class, 'index'])->name('messages.index');
+        Route::post('/messages/{message}/mark-read', [\App\Http\Controllers\SuperAdmin\ContactMessageController::class, 'markAsRead'])->name('messages.mark_read');
+        Route::delete('/messages/{message}', [\App\Http\Controllers\SuperAdmin\ContactMessageController::class, 'destroy'])->name('messages.destroy');
     });
     
     // Reservations

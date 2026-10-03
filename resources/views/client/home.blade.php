@@ -325,14 +325,14 @@
     <!-- Hero Section -->
     <section class="hero-section text-center">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-3" style="font-family: 'Poppins', sans-serif;">Discover Your Perfect Stay</h1>
-            <p class="lead mb-5 mx-auto" style="max-width: 600px; color: rgba(255,255,255,0.8);">Experience world-class luxury and comfort at our carefully selected hotels across top destinations.</p>
+            <h1 class="display-4 fw-bold mb-3 reveal" style="font-family: 'Poppins', sans-serif;">Discover Your Perfect Stay</h1>
+            <p class="lead mb-5 mx-auto reveal delay-1" style="max-width: 600px; color: rgba(255,255,255,0.8);">Experience world-class luxury and comfort at our carefully selected hotels across top destinations.</p>
         </div>
     </section>
 
     <!-- Search Widget -->
     <div class="container">
-        <div class="search-widget">
+        <div class="search-widget reveal delay-2">
             <form action="{{ route('hotels.index') }}" method="GET">
                 <div class="row g-0 align-items-center">
                     <div class="col-lg-3 col-md-6 px-3 search-input-group">
@@ -374,7 +374,7 @@
     <!-- Destinations Section -->
     <section id="destinations" class="py-5 mt-5">
         <div class="container">
-            <div class="text-center mb-5">
+            <div class="text-center mb-5 reveal">
                 <h2 class="section-title">Popular Destinations</h2>
                 <p class="section-subtitle">Explore our top locations and find the perfect setting for your next unforgettable getaway.</p>
             </div>
@@ -382,7 +382,7 @@
             @if($cities->count() > 0)
                 <div class="row g-4">
                     @foreach($cities as $index => $city)
-                        <div class="{{ $index == 0 || $index == 3 ? 'col-lg-7' : 'col-lg-5' }} col-md-6">
+                        <div class="{{ $index == 0 || $index == 3 ? 'col-lg-7' : 'col-lg-5' }} col-md-6 reveal" style="transition-delay: {{ $index * 0.1 }}s;">
                             <a href="#" class="destination-card">
                                 @if($city->image)
                                     <!-- Fallback to a placeholder if image doesn't exist in storage or is just a name -->
@@ -412,7 +412,7 @@
     <!-- Featured Hotels -->
     <section id="hotels" class="py-5 bg-white">
         <div class="container">
-            <div class="d-flex align-items-end justify-content-between mb-5">
+            <div class="d-flex align-items-end justify-content-between mb-5 reveal">
                 <div>
                     <h2 class="section-title mb-2">Featured Hotels</h2>
                     <p class="text-muted mb-0">Hand-picked luxury accommodations for your perfect stay.</p>
@@ -422,8 +422,8 @@
 
             @if($featuredHotels->count() > 0)
                 <div class="row g-4">
-                    @foreach($featuredHotels as $hotel)
-                        <div class="col-lg-4 col-md-6">
+                    @foreach($featuredHotels as $index => $hotel)
+                        <div class="col-lg-4 col-md-6 reveal" style="transition-delay: {{ $index * 0.1 }}s;">
                             <div class="hotel-card">
                                 <div class="hotel-img-wrapper">
                                     @if($hotel->stars)
@@ -473,30 +473,30 @@
     </section>
 
     <!-- Statistics -->
-    <section class="stats-section">
+    <section class="stats-section" id="stats-section">
         <div class="container">
             <div class="row g-4 text-center">
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 reveal delay-1">
                     <div class="stat-item">
-                        <div class="stat-number">{{ $stats['total_hotels'] > 0 ? $stats['total_hotels'] : '50+' }}</div>
+                        <div class="stat-number animated-counter" data-target="{{ $stats['total_hotels'] ?? 0 }}">0</div>
                         <div class="stat-label">Luxury Hotels</div>
                     </div>
                 </div>
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 reveal delay-2">
                     <div class="stat-item">
-                        <div class="stat-number">{{ $stats['total_cities'] > 0 ? $stats['total_cities'] : '20+' }}</div>
+                        <div class="stat-number animated-counter" data-target="{{ $stats['total_cities'] ?? 0 }}">0</div>
                         <div class="stat-label">Destinations</div>
                     </div>
                 </div>
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 reveal delay-3">
                     <div class="stat-item">
-                        <div class="stat-number">{{ $stats['total_rooms'] > 0 ? $stats['total_rooms'] : '1000+' }}</div>
+                        <div class="stat-number animated-counter" data-target="{{ $stats['total_rooms'] ?? 0 }}">0</div>
                         <div class="stat-label">Premium Rooms</div>
                     </div>
                 </div>
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 reveal delay-4">
                     <div class="stat-item">
-                        <div class="stat-number">{{ $stats['total_reviews'] > 0 ? $stats['total_reviews'] : '10k+' }}</div>
+                        <div class="stat-number animated-counter" data-target="{{ $stats['total_guests'] ?? 0 }}">0</div>
                         <div class="stat-label">Happy Guests</div>
                     </div>
                 </div>
@@ -507,11 +507,11 @@
     <!-- Why Choose Us -->
     <section class="py-5 my-5">
         <div class="container text-center">
-            <h2 class="section-title">Why Choose HotelBooking</h2>
-            <p class="section-subtitle">We provide a premium experience from the moment you start searching until you check out.</p>
+            <h2 class="section-title reveal">Why Choose HotelBooking</h2>
+            <p class="section-subtitle reveal delay-1">We provide a premium experience from the moment you start searching until you check out.</p>
             
             <div class="row g-4 mt-2">
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-6 reveal delay-1">
                     <div class="feature-card px-3">
                         <div class="feature-icon">
                             <i class="bi bi-shield-check"></i>
@@ -520,7 +520,7 @@
                         <p class="text-muted">Your payment and personal information are protected by industry-leading security protocols.</p>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-6 reveal delay-2">
                     <div class="feature-card px-3">
                         <div class="feature-icon">
                             <i class="bi bi-tags"></i>
@@ -529,7 +529,7 @@
                         <p class="text-muted">Find a lower price on another website? We'll match it and give you an extra discount.</p>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 offset-md-3 offset-lg-0">
+                <div class="col-lg-4 col-md-6 offset-md-3 offset-lg-0 reveal delay-3">
                     <div class="feature-card px-3">
                         <div class="feature-icon">
                             <i class="bi bi-headset"></i>
@@ -545,12 +545,12 @@
     <!-- Reviews -->
     <section class="py-5 bg-white">
         <div class="container">
-            <h2 class="section-title text-center">What Our Guests Say</h2>
-            <p class="section-subtitle text-center">Real experiences from real travelers.</p>
+            <h2 class="section-title text-center reveal">What Our Guests Say</h2>
+            <p class="section-subtitle text-center reveal delay-1">Real experiences from real travelers.</p>
             
             <div class="row g-4 mt-2">
-                @forelse($guestReviews as $review)
-                    <div class="col-lg-4 col-md-6">
+                @forelse($guestReviews as $index => $review)
+                    <div class="col-lg-4 col-md-6 reveal" style="transition-delay: {{ $index * 0.1 }}s;">
                         <div class="review-card">
                             <i class="bi bi-quote review-quote"></i>
                             <div class="mb-3 text-warning">
@@ -574,7 +574,7 @@
                     </div>
                 @empty
                     <!-- Fallback reviews if DB is empty to maintain layout -->
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 reveal delay-1">
                         <div class="review-card">
                             <i class="bi bi-quote review-quote"></i>
                             <div class="mb-3 text-warning">
@@ -590,7 +590,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 reveal delay-2">
                         <div class="review-card">
                             <i class="bi bi-quote review-quote"></i>
                             <div class="mb-3 text-warning">
@@ -606,7 +606,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 offset-md-3 offset-lg-0">
+                    <div class="col-lg-4 col-md-6 offset-md-3 offset-lg-0 reveal delay-3">
                         <div class="review-card">
                             <i class="bi bi-quote review-quote"></i>
                             <div class="mb-3 text-warning">
@@ -629,7 +629,7 @@
 
     <!-- Final CTA -->
     <div class="container">
-        <section class="cta-section">
+        <section class="cta-section reveal">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <h2 class="fw-bold mb-4" style="font-family: 'Poppins', sans-serif;">Ready to book your next trip?</h2>
@@ -639,4 +639,87 @@
             </div>
         </section>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const statsSection = document.getElementById('stats-section');
+            if (!statsSection) return;
+
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            const counters = statsSection.querySelectorAll('.animated-counter');
+            let hasAnimated = false;
+
+            // Immediately show final values without animation
+            const showFinalValues = () => {
+                counters.forEach(counter => {
+                    const target = parseInt(counter.getAttribute('data-target'), 10) || 0;
+                    const suffix = counter.getAttribute('data-suffix') || '';
+                    counter.textContent = target + suffix;
+                });
+            };
+
+            // Smooth count-up using requestAnimationFrame + easeOutExpo
+            const animateCounters = () => {
+                if (hasAnimated) return;
+                hasAnimated = true;
+
+                const DURATION = 1500; // ms
+
+                const easeOutExpo = (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+
+                counters.forEach(counter => {
+                    const target = parseInt(counter.getAttribute('data-target'), 10) || 0;
+                    const suffix = counter.getAttribute('data-suffix') || '';
+
+                    if (target === 0) {
+                        counter.textContent = '0' + suffix;
+                        return;
+                    }
+
+                    const startTime = performance.now();
+
+                    const tick = (now) => {
+                        const elapsed = now - startTime;
+                        const progress = Math.min(elapsed / DURATION, 1);
+                        const easedProgress = easeOutExpo(progress);
+                        const current = Math.round(target * easedProgress);
+
+                        counter.textContent = current + suffix;
+
+                        if (progress < 1) {
+                            requestAnimationFrame(tick);
+                        } else {
+                            counter.textContent = target + suffix;
+                        }
+                    };
+
+                    requestAnimationFrame(tick);
+                });
+            };
+
+            if (prefersReducedMotion) {
+                // Skip animation — show final values immediately
+                showFinalValues();
+                return;
+            }
+
+            // Observe the stats section entering the viewport.
+            // Delay start by ~1.2s to let the reveal fade-in (delay-4 = 0.4s + 0.8s transition)
+            // finish before counting begins, so numbers appear after elements are visible.
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !hasAnimated) {
+                        // The last stat column has delay-4 (0.4s) + 0.8s transition = 1.2s
+                        setTimeout(animateCounters, 1200);
+                        sectionObserver.unobserve(statsSection);
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            sectionObserver.observe(statsSection);
+        });
+    </script>
+    @endpush
 @endsection

@@ -192,16 +192,16 @@ class HotelController extends Controller
             ->where('status', 'active')
             ->with('city')
             ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->withMin(['rooms' => function ($query) {
+                $query->where('status', 'available');
+            }], 'price_per_night')
             ->take(3)
             ->get();
 
         foreach ($relatedHotels as $h) {
-            $h->avg_rating = $h->reviews_count > 0
-                ? round($h->reviews()->avg('rating'), 1)
-                : null;
-            $h->starting_price = $h->rooms()
-                ->where('status', 'available')
-                ->min('price_per_night');
+            $h->avg_rating = $h->reviews_avg_rating ? round((float)$h->reviews_avg_rating, 1) : null;
+            $h->starting_price = $h->rooms_min_price_per_night ?? $h->price_per_night;
         }
 
         return view('client.hotels.show', compact(

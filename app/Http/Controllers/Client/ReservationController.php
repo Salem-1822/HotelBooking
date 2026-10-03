@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ReservationController extends Controller
 {
@@ -169,9 +170,7 @@ class ReservationController extends Controller
     public function confirmation(Reservation $reservation)
     {
         // Only the owner may view their confirmation
-        if ($reservation->user_id !== Auth::guard('web')->user()->id) {
-            abort(403);
-        }
+        Gate::authorize('view', $reservation);
 
         $reservation->load(['hotel.city', 'room']);
 
@@ -197,9 +196,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        if ($reservation->user_id !== Auth::guard('web')->user()->id) {
-            abort(403);
-        }
+        Gate::authorize('view', $reservation);
 
         $reservation->load(['hotel', 'room']);
 
@@ -211,9 +208,7 @@ class ReservationController extends Controller
      */
     public function cancel(Reservation $reservation)
     {
-        if ($reservation->user_id !== Auth::guard('web')->user()->id) {
-            abort(403);
-        }
+        Gate::authorize('cancel', $reservation);
 
         if (!in_array($reservation->status, ['pending', 'confirmed'])) {
             return back()->with('error', 'This reservation cannot be cancelled because it is already ' . str_replace('_', ' ', $reservation->status) . '.');
