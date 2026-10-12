@@ -17,7 +17,6 @@ class HomeController extends Controller
         $cities = City::withCount('hotels')
             ->having('hotels_count', '>', 0)
             ->orderBy('hotels_count', 'desc')
-            ->take(4)
             ->get();
 
         // 2. Fetch Featured Hotels

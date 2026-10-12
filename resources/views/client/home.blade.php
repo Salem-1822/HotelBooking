@@ -382,8 +382,8 @@
             @if($cities->count() > 0)
                 <div class="row g-4">
                     @foreach($cities as $index => $city)
-                        <div class="{{ $index == 0 || $index == 3 ? 'col-lg-7' : 'col-lg-5' }} col-md-6 reveal" style="transition-delay: {{ $index * 0.1 }}s;">
-                            <a href="#" class="destination-card">
+                        <div class="{{ $index % 4 == 0 || $index % 4 == 3 ? 'col-lg-7' : 'col-lg-5' }} col-md-6 reveal" style="transition-delay: {{ ($index % 4) * 0.1 }}s;">
+                            <a href="{{ route('hotels.index', ['city_id' => $city->id]) }}" class="destination-card">
                                 @if($city->image)
                                     <!-- Fallback to a placeholder if image doesn't exist in storage or is just a name -->
                                     <img src="{{ asset('storage/' . $city->image) }}" onerror="this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $city->name }}">
@@ -417,7 +417,7 @@
                     <h2 class="section-title mb-2">Featured Hotels</h2>
                     <p class="text-muted mb-0">Hand-picked luxury accommodations for your perfect stay.</p>
                 </div>
-                <a href="#" class="btn btn-outline-dark d-none d-md-inline-block" style="border-radius: 2rem; padding: 0.5rem 1.5rem; font-weight: 500;">View All <i class="bi bi-arrow-right ms-1"></i></a>
+                <a href="{{ route('hotels.index') }}" class="btn btn-outline-dark d-none d-md-inline-block" style="border-radius: 2rem; padding: 0.5rem 1.5rem; font-weight: 500;">View All <i class="bi bi-arrow-right ms-1"></i></a>
             </div>
 
             @if($featuredHotels->count() > 0)
@@ -461,7 +461,7 @@
                     @endforeach
                 </div>
                 <div class="text-center mt-4 d-md-none">
-                    <a href="#" class="btn btn-outline-dark" style="border-radius: 2rem; padding: 0.5rem 1.5rem;">View All Hotels</a>
+                    <a href="{{ route('hotels.index') }}" class="btn btn-outline-dark" style="border-radius: 2rem; padding: 0.5rem 1.5rem;">View All Hotels</a>
                 </div>
             @else
                 <div class="text-center py-5 bg-light" style="border-radius: 1rem; border: 1px dashed var(--border-color);">
@@ -573,53 +573,11 @@
                         </div>
                     </div>
                 @empty
-                    <!-- Fallback reviews if DB is empty to maintain layout -->
-                    <div class="col-lg-4 col-md-6 reveal delay-1">
-                        <div class="review-card">
-                            <i class="bi bi-quote review-quote"></i>
-                            <div class="mb-3 text-warning">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                            </div>
-                            <p class="mb-4" style="font-style: italic; color: #475569;">"Absolutely exceptional service and beautiful rooms. The booking process was seamless and the stay was unforgettable."</p>
-                            <div class="d-flex align-items-center">
-                                <img src="https://ui-avatars.com/api/?name=Sarah+J&background=0F172A&color=fff" class="rounded-circle me-3" width="48" height="48" alt="">
-                                <div>
-                                    <h6 class="mb-0 fw-bold">Sarah J.</h6>
-                                    <small class="text-muted">Frequent Traveler</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 reveal delay-2">
-                        <div class="review-card">
-                            <i class="bi bi-quote review-quote"></i>
-                            <div class="mb-3 text-warning">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                            </div>
-                            <p class="mb-4" style="font-style: italic; color: #475569;">"I've used many booking platforms, but HotelBooking offers the best selection of luxury properties by far."</p>
-                            <div class="d-flex align-items-center">
-                                <img src="https://ui-avatars.com/api/?name=Michael+T&background=0F172A&color=fff" class="rounded-circle me-3" width="48" height="48" alt="">
-                                <div>
-                                    <h6 class="mb-0 fw-bold">Michael T.</h6>
-                                    <small class="text-muted">Business Executive</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 offset-md-3 offset-lg-0 reveal delay-3">
-                        <div class="review-card">
-                            <i class="bi bi-quote review-quote"></i>
-                            <div class="mb-3 text-warning">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i>
-                            </div>
-                            <p class="mb-4" style="font-style: italic; color: #475569;">"Great experience overall. The hotel matched the photos perfectly and the check-in process was very fast."</p>
-                            <div class="d-flex align-items-center">
-                                <img src="https://ui-avatars.com/api/?name=Emma+W&background=0F172A&color=fff" class="rounded-circle me-3" width="48" height="48" alt="">
-                                <div>
-                                    <h6 class="mb-0 fw-bold">Emma W.</h6>
-                                    <small class="text-muted">Family Vacation</small>
-                                </div>
-                            </div>
+                    <div class="col-12 reveal delay-1">
+                        <div class="text-center py-5" style="border-radius: 1rem; border: 1px dashed var(--border-color); background: #fff;">
+                            <i class="bi bi-chat-square-quote" style="font-size: 3rem; color: var(--brand-accent); opacity: 0.5;"></i>
+                            <h5 class="mt-3 mb-2" style="color: var(--brand-primary); font-weight: 700;">No guest reviews yet.</h5>
+                            <p class="text-muted mb-0" style="max-width: 380px; margin: 0 auto;">Guest reviews will appear here after their first stay. Be the first to share your experience!</p>
                         </div>
                     </div>
                 @endforelse
