@@ -126,7 +126,7 @@
 
                         <div class="px-2">
                             <h6 class="fw-bold text-uppercase small text-muted mb-3" style="letter-spacing: 1px;">Message Content</h6>
-                            <p class="text-dark" style="white-space: pre-line; line-height: 1.7;">{{ $message->message }}</p>
+                            <p class="text-dark" style="white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; line-height: 1.7;">{{ $message->message }}</p>
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0 py-3 d-flex justify-content-between">
