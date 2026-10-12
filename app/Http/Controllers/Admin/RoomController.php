@@ -28,7 +28,6 @@ class RoomController extends Controller
             return [
                 'id'              => $room->id,
                 'room_number'     => $room->room_number,
-                'name'            => $room->name,
                 'type'            => $room->type,
                 'capacity'        => $room->capacity,
                 'price_per_night' => number_format($room->price_per_night, 2),
@@ -39,7 +38,7 @@ class RoomController extends Controller
             ];
         });
 
-        return view('rooms.index', [
+        return view('admin.rooms.index', [
             'layout'           => $this->getLayout(),
             'routePrefix'      => $this->getRoutePrefix(),
             'rooms'            => $rooms,
@@ -114,7 +113,6 @@ class RoomController extends Controller
                     return $query->where('hotel_id', $hotelId);
                 })->ignore($roomId),
             ],
-            'name' => 'required|string|max:255',
             'type' => ['required', 'string', Rule::in($this->roomTypes)],
             'capacity' => 'required|integer|min:1',
             'price_per_night' => 'required|numeric|min:0',
@@ -125,7 +123,6 @@ class RoomController extends Controller
 
         return $request->validate($rules, [
             'room_number.required' => 'Room number is required.',
-            'name.required' => 'Room name is required.',
             'type.required' => 'Room type is required.',
             'capacity.required' => 'Capacity is required.',
             'price_per_night.required' => 'Price per night is required.',

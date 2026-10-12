@@ -146,7 +146,7 @@
                     <th>Guests</th>
                     <th>Total Price</th>
                     <th>Status</th>
-                    <th class="text-end pe-4">Actions</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>

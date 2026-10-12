@@ -117,7 +117,7 @@
                     <th class="text-center">Total Bookings</th>
                     <th>Last Reservation</th>
                     <th>Tier Status</th>
-                    <th class="text-end pe-4">Actions</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>

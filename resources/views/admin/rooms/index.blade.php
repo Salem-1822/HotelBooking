@@ -165,7 +165,7 @@
                     <div class="input-group">
                         <span class="input-group-text bg-light border-0 text-muted"><i class="bi bi-search"></i></span>
                         <input type="text" id="roomSearchInput" class="form-control bg-light border-0" 
-                               placeholder="Search room number, name or type...">
+                               placeholder="Search room number or type...">
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
@@ -200,17 +200,12 @@
                 <tr>
                     <th>Image</th>
                     <th>Room Number</th>
-                    <th>Room Name</th>
                     <th>Type</th>
                     <th>Capacity</th>
                     <th>Price</th>
                     <th>Status</th>
                     <th>Updated At</th>
-                    @if($routePrefix === 'super_admin.')
-                        <th class="text-end">Actions</th>
-                    @else
-                        <th class="text-end pe-4">Actions</th>
-                    @endif
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody id="roomsTableBody">
@@ -218,7 +213,7 @@
                 <tr data-id="{{ $room->id }}" data-status="{{ $room->status }}" data-type="{{ $room->type }}" data-floor="{{ $room->floor }}">
                     <td class="pe-0">
                         @if($room->main_image && Storage::disk('public')->exists($room->main_image))
-                        <img src="{{ asset('storage/' . $room->main_image) }}" class="room-image-thumb" alt="{{ $room->name }}">
+                        <img src="{{ asset('storage/' . $room->main_image) }}" class="room-image-thumb" alt="Room {{ $room->room_number }}">
                         @else
                         <div class="room-image-thumb d-flex align-items-center justify-content-center bg-light text-muted">
                             <i class="bi bi-door-closed fs-5"></i>
@@ -226,12 +221,9 @@
                         @endif
                     </td>
                     <td>#{{ $room->room_number }}</td>
-                    <td>
-                        <div class="fw-semibold">{{ $room->name }}</div>
-                        @if(isset($room->hotel) && $routePrefix === 'super_admin.')
-                        <small class="text-muted">{{ $room->hotel->name }}</small>
-                        @endif
-                    </td>
+                    @if($routePrefix === 'super_admin.')
+                    <td><small class="text-muted">{{ $room->hotel->name ?? '' }}</small></td>
+                    @endif
                     <td>{{ $room->type }}</td>
                     <td>{{ $room->capacity }}</td>
                     <td>{{ number_format($room->price_per_night, 2) }} MAD</td>
@@ -279,7 +271,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="9" class="text-center py-5">
+                    <td colspan="{{ $routePrefix === 'super_admin.' ? 9 : 8 }}" class="text-center py-5">
                         <div class="text-muted">
                             <i class="bi bi-door-open fs-1 mb-3"></i>
                             <h5 class="fw-bold">No rooms found</h5>
@@ -307,11 +299,6 @@
                         <div class="col-md-6">
                             <label class="form-label">Room Number</label>
                             <input name="room_number" type="text" class="form-control" placeholder="e.g. 101" required>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Room Name</label>
-                            <input name="name" type="text" class="form-control" placeholder="e.g. Deluxe Ocean View" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
@@ -379,11 +366,6 @@
                         <div class="col-md-6">
                             <label class="form-label">Room Number</label>
                             <input name="room_number" type="text" class="form-control" placeholder="e.g. 101" required>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Room Name</label>
-                            <input name="name" type="text" class="form-control" placeholder="e.g. Deluxe Ocean View" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
@@ -455,7 +437,7 @@
                     </div>
                     <div class="col-lg-7">
                         <div class="mb-4">
-                            <h4 id="viewRoomName" class="fw-bold"></h4>
+                            <h4 id="viewRoomTitle" class="fw-bold"></h4>
                             <p id="viewRoomSubtitle" class="text-muted mb-1"></p>
                             <span id="viewStatusBadge" class="badge rounded-pill px-3"></span>
                         </div>
@@ -502,7 +484,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="mb-0">Are you sure you want to delete <strong id="deleteRoomName"></strong>? This action cannot be undone.</p>
+                <p class="mb-0">Are you sure you want to delete room <strong id="deleteRoomNumber"></strong>? This action cannot be undone.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -577,14 +559,15 @@
             if (state.type && room.type !== state.type) return false;
             if (state.floor && String(room.floor) !== state.floor) return false;
             if (!state.search) return true;
-            return [room.room_number, room.name, room.type, room.hotel_name || '']
+            return [room.room_number, room.type, room.hotel_name || '']
                 .join(' ').toLowerCase().includes(state.search);
         });
 
         if (!filtered.length) {
+            const cols = window.isSuperAdminArea ? 9 : 8;
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="9" class="text-center py-5">
+                    <td colspan="${cols}" class="text-center py-5">
                         <div class="text-muted">
                             <i class="bi bi-door-open fs-1 mb-3"></i>
                             <h5 class="fw-bold">No rooms match your filters</h5>
@@ -608,7 +591,7 @@
         };
         const statusClass = statusMap[room.status] || 'bg-secondary bg-opacity-15 text-secondary';
         const hotelInfo = window.isSuperAdminArea && room.hotel_name ? `<small class="text-muted">${escapeHtml(room.hotel_name)}</small>` : '';
-        const image = room.main_image_url ? `<img src="${room.main_image_url}" class="room-image-thumb" alt="${escapeHtml(room.name)}">` : '<div class="room-image-thumb d-flex align-items-center justify-content-center bg-light text-muted"><i class="bi bi-door-closed fs-5"></i></div>';
+        const image = room.main_image_url ? `<img src="${room.main_image_url}" class="room-image-thumb" alt="Room ${escapeHtml(room.room_number)}">` : '<div class="room-image-thumb d-flex align-items-center justify-content-center bg-light text-muted"><i class="bi bi-door-closed fs-5"></i></div>';
 
         const actionButtons = window.isSuperAdminArea ? `
             <td class="text-end">
@@ -642,10 +625,7 @@
             <tr data-id="${room.id}" data-status="${escapeHtml(room.status)}" data-type="${escapeHtml(room.type)}">
                 <td class="pe-0">${image}</td>
                 <td>#${escapeHtml(room.room_number)}</td>
-                <td>
-                    <div class="fw-semibold">${escapeHtml(room.name)}</div>
-                    ${hotelInfo}
-                </td>
+                ${window.isSuperAdminArea ? `<td>${hotelInfo}</td>` : ''}
                 <td>${escapeHtml(room.type)}</td>
                 <td>${escapeHtml(room.capacity)}</td>
                 <td>${escapeHtml(room.price_per_night)} MAD</td>
@@ -687,7 +667,7 @@
         const modal = new bootstrap.Modal(document.getElementById('viewRoomModal'));
         state.selectedRoomId = room.id;
         document.getElementById('viewMainImage').src = room.main_image_url || 'https://via.placeholder.com/600x400?text=No+Image';
-        document.getElementById('viewRoomName').textContent = room.name;
+        document.getElementById('viewRoomTitle').textContent = `Room #${room.room_number}`;
         document.getElementById('viewRoomSubtitle').textContent = room.type;
         document.getElementById('viewStatusBadge').textContent = capitalize(room.status);
         document.getElementById('viewStatusBadge').className = `badge rounded-pill px-3 ${badgeClasses(room.status)}`;
@@ -708,7 +688,6 @@
         form.reset();
         clearFormErrors(form);
         form.querySelector('[name="room_number"]').value = room.room_number;
-        form.querySelector('[name="name"]').value = room.name;
         form.querySelector('[name="type"]').value = room.type;
         form.querySelector('[name="capacity"]').value = room.capacity;
         form.querySelector('[name="price_per_night"]').value = room.price_per_night;
@@ -724,7 +703,7 @@
 
     function showDeleteModal(room) {
         state.selectedRoomId = room.id;
-        document.getElementById('deleteRoomName').textContent = room.name;
+        document.getElementById('deleteRoomNumber').textContent = `#${room.room_number}`;
         const modalEl = document.getElementById('deleteRoomModal');
         const deleteModal = new bootstrap.Modal(modalEl);
         document.getElementById('confirmDeleteRoom').onclick = function () {
@@ -803,7 +782,6 @@
         return {
             id: room.id,
             room_number: room.room_number,
-            name: room.name,
             type: room.type,
             capacity: room.capacity,
             price_per_night: Number(room.price_per_night).toFixed(2),
