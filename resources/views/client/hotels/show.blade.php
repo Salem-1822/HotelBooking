@@ -172,7 +172,7 @@
     text-transform: uppercase; letter-spacing: 0.06em;
     margin-bottom: 0.5rem;
 }
-.room-name { font-size: 1.1rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 0.4rem; }
+.room-title { font-size: 1.1rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 0.4rem; }
 .room-meta {
     display: flex; flex-wrap: wrap; gap: 1rem;
     margin-bottom: 0.875rem;
@@ -575,7 +575,7 @@
                     @endif
 
                     @foreach($rooms as $room)
-                    <article class="room-card" aria-label="{{ $room->name ?? 'Room '.$room->room_number }}">
+                    <article class="room-card" aria-label="Room {{ $room->room_number }}">
                         {{-- Room image --}}
                         <div class="room-card-img">
                             @php
@@ -587,7 +587,7 @@
                             </div>
                             @if($room->main_image)
                                 <img src="{{ asset('storage/' . $room->main_image) }}"
-                                     alt="{{ $room->name ?? 'Room image' }}"
+                                     alt="Room {{ $room->room_number }}"
                                      loading="lazy"
                                      onerror="this.parentElement.innerHTML='<div class=\'room-card-img-placeholder\'><i class=\'bi bi-image\'></i></div>'">
                             @else
@@ -603,8 +603,8 @@
                                 <span class="room-type-badge">{{ $room->type }}</span>
                             @endif
 
-                            <div class="room-name">
-                                {{ $room->name ?? 'Room ' . $room->room_number }}
+                            <div class="room-title">
+                                Room {{ $room->room_number }}
                             </div>
 
                             <div class="room-meta">
@@ -660,7 +660,7 @@
                                         <a href="{{ route('client.reserve.create', [$hotel, $room]) }}{{ $queryStr }}"
                                            class="btn-book-now"
                                            data-room-id="{{ $room->id }}"
-                                           data-room-name="{{ $room->name ?? 'Room '.$room->room_number }}"
+                                           data-room-title="Room {{ $room->room_number }}"
                                            data-room-price="{{ $room->price_per_night }}">
                                             <i class="bi bi-calendar-check me-1"></i> Book Now
                                         </a>
@@ -854,7 +854,7 @@
                 <!-- Selected room feedback -->
                 <div id="selectedRoomInfo" class="mt-3 p-2" style="background:rgba(212,175,55,0.07); border:1px solid rgba(212,175,55,0.25); border-radius:0.625rem; display:none; font-size:0.875rem;">
                     <div style="font-weight:600; color:var(--brand-primary); margin-bottom:0.25rem;">Selected Room</div>
-                    <div id="selectedRoomName" style="color:var(--text-muted);"></div>
+                    <div id="selectedRoomTitle" style="color:var(--text-muted);"></div>
                     <div id="selectedRoomPrice" style="font-weight:700; color:var(--brand-primary);"></div>
                 </div>
 
@@ -914,11 +914,11 @@
 <script>
 /* ── Room selection feedback ───────────────────────────────── */
 function selectRoom(btn) {
-    const name  = btn.dataset.roomName;
+    const title = btn.dataset.roomTitle;
     const price = parseFloat(btn.dataset.roomPrice);
     const panel = document.getElementById('selectedRoomInfo');
     if (!panel) return;
-    document.getElementById('selectedRoomName').textContent  = name;
+    document.getElementById('selectedRoomTitle').textContent = title;
     document.getElementById('selectedRoomPrice').textContent = price.toFixed(2) + ' MAD / night';
     panel.style.display = 'block';
     // Highlight all book-now buttons; dim others

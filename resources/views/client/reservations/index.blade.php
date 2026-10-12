@@ -172,13 +172,13 @@
 {{-- Page Header --}}
 <div class="page-header">
     <div class="container">
-        <nav aria-label="breadcrumb" class="mb-2">
+        <nav aria-label="breadcrumb" class="mb-2 reveal">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                 <li class="breadcrumb-item active">My Reservations</li>
             </ol>
         </nav>
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 reveal delay-1">
             <h1><i class="bi bi-calendar-check me-2" style="color:var(--brand-accent); font-size:1.4rem;"></i>My Reservations</h1>
             <a href="{{ route('hotels.index') }}" class="btn btn-accent" style="font-size:0.875rem; padding:0.55rem 1.4rem;">
                 <i class="bi bi-plus-lg me-1"></i> Book New Room
@@ -201,7 +201,7 @@
     @endif
 
     @if($reservations->isEmpty())
-        <div class="empty-state">
+        <div class="empty-state reveal delay-2">
             <i class="bi bi-calendar-x"></i>
             <h5>No reservations yet</h5>
             <p>You haven't made any reservations. Explore our hotels and book your perfect stay.</p>
@@ -210,7 +210,7 @@
     @else
 
         {{-- Summary bar --}}
-        <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-4 reveal delay-1">
             <p class="mb-0 text-muted" style="font-size:0.875rem;">
                 Showing <strong>{{ $reservations->count() }}</strong> reservation{{ $reservations->count() !== 1 ? 's' : '' }}
                 @if($reservations->total() > $reservations->count())
@@ -219,7 +219,7 @@
             </p>
         </div>
 
-        @foreach($reservations as $res)
+        @foreach($reservations as $index => $res)
         @php
             $statusMap = [
                 'pending'     => ['Pending',     'rgba(245,158,11,.1)', '#92400E', 'rgba(245,158,11,.3)'],
@@ -232,7 +232,7 @@
             $nights = \Carbon\Carbon::parse($res->check_in)->diffInDays(\Carbon\Carbon::parse($res->check_out));
         @endphp
 
-        <div class="res-card">
+        <div class="res-card reveal" style="transition-delay: {{ min($index * 0.08, 0.4) }}s;">
             <div class="res-card-accent {{ $res->status }}"></div>
             <div class="res-card-body">
 

@@ -63,8 +63,8 @@
     <!-- Hero Section -->
     <section class="contact-hero">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-3">Contact Us</h1>
-            <p class="lead mb-0 text-white-50">We're here to help and answer any question you might have.</p>
+            <h1 class="display-4 fw-bold mb-3 reveal">Contact Us</h1>
+            <p class="lead mb-0 text-white-50 reveal delay-1">We're here to help and answer any question you might have.</p>
         </div>
     </section>
 
@@ -82,7 +82,7 @@
                         </div>
                     @endif
 
-                    <div class="contact-card row g-0">
+                    <div class="contact-card row g-0 reveal delay-2">
                         <!-- Contact Info -->
                         <div class="col-md-5 d-none d-md-block">
                             <div class="contact-info-panel">

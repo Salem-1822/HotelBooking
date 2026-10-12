@@ -148,13 +148,13 @@
 {{-- ── Hero ── --}}
 <section class="dashboard-hero">
     <div class="container position-relative" style="z-index: 1;">
-        <div class="welcome-badge">
+        <div class="welcome-badge reveal">
             <i class="bi bi-patch-check-fill"></i> Client Portal
         </div>
-        <h1 class="welcome-heading">
+        <h1 class="welcome-heading reveal delay-1">
             Welcome back, <span class="client-name">{{ Auth::guard('web')->user()->name }}</span>
         </h1>
-        <p class="welcome-sub">You're successfully signed in to your HotelBooking account.</p>
+        <p class="welcome-sub reveal delay-2">You're successfully signed in to your HotelBooking account.</p>
     </div>
 </section>
 
@@ -164,7 +164,7 @@
 
         {{-- Quick-Info Row --}}
         <div class="row g-4 mb-4">
-            <div class="col-md-4">
+            <div class="col-md-4 reveal delay-1">
                 <div class="info-card">
                     <div class="info-card-icon" style="background: rgba(212, 175, 55, 0.12); color: var(--brand-accent);">
                         <i class="bi bi-person-fill"></i>
@@ -175,7 +175,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 reveal delay-2">
                 <div class="info-card">
                     <div class="info-card-icon" style="background: rgba(34, 197, 94, 0.12); color: #16A34A;">
                         <i class="bi bi-shield-check-fill"></i>
@@ -186,7 +186,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 reveal delay-3">
                 <div class="info-card">
                     <div class="info-card-icon" style="background: rgba(99, 102, 241, 0.12); color: #6366F1;">
                         <i class="bi bi-calendar3"></i>
@@ -200,7 +200,7 @@
         </div>
 
         {{-- My Reservations --}}
-        <div class="mb-4">
+        <div class="mb-4 reveal delay-2">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
                 <h5 style="font-family:'Poppins',sans-serif; font-weight:700; margin:0;">
                     <i class="bi bi-calendar-check me-2" style="color:var(--brand-accent);"></i>My Reservations

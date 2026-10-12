@@ -116,6 +116,23 @@
             color: #fff;
         }
 
+        /* Language Dropdown */
+        .lang-dropdown-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-radius: 0.625rem;
+            padding: 0.5rem 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .lang-dropdown-btn:hover,
+        .lang-dropdown-btn:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #fff;
+        }
+
         /* Footer */
         .footer {
             background-color: var(--brand-primary);
@@ -160,6 +177,7 @@
         .text-accent {
             color: var(--brand-accent);
         }
+
         /* Scroll Reveal Animations */
         .reveal {
             opacity: 0;
@@ -172,16 +190,40 @@
             opacity: 1;
             transform: translateY(0);
         }
-        
-        .delay-1 { transition-delay: 0.1s; }
-        .delay-2 { transition-delay: 0.2s; }
-        .delay-3 { transition-delay: 0.3s; }
-        .delay-4 { transition-delay: 0.4s; }
-        .delay-5 { transition-delay: 0.5s; }
-        .delay-6 { transition-delay: 0.6s; }
+
+        .delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .delay-3 {
+            transition-delay: 0.3s;
+        }
+
+        .delay-4 {
+            transition-delay: 0.4s;
+        }
+
+        .delay-5 {
+            transition-delay: 0.5s;
+        }
+
+        .delay-6 {
+            transition-delay: 0.6s;
+        }
 
         @media (prefers-reduced-motion: reduce) {
-            .reveal, .delay-1, .delay-2, .delay-3, .delay-4, .delay-5, .delay-6 {
+
+            .reveal,
+            .delay-1,
+            .delay-2,
+            .delay-3,
+            .delay-4,
+            .delay-5,
+            .delay-6 {
                 opacity: 1 !important;
                 transform: none !important;
                 transition: none !important;
@@ -209,34 +251,65 @@
                             href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('hotels.index') ? 'active' : '' }}"
+                        <a class="nav-link {{ request()->routeIs('hotels.index') || request()->routeIs('hotels.show') ? 'active' : '' }}"
                             href="{{ route('hotels.index') }}">Hotels</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}">About</a>
+                        <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}"
+                            href="{{ route('about') }}">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}">Contact</a>
+                        <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}"
+                            href="{{ route('contact') }}">Contact</a>
                     </li>
+                    @auth('web')
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('client.dashboard') ? 'active' : '' }}"
+                                href="{{ route('client.dashboard') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('client.reservations.*') ? 'active' : '' }}"
+                                href="{{ route('client.reservations.index') }}">My Reservations</a>
+                        </li>
+                    @endauth
                 </ul>
-                <div class="d-flex gap-3 mt-3 mt-lg-0">
+                <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+                    <!-- Language Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn lang-dropdown-btn d-flex align-items-center gap-2" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-globe" style="font-size: 1.1rem; color: rgba(255,255,255,0.7);"></i>
+                            <span style="font-size: 0.85rem; font-weight: 500;">English</span>
+                            <i class="bi bi-chevron-expand" style="font-size: 0.8rem; color: rgba(255,255,255,0.5);"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-sm"
+                            style="border-radius: 0.625rem; border: 1px solid rgba(255,255,255,0.1); background: #1E293B; padding: 0.5rem; min-width: 150px;">
+                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                                    style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
+                                        class="fs-6">🇺🇸</span> English</a></li>
+                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                                    style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
+                                        class="fs-6">🇫🇷</span> Français</a></li>
+                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                                    style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
+                                        class="fs-6">🇲🇦</span> العربية</a></li>
+                        </ul>
+                    </div>
+
                     @auth('web')
                         <div class="dropdown">
                             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-white"
                                 data-bs-toggle="dropdown">
                                 <div class="me-2 text-end d-none d-lg-block">
                                     <div style="font-size: 0.875rem; font-weight: 600;">
-                                        {{ Auth::guard('web')->user()->name }}</div>
+                                        {{ Auth::guard('web')->user()->name }}
+                                    </div>
                                 </div>
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('web')->user()->name) }}&background=D4AF37&color=fff"
                                     class="rounded-circle" width="38" height="38" alt="">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm"
                                 style="border-radius: 0.875rem; border: 1px solid var(--border-color);">
-                                <li><a class="dropdown-item py-2" href="{{ route('client.dashboard') }}"><i
-                                            class="bi bi-grid-fill me-2 text-muted"></i> Dashboard</a></li>
-                                <li><a class="dropdown-item py-2" href="{{ route('client.reservations.index') }}"><i
-                                            class="bi bi-calendar-check-fill me-2 text-muted"></i> My Reservations</a></li>
                                 <li><a class="dropdown-item py-2" href="{{ route('client.profile.edit') }}"><i
                                             class="bi bi-person-fill me-2 text-muted"></i> My Profile</a></li>
                                 <li>
@@ -330,9 +403,9 @@
         });
 
         // Shared scroll reveal observer
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            
+
             if (!prefersReducedMotion) {
                 const observerOptions = {
                     root: null,
@@ -351,7 +424,7 @@
 
                 const revealElements = document.querySelectorAll('.reveal');
                 revealElements.forEach(el => observer.observe(el));
-                
+
                 // Immediately reveal items already in viewport
                 setTimeout(() => {
                     revealElements.forEach(el => {

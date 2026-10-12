@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'Book Room — ' . ($room->name ?? 'Room ' . $room->room_number))
+@section('title', 'Book Room — Room ' . $room->room_number)
 
 @push('styles')
 <style>
@@ -333,7 +333,7 @@
                         {{-- Room --}}
                         <div class="summary-row">
                             <span class="label">Room</span>
-                            <span class="value">{{ $room->name ?? 'Room ' . $room->room_number }}</span>
+                            <span class="value">Room {{ $room->room_number }}</span>
                         </div>
 
                         {{-- Type --}}

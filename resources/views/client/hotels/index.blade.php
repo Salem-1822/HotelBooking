@@ -376,17 +376,17 @@
 ════════════════════════════════════════════ -->
 <div class="page-header">
     <div class="container">
-        <nav aria-label="breadcrumb" class="breadcrumb-custom">
+        <nav aria-label="breadcrumb" class="breadcrumb-custom reveal">
             <ol class="breadcrumb mb-2">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Hotels</li>
             </ol>
         </nav>
-        <h1>Browse Our Hotels</h1>
-        <p>Find the perfect stay from our curated collection across top destinations</p>
+        <h1 class="reveal delay-1">Browse Our Hotels</h1>
+        <p class="reveal delay-2">Find the perfect stay from our curated collection across top destinations</p>
 
         <!-- Inline Search Bar -->
-        <form method="GET" action="{{ route('hotels.index') }}" class="search-bar-wrap" id="searchForm">
+        <form method="GET" action="{{ route('hotels.index') }}" class="search-bar-wrap reveal delay-2" id="searchForm">
             <div class="row g-3 align-items-end">
                 <div class="col-lg-3 col-md-6">
                     <span class="search-bar-label">Search by name or location</span>
@@ -643,7 +643,7 @@
 
             @if($hotels->isEmpty())
                 <!-- Empty State -->
-                <div class="empty-state">
+                <div class="empty-state reveal delay-1">
                     <div class="empty-state-icon"><i class="bi bi-building-x"></i></div>
                     <h4>No hotels found</h4>
                     <p>
@@ -662,7 +662,7 @@
             @else
                 <!-- Hotel Grid -->
                 <div class="row g-4">
-                    @foreach($hotels as $hotel)
+                    @foreach($hotels as $index => $hotel)
                     @php
                         $hotelParams = array_filter([
                             'check_in'  => $validated['check_in'] ?? null,
@@ -671,7 +671,7 @@
                         ]);
                         $hotelUrl = route('hotels.show', $hotel) . (count($hotelParams) ? '?' . http_build_query($hotelParams) : '');
                     @endphp
-                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 reveal" style="transition-delay: {{ ($index % 3) * 0.1 }}s;">
                         <article class="hotel-card" aria-label="{{ $hotel->name }}">
                             <!-- Image -->
                             <div class="hotel-img-wrap">

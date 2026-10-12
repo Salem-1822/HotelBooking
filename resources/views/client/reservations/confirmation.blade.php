@@ -187,7 +187,7 @@
                 <div class="detail-row">
                     <span class="d-label">Room</span>
                     <span class="d-value">
-                        {{ $reservation->room->name ?? 'Room ' . $reservation->room->room_number }}
+                        Room {{ $reservation->room->room_number }}
                         @if($reservation->room->type)
                             <div style="font-weight:400; color:var(--text-muted); font-size:.82rem;">
                                 {{ $reservation->room->type }}
