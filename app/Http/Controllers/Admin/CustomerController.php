@@ -66,7 +66,7 @@ class CustomerController extends Controller
         $hotelId = Auth::guard('admin')->user()->hotel_id;
 
         // Scope check: prevent viewing customers from other hotels
-        if ($customer->hotel_id !== $hotelId) {
+        if (!$hotelId || $customer->hotel_id !== $hotelId) {
             abort(403, 'Unauthorized.');
         }
 
@@ -88,7 +88,7 @@ class CustomerController extends Controller
     {
         $hotelId = Auth::guard('admin')->user()->hotel_id;
 
-        if ($customer->hotel_id !== $hotelId) {
+        if (!$hotelId || $customer->hotel_id !== $hotelId) {
             abort(403, 'Unauthorized.');
         }
 
@@ -137,7 +137,7 @@ class CustomerController extends Controller
     {
         $hotelId = Auth::guard('admin')->user()->hotel_id;
 
-        if ($customer->hotel_id !== $hotelId) {
+        if (!$hotelId || $customer->hotel_id !== $hotelId) {
             abort(403, 'Unauthorized.');
         }
 

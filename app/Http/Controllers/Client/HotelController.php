@@ -99,8 +99,8 @@ class HotelController extends Controller
                 : null;
         }
 
-        $cities = City::withCount(['hotels' => fn ($q) => $q->where('status', 'active')])
-            ->having('hotels_count', '>', 0)
+        $cities = City::whereHas('hotels', fn ($q) => $q->where('status', 'active'))
+            ->withCount(['hotels' => fn ($q) => $q->where('status', 'active')])
             ->orderBy('name')
             ->get();
 

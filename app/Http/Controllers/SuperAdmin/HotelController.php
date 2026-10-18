@@ -24,32 +24,30 @@ class HotelController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'city_id' => 'required|exists:cities,id',
             'address' => 'required|string',
             'status' => 'required|in:active,inactive',
-            // Added validation for price_per_night to fix the 1364 default value error
             'price_per_night' => 'required|numeric|min:0',
         ]);
 
-        Hotel::create($request->all());
+        Hotel::create($validated);
 
         return redirect()->route('super_admin.hotels.index')->with('success', 'Hotel created successfully.');
     }
 
     public function update(Request $request, Hotel $hotel)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'city_id' => 'required|exists:cities,id',
             'address' => 'required|string',
             'status' => 'required|in:active,inactive',
-            // Added validation for price_per_night
             'price_per_night' => 'required|numeric|min:0',
         ]);
 
-        $hotel->update($request->all());
+        $hotel->update($validated);
 
         return redirect()->route('super_admin.hotels.index')->with('success', 'Hotel updated successfully.');
     }

@@ -56,6 +56,9 @@ class RoomController extends Controller
     public function store(Request $request)
     {
         $hotelId = Auth::guard('admin')->user()->hotel_id;
+        if (!$hotelId) {
+            abort(403, 'No hotel assigned.');
+        }
         $data = $this->validateRoom($request, $hotelId);
         $data['hotel_id'] = $hotelId;
 
@@ -97,7 +100,7 @@ class RoomController extends Controller
     protected function authorizeRoom(Room $room): void
     {
         $hotelId = Auth::guard('admin')->user()->hotel_id;
-        if ($room->hotel_id !== $hotelId) {
+        if (!$hotelId || $room->hotel_id !== $hotelId) {
             abort(403, 'Unauthorized action.');
         }
     }

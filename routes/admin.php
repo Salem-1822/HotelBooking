@@ -8,10 +8,10 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\HotelProfileController;
 
-Route::middleware(['auth:admin', 'role:admin'])->group(function () {
+Route::middleware(['role:admin', 'auth:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('rooms', RoomController::class)->except(['create', 'edit', 'show']);
-    Route::resource('reservations', ReservationController::class);
+    Route::resource('reservations', ReservationController::class)->except(['create', 'edit', 'show']);
 
     // Customers Management
     Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');

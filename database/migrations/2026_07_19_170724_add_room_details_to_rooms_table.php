@@ -38,7 +38,9 @@ return new class extends Migration
             });
 
             // Expand status options and enforce unique room numbers per hotel.
-            DB::statement("ALTER TABLE rooms MODIFY COLUMN status ENUM('available','occupied','reserved','maintenance','inactive') NOT NULL DEFAULT 'available';");
+            if (DB::getDriverName() === 'mysql') {
+                DB::statement("ALTER TABLE rooms MODIFY COLUMN status ENUM('available','occupied','reserved','maintenance','inactive') NOT NULL DEFAULT 'available';");
+            }
             Schema::table('rooms', function (Blueprint $table) {
                 if (! Schema::hasColumn('rooms', 'hotel_id_room_number_unique')) {
                     $table->unique(['hotel_id', 'room_number'], 'rooms_hotel_id_room_number_unique');
@@ -78,7 +80,9 @@ return new class extends Migration
                 $table->dropUnique('rooms_hotel_id_room_number_unique');
             });
 
-            DB::statement("ALTER TABLE rooms MODIFY COLUMN status ENUM('available','occupied','maintenance') NOT NULL DEFAULT 'available';");
+            if (DB::getDriverName() === 'mysql') {
+                DB::statement("ALTER TABLE rooms MODIFY COLUMN status ENUM('available','occupied','maintenance') NOT NULL DEFAULT 'available';");
+            }
         }
     }
 };

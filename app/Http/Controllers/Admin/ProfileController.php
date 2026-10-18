@@ -47,7 +47,7 @@ class ProfileController extends Controller
                 Storage::disk('public')->delete('profiles/' . $admin->profile_image);
             }
             // Store the new image in storage/profiles/.
-            $filename = time() . '_' . $request->file('profile_image')->getClientOriginalName();
+            $filename = $request->file('profile_image')->hashName();
             $request->file('profile_image')->storeAs('profiles', $filename, 'public');
             $admin->profile_image = $filename;
         }

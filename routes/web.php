@@ -14,7 +14,7 @@ Route::get('/hotels/{hotel}', [HotelController::class, 'show'])->name('hotels.sh
 Route::view('/about', 'client.about')->name('about');
 
 Route::get('/contact', [\App\Http\Controllers\Client\ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [\App\Http\Controllers\Client\ContactController::class, 'store'])->name('contact.store');
+Route::post('/contact', [\App\Http\Controllers\Client\ContactController::class, 'store'])->middleware('throttle:10,1')->name('contact.store');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

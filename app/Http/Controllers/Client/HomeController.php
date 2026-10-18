@@ -14,8 +14,8 @@ class HomeController extends Controller
     public function index()
     {
         // 1. Fetch Cities with hotel counts
-        $cities = City::withCount('hotels')
-            ->having('hotels_count', '>', 0)
+        $cities = City::has('hotels')
+            ->withCount('hotels')
             ->orderBy('hotels_count', 'desc')
             ->get();
 

@@ -29,13 +29,13 @@ class DashboardController extends Controller
         ];
 
         // Chart data: reservations grouped by month for the last 6 months
-        $chartData = Reservation::selectRaw(
-                "DATE_FORMAT(created_at, '%b %Y') as label,
-                 DATE_FORMAT(created_at, '%Y%m') as sort_key,
-                 COUNT(*) as total"
-            )
+        $isSqlite = \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite';
+        $labelSql = $isSqlite ? "strftime('%m %Y', created_at)" : "DATE_FORMAT(created_at, '%b %Y')";
+        $sortSql  = $isSqlite ? "strftime('%Y%m', created_at)" : "DATE_FORMAT(created_at, '%Y%m')";
+
+        $chartData = Reservation::selectRaw("{$labelSql} as label, {$sortSql} as sort_key, COUNT(*) as total")
             ->where('created_at', '>=', now()->subMonths(5)->startOfMonth())
-            ->groupByRaw("DATE_FORMAT(created_at, '%b %Y'), DATE_FORMAT(created_at, '%Y%m')")
+            ->groupByRaw("{$labelSql}, {$sortSql}")
             ->orderByRaw("MIN(created_at)")
             ->get();
 

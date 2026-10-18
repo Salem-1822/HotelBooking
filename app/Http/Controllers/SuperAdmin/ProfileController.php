@@ -32,8 +32,8 @@ class ProfileController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:admins,email,' . $admin->id,
-            'password' => 'nullable|min:6',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'password' => 'nullable|string|min:8',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
         $admin->name = $request->name;
@@ -48,8 +48,8 @@ class ProfileController extends Controller
             if ($admin->profile_image && Storage::disk('public')->exists('profiles/' . $admin->profile_image)) {
                 Storage::disk('public')->delete('profiles/' . $admin->profile_image);
             }
-            // Store new image
-            $filename = time() . '_' . $request->file('profile_image')->getClientOriginalName();
+            // Store new image with random hash name
+            $filename = $request->file('profile_image')->hashName();
             $request->file('profile_image')->storeAs('profiles', $filename, 'public');
             $admin->profile_image = $filename;
         }

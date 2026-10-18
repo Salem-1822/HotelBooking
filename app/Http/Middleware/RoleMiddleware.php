@@ -14,21 +14,24 @@ class RoleMiddleware
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
+        // 1. If a client user (web guard) attempts to access an admin-scoped route, deny immediately with 403
+        if (Auth::guard('web')->check() && ! Auth::guard('admin')->check()) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        // 2. Unauthenticated check for admin guard
         if (! Auth::guard('admin')->check()) {
+            if ($request->expectsJson()) {
+                abort(401, 'Unauthenticated.');
+            }
             return redirect()->route('login');
         }
 
-        if (Auth::guard('admin')->user()->role !== $role) {
-            $userRole = Auth::guard('admin')->user()->role;
-            if ($userRole === 'super_admin') {
-                return redirect()->route('super_admin.dashboard');
-            } elseif ($userRole === 'admin') {
-                return redirect()->route('admin.dashboard');
-            } elseif ($userRole === 'client') {
-                return redirect()->route('client.dashboard');
-            }
+        // 3. Authenticated admin does not possess the required role
+        $admin = Auth::guard('admin')->user();
+        if (! in_array($admin->role, $roles, true)) {
             abort(403, 'Unauthorized access.');
         }
 

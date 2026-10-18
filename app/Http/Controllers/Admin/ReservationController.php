@@ -86,6 +86,9 @@ class ReservationController extends Controller
     public function store(Request $request)
     {
         $hotelId = Auth::guard('admin')->user()->hotel_id;
+        if (!$hotelId) {
+            abort(403, 'No hotel assigned.');
+        }
         
         if ($request->filled('guest_phone')) {
             $request->merge([
@@ -124,8 +127,26 @@ class ReservationController extends Controller
         $data = $request->validate($rules);
         $data['hotel_id'] = $hotelId;
 
-        // Calculate total price based on room price and number of nights
+        // Verify room availability and capacity
         $room = Room::findOrFail($data['room_id']);
+        if ($data['guests_count'] > $room->capacity) {
+            return back()->withInput()->withErrors(['guests_count' => "This room can accommodate a maximum of {$room->capacity} guest(s)."]);
+        }
+
+        // Check for date conflicts if reservation is not cancelled
+        if ($data['status'] !== 'cancelled') {
+            $conflict = Reservation::where('room_id', $data['room_id'])
+                ->whereNotIn('status', ['cancelled'])
+                ->where('check_in', '<', $data['check_out'])
+                ->where('check_out', '>', $data['check_in'])
+                ->exists();
+
+            if ($conflict) {
+                return back()->withInput()->withErrors(['check_in' => 'This room is already reserved for the selected dates. Please choose different dates.']);
+            }
+        }
+
+        // Calculate total price based on room price and number of nights
         $checkIn = Carbon::parse($data['check_in']);
         $checkOut = Carbon::parse($data['check_out']);
         $nights = $checkIn->diffInDays($checkOut);
@@ -150,7 +171,7 @@ class ReservationController extends Controller
     public function update(Request $request, Reservation $reservation)
     {
         $hotelId = Auth::guard('admin')->user()->hotel_id;
-        if ($reservation->hotel_id !== $hotelId) {
+        if (!$hotelId || $reservation->hotel_id !== $hotelId) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -200,8 +221,27 @@ class ReservationController extends Controller
 
         $data = $request->validate($rules);
 
-        // Calculate total price based on room price and number of nights
+        // Verify room capacity and availability
         $room = Room::findOrFail($data['room_id']);
+        if ($data['guests_count'] > $room->capacity) {
+            return back()->withInput()->withErrors(['guests_count' => "This room can accommodate a maximum of {$room->capacity} guest(s)."]);
+        }
+
+        // Check for date conflicts if reservation is not cancelled
+        if ($data['status'] !== 'cancelled') {
+            $conflict = Reservation::where('room_id', $data['room_id'])
+                ->where('id', '!=', $reservation->id)
+                ->whereNotIn('status', ['cancelled'])
+                ->where('check_in', '<', $data['check_out'])
+                ->where('check_out', '>', $data['check_in'])
+                ->exists();
+
+            if ($conflict) {
+                return back()->withInput()->withErrors(['check_in' => 'This room is already reserved for the selected dates. Please choose different dates.']);
+            }
+        }
+
+        // Calculate total price based on room price and number of nights
         $checkIn  = Carbon::parse($data['check_in']);
         $checkOut = Carbon::parse($data['check_out']);
         $nights   = $checkIn->diffInDays($checkOut);
@@ -230,7 +270,7 @@ class ReservationController extends Controller
     public function destroy(Reservation $reservation)
     {
         $hotelId = Auth::guard('admin')->user()->hotel_id;
-        if ($reservation->hotel_id !== $hotelId) {
+        if (!$hotelId || $reservation->hotel_id !== $hotelId) {
             abort(403, 'Unauthorized action.');
         }
 

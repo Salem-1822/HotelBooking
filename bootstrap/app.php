@@ -29,7 +29,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->redirectTo(
-            guests: '/login',
+            guests: function (\Illuminate\Http\Request $request) {
+                if (\Illuminate\Support\Facades\Auth::guard('web')->check() && ($request->is('admin*') || $request->is('super-admin*'))) {
+                    abort(403, 'Unauthorized access.');
+                }
+                return $request->expectsJson() ? null : route('login');
+            },
             users: '/client/dashboard'
         );
         $middleware->alias([

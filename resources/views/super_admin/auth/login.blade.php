@@ -235,17 +235,17 @@
 
 @section('content')
     <section class="auth-section">
-        <div class="auth-card">
+        <div class="auth-card reveal">
 
             {{-- Card Header --}}
             <div class="auth-card-header">
-                <div class="auth-brand">HotelBooking</div>
-                <h5>Welcome back</h5>
-                <p>Sign in to your account to continue.</p>
+                <div class="auth-brand reveal delay-1">HotelBooking</div>
+                <h5 class="reveal delay-1">Welcome back</h5>
+                <p class="reveal delay-2">Sign in to your account to continue.</p>
             </div>
 
             {{-- Card Body --}}
-            <div class="auth-card-body">
+            <div class="auth-card-body reveal delay-3">
 
                 @if(session('success'))
                     <div class="alert-success-custom mb-4">
@@ -313,7 +313,7 @@
 
                 <hr class="auth-divider">
 
-                <p class="auth-footer-text">
+                <p class="auth-footer-text reveal delay-4">
                     Don't have an account?
                     <a href="{{ route('client.register') }}">Create Account</a>
                 </p>

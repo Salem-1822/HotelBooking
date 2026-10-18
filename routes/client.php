@@ -7,7 +7,7 @@ use App\Http\Controllers\Client\ReservationController;
 
 // --- Client Registration (public/guest) ---
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:10,1')->name('register.submit');
 
 // --- Client Protected Routes (web guard) ---
 Route::middleware(['auth:web'])->group(function () {

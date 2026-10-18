@@ -15,8 +15,8 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Protected Routes
-Route::middleware(['auth:admin'])->group(function () {
+// Protected Routes (Strictly Super Admin only)
+Route::middleware(['role:super_admin', 'auth:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Hotels
@@ -26,28 +26,23 @@ Route::middleware(['auth:admin'])->group(function () {
     // Cities
     Route::resource('cities', CityController::class)->except(['create', 'edit', 'show']);
     
-    // Admins (Only Super Admin)
-    Route::middleware(['role:super_admin'])->group(function () {
-        
-        // Admins Management
-        Route::resource('admins', AdminUserController::class)->except(['create', 'edit', 'show']);
+    // Admins Management
+    Route::resource('admins', AdminUserController::class)->except(['create', 'edit', 'show']);
 
-        // System Configuration
-        Route::get('/settings', [SystemConfigController::class, 'index'])->name('settings');
-        Route::post('/settings', [SystemConfigController::class, 'update'])->name('settings.update');
+    // System Configuration
+    Route::get('/settings', [SystemConfigController::class, 'index'])->name('settings');
+    Route::post('/settings', [SystemConfigController::class, 'update'])->name('settings.update');
 
-        // Profile
-        Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-        Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-        // Messages
-        Route::get('/messages', [\App\Http\Controllers\SuperAdmin\ContactMessageController::class, 'index'])->name('messages.index');
-        Route::post('/messages/{message}/mark-read', [\App\Http\Controllers\SuperAdmin\ContactMessageController::class, 'markAsRead'])->name('messages.mark_read');
-        Route::delete('/messages/{message}', [\App\Http\Controllers\SuperAdmin\ContactMessageController::class, 'destroy'])->name('messages.destroy');
-    });
+    // Messages
+    Route::get('/messages', [\App\Http\Controllers\SuperAdmin\ContactMessageController::class, 'index'])->name('messages.index');
+    Route::post('/messages/{message}/mark-read', [\App\Http\Controllers\SuperAdmin\ContactMessageController::class, 'markAsRead'])->name('messages.mark_read');
+    Route::delete('/messages/{message}', [\App\Http\Controllers\SuperAdmin\ContactMessageController::class, 'destroy'])->name('messages.destroy');
     
     // Reservations
     Route::get('reservations/export', [ReservationController::class, 'exportPDF'])->name('reservations.export');
     Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
-    
 });
