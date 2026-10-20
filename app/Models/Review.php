@@ -25,4 +25,14 @@ class Review extends Model
     {
         return $this->belongsTo(Reservation::class);
     }
+
+    protected static function booted(): void
+    {
+        $flushCache = function () {
+            \Illuminate\Support\Facades\Cache::forget('home_guest_reviews');
+        };
+
+        static::saved($flushCache);
+        static::deleted($flushCache);
+    }
 }

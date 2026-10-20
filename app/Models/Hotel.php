@@ -70,4 +70,17 @@ class Hotel extends Model
     {
         return $this->hasMany(Customer::class);
     }
+
+    protected static function booted(): void
+    {
+        $flushCache = function () {
+            \Illuminate\Support\Facades\Cache::forget('home_cities_with_counts');
+            \Illuminate\Support\Facades\Cache::forget('home_platform_stats');
+            \Illuminate\Support\Facades\Cache::forget('active_cities_with_hotel_count');
+            \Illuminate\Support\Facades\Cache::forget('active_hotels_price_range');
+        };
+
+        static::saved($flushCache);
+        static::deleted($flushCache);
+    }
 }

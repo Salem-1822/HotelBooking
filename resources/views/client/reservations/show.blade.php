@@ -429,7 +429,7 @@
 
                     {{-- Review action --}}
                     @if($reservation->status === 'checked_out')
-                        <div style="border-top:1px solid var(--border-color); padding-top:1.25rem; margin-top:{{ in_array($reservation->status, ['pending','confirmed']) ? '0' : '0' }};">
+                        <div id="review-section" style="border-top:1px solid var(--border-color); padding-top:1.25rem; margin-top:{{ in_array($reservation->status, ['pending','confirmed']) ? '0' : '0' }};">
                             @if(!$reservation->review)
                                 <div class="review-cta">
                                     <div class="title"><i class="bi bi-star-fill me-1" style="color:var(--brand-accent);"></i> Rate Your Stay</div>
@@ -576,6 +576,14 @@ document.addEventListener('DOMContentLoaded', function() {
             L.marker([lat, lng]).addTo(map)
               .bindPopup("<b>{{ addslashes($reservation->hotel->name ?? '') }}</b>")
               .openPopup();
+        }
+    }
+
+    if (window.location.hash === '#review-section' || window.location.hash === '#reviewModal') {
+        const reviewModalEl = document.getElementById('reviewModal');
+        if (reviewModalEl && typeof bootstrap !== 'undefined') {
+            const modal = new bootstrap.Modal(reviewModalEl);
+            modal.show();
         }
     }
 });

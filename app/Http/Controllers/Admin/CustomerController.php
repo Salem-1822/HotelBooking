@@ -21,31 +21,44 @@ class CustomerController extends Controller
             return redirect()->route('login')->with('error', 'No hotel assigned.');
         }
 
-        // Load all customers for this hotel.
-        // withCount('reservations')                → total bookings per customer
-        // withCount('reservations as active_...')  → bookings in active statuses
-        // with(['reservations' => ...])            → latest 1 reservation for "Last Reservation" date
-        //   Scoped with limit(1) per customer via a specific subrelation
+        // --- Dashboard-style summary cards via database aggregates ---
+        $baseCustomers = Customer::where('hotel_id', $hotelId);
+        $totalCustomers = (clone $baseCustomers)->count();
+
+        // Count new (exactly 1 reservation) and returning (2+ reservations)
+        $reservationCounts = Customer::where('customers.hotel_id', $hotelId)
+            ->join('reservations', 'reservations.customer_id', '=', 'customers.id')
+            ->selectRaw('customers.id, COUNT(reservations.id) as res_count')
+            ->groupBy('customers.id')
+            ->pluck('res_count', 'id');
+
+        $newCustomers       = $reservationCounts->filter(fn ($cnt) => $cnt === 1)->count();
+        $returningCustomers = $reservationCounts->filter(fn ($cnt) => $cnt >= 2)->count();
+
+        // Active customers: having at least one active reservation
+        $activeCustomers = Customer::where('hotel_id', $hotelId)
+            ->whereHas('reservations', fn ($q) => $q->whereIn('status', self::ACTIVE_STATUSES))
+            ->count();
+
+        // Load paginated customers for this hotel (15 per page)
+        // Attach subquery for latest reservation check_in date to avoid loading all reservations for list view
         $customers = Customer::where('hotel_id', $hotelId)
             ->withCount('reservations')
             ->withCount(['reservations as active_reservations_count' => function ($q) {
                 $q->whereIn('status', self::ACTIVE_STATUSES);
             }])
+            ->addSelect([
+                'last_reservation_date' => \App\Models\Reservation::select('check_in')
+                    ->whereColumn('customer_id', 'customers.id')
+                    ->orderByDesc('check_in')
+                    ->limit(1),
+            ])
             ->with(['reservations' => function ($q) {
                 $q->orderByDesc('check_in')->with('room');
             }])
-            ->get();
-
-        // Attach last_reservation_date as a flat property expected by the view
-        foreach ($customers as $customer) {
-            $customer->last_reservation_date = $customer->reservations->first()?->check_in;
-        }
-
-        // --- Dashboard-style summary cards ---
-        $totalCustomers     = $customers->count();
-        $newCustomers       = $customers->filter(fn ($c) => $c->reservations_count === 1)->count();
-        $returningCustomers = $customers->filter(fn ($c) => $c->reservations_count >= 2)->count();
-        $activeCustomers    = $customers->filter(fn ($c) => $c->active_reservations_count > 0)->count();
+            ->orderBy('name')
+            ->paginate(15)
+            ->withQueryString();
 
         return view('admin.customers.index', compact(
             'customers',

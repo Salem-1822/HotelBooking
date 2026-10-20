@@ -3,11 +3,18 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Client\DashboardController;
 use App\Http\Controllers\Client\AuthController;
+use App\Http\Controllers\Client\PasswordResetController;
 use App\Http\Controllers\Client\ReservationController;
 
 // --- Client Registration (public/guest) ---
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:10,1')->name('register.submit');
+
+// --- Client Password Reset (public/guest) ---
+Route::get('/forgot-password', [PasswordResetController::class, 'showForgotForm'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->middleware('throttle:5,1')->name('password.email');
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
 
 // --- Client Protected Routes (web guard) ---
 Route::middleware(['auth:web'])->group(function () {

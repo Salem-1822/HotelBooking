@@ -361,6 +361,14 @@
             </tbody>
         </table>
     </div>
+
+    @if($customers->hasPages())
+    <div class="card-footer bg-white border-0 py-3">
+        <div class="d-flex justify-content-center">
+            {{ $customers->links('pagination::bootstrap-5') }}
+        </div>
+    </div>
+    @endif
 </div>
 
 @endsection

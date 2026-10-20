@@ -386,7 +386,7 @@
                             <a href="{{ route('hotels.index', ['city_id' => $city->id]) }}" class="destination-card">
                                 @if($city->image)
                                     <!-- Fallback to a placeholder if image doesn't exist in storage or is just a name -->
-                                    <img src="{{ asset('storage/' . $city->image) }}" onerror="this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $city->name }}">
+                                    <img src="{{ asset('storage/' . $city->image) }}" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $city->name }}">
                                 @else
                                     <div class="fallback-img-bg">
                                         <i class="bi bi-building"></i>
@@ -431,7 +431,7 @@
                                     @endif
                                     
                                     @if($hotel->image)
-                                        <img src="{{ asset('storage/' . $hotel->image) }}" onerror="this.src='https://images.unsplash.com/photo-1542314831-c6a4d27a6582?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $hotel->name }}">
+                                        <img src="{{ asset('storage/' . $hotel->image) }}" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1542314831-c6a4d27a6582?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $hotel->name }}">
                                     @else
                                         <div class="fallback-img-bg">
                                             <i class="bi bi-image"></i>

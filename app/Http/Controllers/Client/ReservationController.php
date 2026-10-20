@@ -184,7 +184,7 @@ class ReservationController extends Controller
         $client = Auth::guard('web')->user();
         
         $reservations = Reservation::where('user_id', $client->id)
-            ->with(['hotel', 'room'])
+            ->with(['hotel', 'room', 'review'])
             ->orderBy('created_at', 'desc')
             ->paginate(15);
             
@@ -198,7 +198,7 @@ class ReservationController extends Controller
     {
         Gate::authorize('view', $reservation);
 
-        $reservation->load(['hotel', 'room']);
+        $reservation->load(['hotel', 'room', 'review']);
 
         return view('client.reservations.show', compact('reservation'));
     }

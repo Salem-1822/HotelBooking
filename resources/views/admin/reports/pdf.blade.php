@@ -174,7 +174,7 @@
     @endif
 
     <div class="footer">
-        <span>Hotelia Management System — Page <span class="page-number"></span></span>
+        <span>HotelBooking Management System — Page <span class="page-number"></span></span>
     </div>
 
 </body>

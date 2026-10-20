@@ -99,14 +99,18 @@ class HotelController extends Controller
                 : null;
         }
 
-        $cities = City::whereHas('hotels', fn ($q) => $q->where('status', 'active'))
-            ->withCount(['hotels' => fn ($q) => $q->where('status', 'active')])
-            ->orderBy('name')
-            ->get();
+        $cities = \Illuminate\Support\Facades\Cache::remember('active_cities_with_hotel_count', 3600, function () {
+            return City::whereHas('hotels', fn ($q) => $q->where('status', 'active'))
+                ->withCount(['hotels' => fn ($q) => $q->where('status', 'active')])
+                ->orderBy('name')
+                ->get();
+        });
 
-        $priceRange = Hotel::where('status', 'active')
-            ->selectRaw('MIN(price_per_night) as min_price, MAX(price_per_night) as max_price')
-            ->first();
+        $priceRange = \Illuminate\Support\Facades\Cache::remember('active_hotels_price_range', 1800, function () {
+            return Hotel::where('status', 'active')
+                ->selectRaw('MIN(price_per_night) as min_price, MAX(price_per_night) as max_price')
+                ->first();
+        });
 
         return view('client.hotels.index', compact('hotels', 'cities', 'priceRange', 'validated'));
     }
@@ -134,14 +138,26 @@ class HotelController extends Controller
         $hotel->load(['city', 'reviews.user']);
 
         // ── Rooms ────────────────────────────────────────────────────────────
-        // Order: available first, then by price ascending
+        // Order: available first, then by price ascending (ANSI SQL compatible across MySQL and SQLite)
         $rooms = $hotel->rooms()
-            ->orderByRaw("FIELD(status, 'available', 'reserved', 'occupied', 'maintenance', 'inactive')")
+            ->orderByRaw("CASE status WHEN 'available' THEN 1 WHEN 'reserved' THEN 2 WHEN 'occupied' THEN 3 WHEN 'maintenance' THEN 4 ELSE 5 END")
             ->orderBy('price_per_night', 'asc')
             ->get();
 
         // Annotate each room with a simple is_bookable flag
         $requestedGuests = !empty($validated['guests']) ? (int) $validated['guests'] : null;
+
+        // Efficient batch check: if dates are requested, find all conflicting room_ids in a single query
+        $conflictedRoomIds = [];
+        if ($checkIn && $checkOut) {
+            $conflictedRoomIds = \App\Models\Reservation::whereIn('room_id', $rooms->pluck('id'))
+                ->whereNotIn('status', ['cancelled'])
+                ->where('check_in', '<', $checkOut)
+                ->where('check_out', '>', $checkIn)
+                ->pluck('room_id')
+                ->flip()
+                ->toArray();
+        }
 
         foreach ($rooms as $room) {
             $isAvailable = ($room->status === 'available');
@@ -151,17 +167,9 @@ class HotelController extends Controller
                 $isAvailable = false;
             }
 
-            // Date-overlap gate: room has an active reservation in the requested window
-            if ($isAvailable && $checkIn && $checkOut) {
-                $conflict = \App\Models\Reservation::where('room_id', $room->id)
-                    ->whereNotIn('status', ['cancelled'])
-                    ->where('check_in', '<', $checkOut)
-                    ->where('check_out', '>', $checkIn)
-                    ->exists();
-
-                if ($conflict) {
-                    $isAvailable = false;
-                }
+            // Date-overlap gate: check batch conflict hash
+            if ($isAvailable && isset($conflictedRoomIds[$room->id])) {
+                $isAvailable = false;
             }
 
             $room->is_bookable = $isAvailable;
@@ -174,11 +182,17 @@ class HotelController extends Controller
             ? round($hotel->reviews()->avg('rating'), 1)
             : null;
 
-        // Star distribution for the rating breakdown bar
+        // Star distribution for the rating breakdown bar (single GROUP BY query instead of 5 separate queries)
         $ratingBreakdown = [];
         if ($reviewCount > 0) {
+            $ratingCounts = $hotel->reviews()
+                ->selectRaw('rating, COUNT(*) as cnt')
+                ->groupBy('rating')
+                ->pluck('cnt', 'rating')
+                ->toArray();
+
             for ($s = 5; $s >= 1; $s--) {
-                $cnt = $hotel->reviews()->where('rating', $s)->count();
+                $cnt = $ratingCounts[$s] ?? 0;
                 $ratingBreakdown[$s] = [
                     'count'   => $cnt,
                     'percent' => round(($cnt / $reviewCount) * 100),

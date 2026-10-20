@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ReservationStatusChangedNotification;
 
 class Reservation extends Model
 {
@@ -25,6 +28,53 @@ class Reservation extends Model
                 }
             }
         });
+
+        static::updated(function ($reservation) {
+            // Check if status has changed
+            if ($reservation->wasChanged('status')) {
+                $reservation->sendStatusChangeNotification();
+            }
+        });
+    }
+
+    /**
+     * Send email notification to client when status changes.
+     */
+    public function sendStatusChangeNotification(): void
+    {
+        // Don't send notification for pending status or if notifiable recipient cannot be resolved
+        if (!in_array($this->status, ['confirmed', 'checked_in', 'checked_out', 'cancelled'])) {
+            return;
+        }
+
+        try {
+            $recipient = null;
+
+            if ($this->user_id && $this->user) {
+                $recipient = $this->user;
+            } elseif ($this->customer_id && $this->customer && !empty($this->customer->email)) {
+                $recipient = $this->customer;
+            } elseif ($this->user_id) {
+                $user = User::find($this->user_id);
+                if ($user) {
+                    $recipient = $user;
+                }
+            } elseif ($this->customer_id) {
+                $customer = Customer::find($this->customer_id);
+                if ($customer && !empty($customer->email)) {
+                    $recipient = $customer;
+                }
+            }
+
+            if ($recipient) {
+                $recipient->notify(new ReservationStatusChangedNotification($this));
+            }
+        } catch (\Throwable $e) {
+            // An email failure must not undo or throw an exception that breaks a successfully saved reservation status
+            Log::error("Failed to send reservation status notification for reservation ID {$this->id}: " . $e->getMessage(), [
+                'exception' => $e
+            ]);
+        }
     }
 
     public function hotel()
