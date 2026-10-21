@@ -97,7 +97,7 @@
                             <td class="px-4 py-3 border-light">
                                 <div class="d-flex align-items-center">
                                     @php
-                                        $img = Str::startsWith($admin->profile_image, ['http://', 'https://']) ? $admin->profile_image : ($admin->profile_image ? asset('storage/' . $admin->profile_image) : 'https://ui-avatars.com/api/?name='.urlencode($admin->name).'&color=7F9CF5&background=EBF4FF');
+                                        $img = $admin->getProfilePhotoUrl('EBF4FF', '7F9CF5', 100);
                                     @endphp
                                     <img src="{{ $img }}" alt="{{ $admin->name }}" class="rounded-circle shadow-sm me-3" style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #fff;">
                                     <div>
@@ -257,7 +257,7 @@
             </div>
             <div class="modal-body p-4">
                 @php
-                    $adminViewImg = Str::startsWith($admin->profile_image, ['http://', 'https://']) ? $admin->profile_image : ($admin->profile_image ? asset('storage/' . $admin->profile_image) : 'https://ui-avatars.com/api/?name='.urlencode($admin->name).'&color=7F9CF5&background=EBF4FF&size=140');
+                    $adminViewImg = $admin->getProfilePhotoUrl('EBF4FF', '7F9CF5', 140);
                 @endphp
                 <div class="text-center mb-4">
                     <img src="{{ $adminViewImg }}" alt="{{ $admin->name }}" class="rounded-circle shadow-sm border mb-3" style="width: 70px; height: 70px; object-fit: cover;">

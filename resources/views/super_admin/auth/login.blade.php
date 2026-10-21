@@ -281,7 +281,7 @@
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <label for="password" class="auth-label mb-0">Password</label>
-                            <a href="{{ route('client.password.request') }}" class="forgot-link">Forgot password?</a>
+                            <a href="{{ route('admin.password.request') }}" class="forgot-link">Forgot password?</a>
                         </div>
                         <div class="input-icon-wrap">
                             <i class="bi bi-lock input-icon"></i>

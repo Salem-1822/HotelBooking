@@ -506,13 +506,8 @@
                     <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle"
                         data-bs-toggle="dropdown" style="gap:0.625rem;">
                         @php $layoutAdmin = Auth::guard('admin')->user(); @endphp
-                        @if($layoutAdmin->profile_image && \Storage::disk('public')->exists('profiles/' . $layoutAdmin->profile_image))
-                            <img src="{{ asset('storage/profiles/' . $layoutAdmin->profile_image) }}"
-                                class="topbar-user-avatar" style="object-fit:cover;" alt="">
-                        @else
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($layoutAdmin->name) }}&background=0F172A&color=fff&size=80"
-                                class="topbar-user-avatar" alt="">
-                        @endif
+                        <img src="{{ $layoutAdmin->getProfilePhotoUrl('0F172A', 'fff', 80) }}"
+                            class="topbar-user-avatar" style="object-fit:cover;" alt="{{ $layoutAdmin->name }}">
                         <div class="d-none d-sm-block text-start">
                             <div class="topbar-username">{{ $layoutAdmin->name }}</div>
                             <div class="topbar-role">{{ str_replace('_', ' ', $layoutAdmin->role) }}</div>

@@ -103,6 +103,15 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
+        // Separate broker for regular Admin (role: admin) password resets.
+        // Uses a dedicated token table to keep admin and client tokens isolated.
+        'admins' => [
+            'provider' => 'admins',
+            'table'    => 'admin_password_reset_tokens',
+            'expire'   => 60,
+            'throttle' => 60,
+        ],
     ],
 
     /*

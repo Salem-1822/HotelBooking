@@ -115,10 +115,9 @@ class AdminUserController extends Controller
 
         // Handle profile image update
         if ($request->hasFile('image_file')) {
-            if ($admin->profile_image) {
-                Storage::disk('public')->delete($admin->profile_image);
-            }
-            $data['profile_image'] = $request->file('image_file')->store('profiles', 'public');
+            $newImage = $request->file('image_file')->store('profiles', 'public');
+            $admin->deleteProfileImageFile();
+            $data['profile_image'] = $newImage;
         }
 
         $admin->update($data);
@@ -136,9 +135,7 @@ class AdminUserController extends Controller
             return redirect()->route('super_admin.admins.index')->withErrors(['error' => 'You cannot delete your own account.']);
         }
 
-        if ($admin->profile_image) {
-            Storage::disk('public')->delete($admin->profile_image);
-        }
+        $admin->deleteProfileImageFile();
 
         $admin->delete();
 

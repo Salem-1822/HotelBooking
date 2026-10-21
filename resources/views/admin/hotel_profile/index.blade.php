@@ -1568,14 +1568,9 @@
             </div>
             <div class="hp-card-body" style="padding-top:1rem;">
                 <div class="d-flex align-items-center gap-3">
-                    @if($admin->profile_image && \Storage::disk('public')->exists('profiles/' . $admin->profile_image))
-                        <img src="{{ asset('storage/profiles/' . $admin->profile_image) }}"
-                             style="width:46px;height:46px;border-radius:0.75rem;object-fit:cover;border:2px solid var(--border-color);"
-                             alt="{{ $admin->name }}">
-                    @else
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=0F172A&color=fff&size=80"
-                             style="width:46px;height:46px;border-radius:0.75rem;" alt="">
-                    @endif
+                    <img src="{{ $admin->getProfilePhotoUrl('0F172A', 'fff', 80) }}"
+                         style="width:46px;height:46px;border-radius:0.75rem;object-fit:cover;border:2px solid var(--border-color);"
+                         alt="{{ $admin->name }}">
                     <div>
                         <div style="font-weight:700;font-size:0.875rem;color:var(--text-primary);">
                             {{ $admin->name }}

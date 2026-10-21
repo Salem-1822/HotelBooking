@@ -19,15 +19,10 @@
             <div class="card shadow-sm border-0 mb-4" style="border-radius: 1rem;">
                 <div class="card-body text-center p-4">
                     <div class="position-relative d-inline-block mb-4 mt-2">
-                        @if($admin->profile_image && \Storage::disk('public')->exists('profiles/' . $admin->profile_image))
-                            <img src="{{ asset('storage/profiles/' . $admin->profile_image) }}" alt="{{ $admin->name }}" 
-                                class="rounded-circle img-thumbnail shadow-sm" style="width: 130px; height: 130px; object-fit: cover; border-width: 3px;">
-                        @else
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=0F172A&color=fff&size=150" alt="{{ $admin->name }}" 
-                                class="rounded-circle img-thumbnail shadow-sm" style="width: 130px; height: 130px; object-fit: cover; border-width: 3px;">
-                        @endif
+                        <img src="{{ $admin->profile_image_url }}" alt="{{ $admin->name }}" 
+                            class="rounded-circle img-thumbnail shadow-sm" style="width: 130px; height: 130px; object-fit: cover; border-width: 3px;">
 
-                        @if($admin->profile_image)
+                        @if($admin->hasProfilePhoto())
                             <form action="{{ route('admin.profile.photo.destroy') }}" method="POST" class="position-absolute" style="bottom: 0; right: 0;">
                                 @csrf
                                 @method('DELETE')

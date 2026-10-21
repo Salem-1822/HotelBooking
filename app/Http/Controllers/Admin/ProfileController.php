@@ -42,14 +42,10 @@ class ProfileController extends Controller
         $admin->phone = $request->phone;
 
         if ($request->hasFile('profile_image')) {
-            // Delete the old image if it exists.
-            if ($admin->profile_image && Storage::disk('public')->exists('profiles/' . $admin->profile_image)) {
-                Storage::disk('public')->delete('profiles/' . $admin->profile_image);
-            }
-            // Store the new image in storage/profiles/.
-            $filename = $request->file('profile_image')->hashName();
-            $request->file('profile_image')->storeAs('profiles', $filename, 'public');
-            $admin->profile_image = $filename;
+            // Store the new image first so the existing photo is preserved if upload fails.
+            $newPath = $request->file('profile_image')->store('profiles', 'public');
+            $admin->deleteProfileImageFile();
+            $admin->profile_image = $newPath;
         }
 
         $admin->save();
@@ -90,10 +86,7 @@ class ProfileController extends Controller
     {
         $admin = Auth::guard('admin')->user();
 
-        if ($admin->profile_image && Storage::disk('public')->exists('profiles/' . $admin->profile_image)) {
-            Storage::disk('public')->delete('profiles/' . $admin->profile_image);
-        }
-
+        $admin->deleteProfileImageFile();
         $admin->profile_image = null;
         $admin->save();
 
