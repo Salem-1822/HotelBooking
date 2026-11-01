@@ -678,6 +678,20 @@
 
             sectionObserver.observe(statsSection);
         });
+
+        // Date sync on Home search widget
+        const homeCheckIn = document.querySelector('.search-widget input[name="check_in"]');
+        const homeCheckOut = document.querySelector('.search-widget input[name="check_out"]');
+        if (homeCheckIn && homeCheckOut) {
+            homeCheckIn.addEventListener('change', function () {
+                if (this.value) {
+                    homeCheckOut.min = this.value;
+                    if (homeCheckOut.value && homeCheckOut.value <= this.value) {
+                        homeCheckOut.value = '';
+                    }
+                }
+            });
+        }
     </script>
     @endpush
 @endsection

@@ -371,13 +371,21 @@
     <div class="row g-4 g-lg-5">
 
         <!-- Left column: hotel info + rooms + reviews -->
-        <div class="col-lg-8">
+        <div class="col-lg-8 min-w-0" style="min-width: 0;">
 
             <!-- Description -->
             @if($hotel->description)
-            <section class="mb-5" aria-label="Hotel description">
+            <section class="mb-5 overflow-hidden" aria-label="Hotel description" style="max-width: 100%;">
                 <h2 class="section-heading">About this Hotel</h2>
-                <p class="lh-lg" style="color:#475569; font-size:0.97rem;">{{ $hotel->description }}</p>
+                <div class="hotel-description-content break-words overflow-hidden max-w-full"
+                     style="color:#475569; font-size:0.975rem; line-height:1.8; word-break: break-word; overflow-wrap: anywhere; word-wrap: break-word; max-width: 100%;">
+                    @php
+                        $paragraphs = array_filter(preg_split('/\r\n\r\n|\n\n|\r\r/', $hotel->description), fn($p) => trim($p) !== '');
+                    @endphp
+                    @foreach($paragraphs as $paragraph)
+                        <p class="{{ $loop->last ? 'mb-0' : 'mb-3' }}" style="color:#475569; line-height:1.8; word-break: break-word; overflow-wrap: anywhere; word-wrap: break-word;">{!! nl2br(e(trim($paragraph))) !!}</p>
+                    @endforeach
+                </div>
             </section>
             @endif
 

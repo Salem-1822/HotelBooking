@@ -20,4 +20,16 @@ class City extends Model
     {
         return $this->hasMany(Admin::class);
     }
+
+    protected static function booted(): void
+    {
+        $flushCache = function () {
+            \Illuminate\Support\Facades\Cache::forget('home_cities_with_counts');
+            \Illuminate\Support\Facades\Cache::forget('home_platform_stats');
+            \Illuminate\Support\Facades\Cache::forget('active_cities_with_hotel_count');
+        };
+
+        static::saved($flushCache);
+        static::deleted($flushCache);
+    }
 }

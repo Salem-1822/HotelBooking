@@ -17,79 +17,144 @@ class HotelController extends Controller
     {
         $validated = $request->validate([
             'search'    => 'nullable|string|max:100',
-            'city_id'   => 'nullable|integer|exists:cities,id',
+            'city_id'   => 'nullable|string|max:100',
+            'city'      => 'nullable|string|max:100',
+            'ville'     => 'nullable|string|max:100',
             'stars'     => 'nullable|integer|between:1,5',
-            'price_min' => 'nullable|numeric|min:0',
-            'price_max' => 'nullable|numeric|min:0',
-            'sort'      => 'nullable|in:price_asc,price_desc,stars_desc,name_asc',
-            'check_in'  => 'nullable|date|after_or_equal:today',
-            'check_out' => 'nullable|date|after:check_in',
+            'check_in'  => 'nullable|date',
+            'check_out' => 'nullable|date',
             'guests'    => 'nullable|integer|min:1|max:20',
         ]);
 
-        $checkIn = $validated['check_in'] ?? null;
-        $checkOut = $validated['check_out'] ?? null;
+        // ── Date parsing and normalization ──────────────────────────────────
+        $checkIn = null;
+        $checkOut = null;
+        if (!empty($validated['check_in'])) {
+            try {
+                $checkIn = \Carbon\Carbon::parse($validated['check_in'])->format('Y-m-d');
+            } catch (\Exception $e) {
+                $checkIn = null;
+            }
+        }
+        if (!empty($validated['check_out'])) {
+            try {
+                $checkOut = \Carbon\Carbon::parse($validated['check_out'])->format('Y-m-d');
+            } catch (\Exception $e) {
+                $checkOut = null;
+            }
+        }
+
+        if ($checkIn && !$checkOut) {
+            $checkOut = \Carbon\Carbon::parse($checkIn)->addDay()->format('Y-m-d');
+        } elseif (!$checkIn && $checkOut) {
+            $checkIn = max(now()->format('Y-m-d'), \Carbon\Carbon::parse($checkOut)->subDay()->format('Y-m-d'));
+        }
+
+        if ($checkIn && $checkOut && $checkOut <= $checkIn) {
+            $checkOut = \Carbon\Carbon::parse($checkIn)->addDay()->format('Y-m-d');
+        }
+
+        $validated['check_in'] = $checkIn;
+        $validated['check_out'] = $checkOut;
 
         $query = Hotel::query()
-            ->with(['city', 'reviews'])
-            ->withCount('reviews')
-            ->where('status', 'active')
+            ->select('hotels.*')
             ->addSelect([
                 'starting_price' => Room::selectRaw('MIN(price_per_night)')
                     ->whereColumn('hotel_id', 'hotels.id')
                     ->where('status', 'available')
                     ->limit(1),
             ])
-            ->select('hotels.*');
+            ->with(['city', 'reviews'])
+            ->withCount('reviews')
+            ->where('status', 'active');
 
+        // ── Text Search (hotel name, description, address, city name & slug) ─
         if (!empty($validated['search'])) {
-            $term = $validated['search'];
-            $query->where(function ($q) use ($term) {
-                $q->where('hotels.name', 'like', "%{$term}%")
-                  ->orWhere('hotels.description', 'like', "%{$term}%")
-                  ->orWhere('hotels.address', 'like', "%{$term}%");
-            });
-        }
-
-        if (!empty($validated['city_id'])) {
-            $query->where('hotels.city_id', $validated['city_id']);
-        }
-
-        if (!empty($validated['stars'])) {
-            $query->where('hotels.stars', $validated['stars']);
-        }
-
-        if (!empty($validated['price_min'])) {
-            $query->where('hotels.price_per_night', '>=', $validated['price_min']);
-        }
-        if (!empty($validated['price_max'])) {
-            $query->where('hotels.price_per_night', '<=', $validated['price_max']);
-        }
-
-        if ($checkIn && $checkOut) {
-            $query->whereHas('rooms', function ($q) use ($checkIn, $checkOut, $validated) {
-                $q->where('status', 'available')
-                  ->when(!empty($validated['guests']), fn ($rq) => $rq->where('capacity', '>=', $validated['guests']))
-                  ->whereDoesntHave('reservations', function ($rq) use ($checkIn, $checkOut) {
-                      $rq->whereNotIn('status', ['cancelled'])
-                         ->where('check_in', '<', $checkOut)
-                         ->where('check_out', '>', $checkIn);
+            $term = trim($validated['search']);
+            $lowerTerm = strtolower($term);
+            $query->where(function ($q) use ($lowerTerm) {
+                $q->whereRaw('LOWER(hotels.name) LIKE ?', ["%{$lowerTerm}%"])
+                  ->orWhereRaw('LOWER(hotels.description) LIKE ?', ["%{$lowerTerm}%"])
+                  ->orWhereRaw('LOWER(hotels.address) LIKE ?', ["%{$lowerTerm}%"])
+                  ->orWhereHas('city', function ($cq) use ($lowerTerm) {
+                      $cq->whereRaw('LOWER(name) LIKE ?', ["%{$lowerTerm}%"])
+                        ->orWhereRaw('LOWER(slug) LIKE ?', ["%{$lowerTerm}%"]);
                   });
             });
+        }
+
+        // ── City Filter (handles ID, slug, exact name, or partial LIKE match) ─
+        $rawCity = $validated['city_id'] ?? $validated['city'] ?? $validated['ville'] ?? null;
+        if (!empty($rawCity)) {
+            $cleanCity = trim($rawCity);
+            $cityModel = null;
+
+            if (is_numeric($cleanCity)) {
+                $cityModel = City::find((int) $cleanCity);
+            }
+
+            if (!$cityModel) {
+                $cityModel = City::where('slug', \Illuminate\Support\Str::slug($cleanCity))
+                    ->orWhereRaw('LOWER(slug) = ?', [strtolower($cleanCity)])
+                    ->first();
+            }
+
+            if (!$cityModel) {
+                $cityModel = City::whereRaw('LOWER(name) = ?', [strtolower($cleanCity)])->first();
+            }
+
+            if (!$cityModel) {
+                $cityModel = City::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($cleanCity) . '%'])
+                    ->orWhereRaw('LOWER(slug) LIKE ?', ['%' . strtolower($cleanCity) . '%'])
+                    ->first();
+            }
+
+            if ($cityModel) {
+                $query->where('hotels.city_id', $cityModel->id);
+                $validated['city_id'] = $cityModel->id;
+            } else {
+                $query->whereRaw('1 = 0');
+                $validated['city_id'] = $cleanCity;
+            }
+        }
+
+        // ── Star Rating Filter ───────────────────────────────────────────────
+        if (!empty($validated['stars'])) {
+            $query->where('hotels.stars', (int) $validated['stars']);
+        }
+
+        // ── Date Availability / Fully Booked Filter ──────────────────────────
+        if ($checkIn && $checkOut) {
+            $query->where(function ($hq) use ($checkIn, $checkOut, $validated) {
+                $hq->whereHas('rooms', function ($rq) use ($checkIn, $checkOut, $validated) {
+                    $rq->where('status', 'available')
+                       ->when(!empty($validated['guests']), fn ($cq) => $cq->where('capacity', '>=', $validated['guests']))
+                       ->whereDoesntHave('reservations', function ($resQ) use ($checkIn, $checkOut) {
+                           $resQ->whereNotIn('status', ['cancelled'])
+                                ->where('check_in', '<', $checkOut)
+                                ->where('check_out', '>', $checkIn);
+                       });
+                })
+                ->orWhere(function ($fallbackQ) use ($checkIn, $checkOut) {
+                    $fallbackQ->doesntHave('rooms')
+                        ->whereDoesntHave('reservations', function ($resQ) use ($checkIn, $checkOut) {
+                            $resQ->whereNotIn('status', ['cancelled'])
+                                 ->where('check_in', '<', $checkOut)
+                                 ->where('check_out', '>', $checkIn);
+                        });
+                });
+            });
         } elseif (!empty($validated['guests'])) {
-            // Even without dates, filter hotels that have at least one room fitting the guest count
-            $query->whereHas('rooms', function ($q) use ($validated) {
-                $q->where('status', 'available')
-                  ->where('capacity', '>=', $validated['guests']);
+            $query->where(function ($hq) use ($validated) {
+                $hq->whereHas('rooms', function ($rq) use ($validated) {
+                    $rq->where('status', 'available')
+                       ->where('capacity', '>=', $validated['guests']);
+                })->orWhereDoesntHave('rooms');
             });
         }
 
-        switch ($validated['sort'] ?? 'name_asc') {
-            case 'price_asc':  $query->orderBy('hotels.price_per_night', 'asc');  break;
-            case 'price_desc': $query->orderBy('hotels.price_per_night', 'desc'); break;
-            case 'stars_desc': $query->orderBy('hotels.stars', 'desc');            break;
-            default:           $query->orderBy('hotels.name', 'asc');             break;
-        }
+        $query->orderBy('hotels.id', 'desc');
 
         $hotels = $query->paginate(12)->withQueryString();
 
@@ -100,19 +165,12 @@ class HotelController extends Controller
         }
 
         $cities = \Illuminate\Support\Facades\Cache::remember('active_cities_with_hotel_count', 3600, function () {
-            return City::whereHas('hotels', fn ($q) => $q->where('status', 'active'))
-                ->withCount(['hotels' => fn ($q) => $q->where('status', 'active')])
+            return City::withCount(['hotels' => fn ($q) => $q->where('status', 'active')])
                 ->orderBy('name')
                 ->get();
         });
 
-        $priceRange = \Illuminate\Support\Facades\Cache::remember('active_hotels_price_range', 1800, function () {
-            return Hotel::where('status', 'active')
-                ->selectRaw('MIN(price_per_night) as min_price, MAX(price_per_night) as max_price')
-                ->first();
-        });
-
-        return view('client.hotels.index', compact('hotels', 'cities', 'priceRange', 'validated'));
+        return view('client.hotels.index', compact('hotels', 'cities', 'validated'));
     }
 
     // ────────────────────────────────────────────────────────────────────────────

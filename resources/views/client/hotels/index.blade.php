@@ -104,15 +104,6 @@
 }
 .star-radio label { cursor: pointer; font-size: 0.9rem; }
 .star-radio input[type=radio]:checked + label { color: var(--brand-primary); font-weight: 600; }
-.price-range-display {
-    display: flex; justify-content: space-between;
-    font-size: 0.85rem; font-weight: 600; color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-.filter-sidebar input[type=range] {
-    width: 100%;
-    accent-color: var(--brand-accent);
-}
 .btn-clear-filters {
     width: 100%;
     border: 1px solid var(--border-color);
@@ -131,7 +122,7 @@
 .btn-clear-filters:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
 
 /* ══════════════════════════════════════════════════════
-   Toolbar (results count + sort)
+   Toolbar (results count)
 ══════════════════════════════════════════════════════ */
 .results-toolbar {
     display: flex;
@@ -146,18 +137,6 @@
     color: var(--text-muted);
 }
 .results-count strong { color: var(--text-primary); }
-.sort-select {
-    border: 1px solid var(--border-color);
-    border-radius: 0.625rem;
-    padding: 0.45rem 0.875rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-primary);
-    background: #fff;
-    cursor: pointer;
-    box-shadow: none;
-}
-.sort-select:focus { border-color: var(--brand-primary); box-shadow: none; outline: none; }
 
 /* Mobile filter trigger button */
 .btn-mobile-filter {
@@ -426,16 +405,7 @@
                         @endfor
                     </select>
                 </div>
-                {{-- carry through sort and price from sidebar --}}
-                @if(!empty($validated['sort']))
-                    <input type="hidden" name="sort" value="{{ $validated['sort'] }}">
-                @endif
-                @if(!empty($validated['price_min']))
-                    <input type="hidden" name="price_min" value="{{ $validated['price_min'] }}">
-                @endif
-                @if(!empty($validated['price_max']))
-                    <input type="hidden" name="price_max" value="{{ $validated['price_max'] }}">
-                @endif
+                {{-- carry through stars from sidebar --}}
                 @if(!empty($validated['stars']))
                     <input type="hidden" name="stars" value="{{ $validated['stars'] }}">
                 @endif
@@ -457,8 +427,7 @@
     <!-- Active Filter Pills (desktop + mobile) -->
     @php
         $hasFilters = !empty($validated['search']) || !empty($validated['city_id'])
-            || !empty($validated['stars']) || !empty($validated['price_min'])
-            || !empty($validated['price_max']) || !empty($validated['check_in'])
+            || !empty($validated['stars']) || !empty($validated['check_in'])
             || !empty($validated['check_out']) || !empty($validated['guests']);
     @endphp
     @if($hasFilters)
@@ -471,7 +440,7 @@
         @if(!empty($validated['city_id']))
             @php $selectedCity = $cities->firstWhere('id', $validated['city_id']); @endphp
             @if($selectedCity)
-            <a href="{{ request()->fullUrlWithQuery(['city_id' => null, 'page' => null]) }}" class="filter-pill">
+            <a href="{{ request()->fullUrlWithQuery(['city_id' => null, 'city' => null, 'ville' => null, 'page' => null]) }}" class="filter-pill">
                 <i class="bi bi-x"></i> {{ $selectedCity->name }}
             </a>
             @endif
@@ -493,12 +462,6 @@
                 <i class="bi bi-x"></i> {{ $validated['stars'] }} Stars
             </a>
         @endif
-        @if(!empty($validated['price_min']) || !empty($validated['price_max']))
-            <a href="{{ request()->fullUrlWithQuery(['price_min' => null, 'price_max' => null, 'page' => null]) }}" class="filter-pill">
-                <i class="bi bi-x"></i>
-                {{ number_format($validated['price_min'] ?? 0) }} MAD – {{ number_format($validated['price_max'] ?? ($priceRange->max_price ?? 9999)) }} MAD
-            </a>
-        @endif
         <a href="{{ route('hotels.index') }}" class="filter-pill" style="color:#EF4444; border-color:rgba(239,68,68,0.3);">
             <i class="bi bi-x-circle"></i> Clear all
         </a>
@@ -509,12 +472,9 @@
         <!-- ══════════════════ FILTER SIDEBAR (desktop) ══════════════════ -->
         <aside class="filter-sidebar" aria-label="Filter hotels">
             <form method="GET" action="{{ route('hotels.index') }}" id="filterForm">
-                {{-- carry through text search & sort --}}
+                {{-- carry through text search --}}
                 @if(!empty($validated['search']))
                     <input type="hidden" name="search" value="{{ $validated['search'] }}">
-                @endif
-                @if(!empty($validated['sort']))
-                    <input type="hidden" name="sort" value="{{ $validated['sort'] }}">
                 @endif
                 {{-- carry through date & guest context --}}
                 @if(!empty($validated['check_in']))
@@ -526,8 +486,9 @@
                 @if(!empty($validated['guests']))
                     <input type="hidden" name="guests" value="{{ $validated['guests'] }}">
                 @endif
-                <!-- City -->
-                <p class="filter-section-title">Destination</p>
+
+                <!-- Filter by City (Ville) -->
+                <p class="filter-section-title">Filter by City (Ville)</p>
                 <div class="mb-4">
                     @foreach($cities as $city)
                     <div class="form-check mb-1">
@@ -544,14 +505,14 @@
                     @endforeach
                     @if(!empty($validated['city_id']))
                     <div class="mt-2">
-                        <a href="{{ request()->fullUrlWithQuery(['city_id' => null, 'page' => null]) }}"
+                        <a href="{{ request()->fullUrlWithQuery(['city_id' => null, 'city' => null, 'ville' => null, 'page' => null]) }}"
                            class="text-muted" style="font-size:0.82rem; text-decoration:underline;">Clear</a>
                     </div>
                     @endif
                 </div>
 
-                <!-- Star Rating -->
-                <p class="filter-section-title">Star Rating</p>
+                <!-- Filter by Star Rating (Nombre d'étoiles) -->
+                <p class="filter-section-title">Filter by Star Rating (Nombre d'étoiles)</p>
                 <div class="mb-4">
                     @for($s = 5; $s >= 1; $s--)
                     <div class="form-check star-radio mb-1">
@@ -574,36 +535,6 @@
                     </div>
                     @endif
                 </div>
-
-                <!-- Price Range -->
-                @if($priceRange && $priceRange->max_price > 0)
-                <p class="filter-section-title">Price per Night</p>
-                <div class="mb-4">
-                    @php
-                        $absMin = (int) floor($priceRange->min_price ?? 0);
-                        $absMax = (int) ceil($priceRange->max_price ?? 1000);
-                        $curMin = (int) ($validated['price_min'] ?? $absMin);
-                        $curMax = (int) ($validated['price_max'] ?? $absMax);
-                    @endphp
-                    <div class="price-range-display">
-                        <span id="displayMin">{{ number_format($curMin) }} MAD</span>
-                        <span id="displayMax">{{ number_format($curMax) }} MAD</span>
-                    </div>
-                    <input type="range" id="rangeMin" name="price_min"
-                           min="{{ $absMin }}" max="{{ $absMax }}"
-                           value="{{ $curMin }}"
-                           oninput="updateRange('min', this.value)"
-                           style="margin-bottom:0.5rem;">
-                    <input type="range" id="rangeMax" name="price_max"
-                           min="{{ $absMin }}" max="{{ $absMax }}"
-                           value="{{ $curMax }}"
-                           oninput="updateRange('max', this.value)">
-                    <button type="submit" class="btn btn-sm w-100 mt-2"
-                            style="background:var(--brand-primary);color:#fff;border-radius:0.5rem;font-size:0.82rem;font-weight:600;">
-                        Apply Price
-                    </button>
-                </div>
-                @endif
 
                 <a href="{{ route('hotels.index') }}" class="btn-clear-filters">
                     <i class="bi bi-x-circle me-1"></i> Reset all filters
@@ -628,16 +559,6 @@
                             for "<em>{{ $validated['search'] }}</em>"
                         @endif
                     </span>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <label for="sortSelect" class="text-muted" style="font-size:0.82rem; white-space:nowrap;">Sort by:</label>
-                    <select id="sortSelect" class="sort-select form-select"
-                            onchange="applySortChange(this.value)">
-                        <option value="name_asc"    {{ ($validated['sort'] ?? 'name_asc') === 'name_asc'    ? 'selected' : '' }}>Name A–Z</option>
-                        <option value="price_asc"   {{ ($validated['sort'] ?? '') === 'price_asc'   ? 'selected' : '' }}>Price: Low to High</option>
-                        <option value="price_desc"  {{ ($validated['sort'] ?? '') === 'price_desc'  ? 'selected' : '' }}>Price: High to Low</option>
-                        <option value="stars_desc"  {{ ($validated['sort'] ?? '') === 'stars_desc'  ? 'selected' : '' }}>Stars: Highest First</option>
-                    </select>
                 </div>
             </div>
 
@@ -769,9 +690,6 @@
         @if(!empty($validated['search']))
             <input type="hidden" name="search" value="{{ $validated['search'] }}">
         @endif
-        @if(!empty($validated['sort']))
-            <input type="hidden" name="sort" value="{{ $validated['sort'] }}">
-        @endif
         {{-- carry through date & guest context --}}
         @if(!empty($validated['check_in']))
             <input type="hidden" name="check_in" value="{{ $validated['check_in'] }}">
@@ -783,8 +701,8 @@
             <input type="hidden" name="guests" value="{{ $validated['guests'] }}">
         @endif
 
-        <!-- Destination -->
-        <p class="filter-section-title">Destination</p>
+        <!-- Destination / City -->
+        <p class="filter-section-title">Filter by City (Ville)</p>
         <div class="mb-4">
             <select name="city_id" class="form-select mb-2">
                 <option value="">All destinations</option>
@@ -797,7 +715,7 @@
         </div>
 
         <!-- Stars -->
-        <p class="filter-section-title">Star Rating</p>
+        <p class="filter-section-title">Filter by Star Rating (Nombre d'étoiles)</p>
         <div class="mb-4">
             <div class="row g-2">
                 @for($s = 5; $s >= 1; $s--)
@@ -811,26 +729,6 @@
                 @endfor
             </div>
         </div>
-
-        <!-- Price -->
-        @if($priceRange && $priceRange->max_price > 0)
-        <p class="filter-section-title">Price per Night</p>
-        <div class="mb-4">
-            <div class="price-range-display">
-                <span id="mDisplayMin">{{ number_format($curMin ?? 0) }} MAD</span>
-                <span id="mDisplayMax">{{ number_format($curMax ?? $absMax) }} MAD</span>
-            </div>
-            <input type="range" name="price_min" id="mRangeMin"
-                   min="{{ $absMin }}" max="{{ $absMax }}"
-                   value="{{ $curMin ?? $absMin }}"
-                   oninput="document.getElementById('mDisplayMin').textContent=parseInt(this.value).toLocaleString() + ' MAD'">
-            <input type="range" name="price_max" id="mRangeMax"
-                   min="{{ $absMin }}" max="{{ $absMax }}"
-                   value="{{ $curMax ?? $absMax }}"
-                   oninput="document.getElementById('mDisplayMax').textContent=parseInt(this.value).toLocaleString() + ' MAD'"
-                   style="margin-top:0.5rem;">
-        </div>
-        @endif
 
         <div class="d-grid gap-2 mt-3">
             <button type="submit" class="btn btn-accent py-2" style="border-radius:0.75rem;">
@@ -846,32 +744,18 @@
 
 @push('scripts')
 <script>
-/* ── Sort: update URL param and reload ─────────────────────── */
-function applySortChange(val) {
-    const url = new URL(window.location.href);
-    url.searchParams.set('sort', val);
-    url.searchParams.delete('page');
-    window.location.href = url.toString();
-}
-
-/* ── Price range display ───────────────────────────────────── */
-function updateRange(which, val) {
-    const minEl = document.getElementById('displayMin');
-    const maxEl = document.getElementById('displayMax');
-    const minInput = document.getElementById('rangeMin');
-    const maxInput = document.getElementById('rangeMax');
-    if (!minEl || !maxEl) return;
-
-    let minVal = parseInt(minInput.value);
-    let maxVal = parseInt(maxInput.value);
-
-    if (which === 'min') {
-        if (parseInt(val) > maxVal) { minInput.value = maxVal; val = maxVal; }
-        minEl.textContent = parseInt(val).toLocaleString() + ' MAD';
-    } else {
-        if (parseInt(val) < minVal) { maxInput.value = minVal; val = minVal; }
-        maxEl.textContent = parseInt(val).toLocaleString() + ' MAD';
-    }
+/* ── Date sync: check-in & check-out ────────────────────────── */
+const checkInInput = document.querySelector('input[name="check_in"]');
+const checkOutInput = document.querySelector('input[name="check_out"]');
+if (checkInInput && checkOutInput) {
+    checkInInput.addEventListener('change', function () {
+        if (this.value) {
+            checkOutInput.min = this.value;
+            if (checkOutInput.value && checkOutInput.value <= this.value) {
+                checkOutInput.value = '';
+            }
+        }
+    });
 }
 
 /* ── Mobile drawer ─────────────────────────────────────────── */
