@@ -56,8 +56,10 @@ class HomeController extends Controller
         // 4. Guest Reviews (Cached for 15 minutes)
         $guestReviews = \Illuminate\Support\Facades\Cache::remember('home_guest_reviews', 900, function () {
             return Review::with(['user', 'hotel'])
-                ->where('rating', '>=', 4)
-                ->orderBy('created_at', 'desc')
+                ->whereHas('hotel', function ($query) {
+                    $query->where('status', 'active');
+                })
+                ->latest()
                 ->take(3)
                 ->get();
         });

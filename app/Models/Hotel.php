@@ -78,6 +78,7 @@ class Hotel extends Model
             \Illuminate\Support\Facades\Cache::forget('home_platform_stats');
             \Illuminate\Support\Facades\Cache::forget('active_cities_with_hotel_count');
             \Illuminate\Support\Facades\Cache::forget('active_hotels_price_range');
+            \Illuminate\Support\Facades\Cache::forget('home_guest_reviews');
         };
 
         static::saved($flushCache);
