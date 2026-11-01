@@ -2,17 +2,17 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
  * Password reset notification for regular Admin accounts (role: admin).
  * Sends the reset link to the Admin-specific reset route, not the Client route.
+ * Intentionally synchronous (no Queueable/ShouldQueue) so the reset email is
+ * delivered immediately even when QUEUE_CONNECTION=database and no worker runs.
  */
 class AdminPasswordResetNotification extends Notification
 {
-    use Queueable;
 
     /**
      * The password reset token.

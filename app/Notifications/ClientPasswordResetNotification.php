@@ -2,13 +2,16 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+/**
+ * Password reset notification for Client accounts.
+ * Intentionally synchronous (no Queueable/ShouldQueue) so the reset email is
+ * delivered immediately even when QUEUE_CONNECTION=database and no worker runs.
+ */
 class ClientPasswordResetNotification extends Notification
 {
-    use Queueable;
 
     /**
      * The password reset token.
@@ -41,8 +44,8 @@ class ClientPasswordResetNotification extends Notification
             'email' => $notifiable->getEmailForPasswordReset(),
         ], false));
 
-        $expireMinutes = config('auth.passwords.users.expire', 60);
-        $clientName = $notifiable->name ?? 'there';
+        $expireMinutes = config('auth.passwords.users.expire') ?? config('auth.passwords.clients.expire') ?? 60;
+        $clientName = (!empty($notifiable->name) && trim($notifiable->name) !== '') ? $notifiable->name : 'there';
         $subject = 'Reset Your HotelBooking Password';
 
         return (new MailMessage)

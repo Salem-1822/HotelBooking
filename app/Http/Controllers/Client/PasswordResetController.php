@@ -45,9 +45,8 @@ class PasswordResetController extends Controller
 
         // Attempt to send the reset link via the 'users' broker.
         // We intentionally ignore the status to prevent account enumeration.
-        Password::broker('users')->sendResetLink(
-            $request->only('email')
-        );
+        $credentials = ['email' => trim((string) $request->input('email'))];
+        Password::broker('users')->sendResetLink($credentials);
 
         // Generic message regardless of whether the email is registered.
         return back()->with(
@@ -95,8 +94,15 @@ class PasswordResetController extends Controller
 
         // Attempt to reset the password via the 'users' broker.
         // The broker validates the token, checks expiry, and updates the password.
+        $credentials = [
+            'token'                 => $request->input('token'),
+            'email'                 => trim((string) $request->input('email')),
+            'password'              => $request->input('password'),
+            'password_confirmation' => $request->input('password_confirmation'),
+        ];
+
         $status = Password::broker('users')->reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
+            $credentials,
             function ($user, $password) {
                 // The 'password' cast on User ensures hashing automatically.
                 $user->forceFill(['password' => $password])->save();

@@ -243,9 +243,14 @@
 
             <hr class="auth-divider">
 
-            <p class="auth-footer-text reveal delay-4">
+            <p class="auth-footer-text reveal delay-4 mb-2">
                 Remember your password?
                 <a href="{{ route('login') }}">Back to Sign In</a>
+            </p>
+
+            <p class="auth-footer-text reveal delay-4 mt-0" style="font-size: 0.78rem;">
+                Hotel administrator?
+                <a href="{{ route('admin.password.request') }}">Admin Reset Portal</a>
             </p>
 
         </div>{{-- /.auth-card-body --}}
