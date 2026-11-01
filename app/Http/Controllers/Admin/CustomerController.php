@@ -18,7 +18,7 @@ class CustomerController extends Controller
         $hotelId = Auth::guard('admin')->user()->hotel_id;
 
         if (!$hotelId) {
-            return redirect()->route('login')->with('error', 'No hotel assigned.');
+            return redirect()->route('admin.dashboard')->with('error', 'No hotel assigned.');
         }
 
         // --- Dashboard-style summary cards via database aggregates ---

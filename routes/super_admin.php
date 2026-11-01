@@ -16,7 +16,7 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Protected Routes (Strictly Super Admin only)
-Route::middleware(['role:super_admin', 'auth:admin'])->group(function () {
+Route::middleware(['auth:admin', 'role:super_admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Hotels

@@ -16,14 +16,27 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $hotelId = Auth::guard('admin')->user()->hotel_id;
+        $admin = Auth::guard('admin')->user();
+        $hotelId = $admin->hotel_id;
+
+        // Fallback: Check if a hotel is assigned to this admin via admin_id
+        if (!$hotelId && !empty($admin->id)) {
+            $fallbackHotel = Hotel::whereNotNull('admin_id')->where('admin_id', $admin->id)->first();
+            if ($fallbackHotel) {
+                $hotelId = $fallbackHotel->id;
+                $admin->update(['hotel_id' => $hotelId]);
+            }
+        }
 
         if (!$hotelId) {
-            return redirect()->route('login')->with('error', 'No hotel assigned.');
+            return view('admin.no-hotel');
         }
 
         // Hotel with Rooms count
-        $hotel = Hotel::withCount('rooms')->findOrFail($hotelId);
+        $hotel = Hotel::withCount('rooms')->find($hotelId);
+        if (!$hotel) {
+            return view('admin.no-hotel');
+        }
 
         // Rooms Stats (Single aggregate query)
         $totalRooms = $hotel->rooms_count;

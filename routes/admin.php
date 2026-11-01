@@ -20,7 +20,7 @@ Route::get('/reset-password/{token}', [PasswordResetController::class, 'showRese
 Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])
     ->name('password.update');
 
-Route::middleware(['role:admin', 'auth:admin'])->group(function () {
+Route::middleware(['auth:admin', 'role:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('rooms', RoomController::class)->except(['create', 'edit', 'show']);
     Route::resource('reservations', ReservationController::class)->except(['create', 'edit', 'show']);
