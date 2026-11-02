@@ -285,6 +285,8 @@
                                 <a href="{{ route('client.password.request') }}" class="forgot-link">Forgot password?</a>
                                 <span class="text-muted small mx-1">|</span>
                                 <a href="{{ route('admin.password.request') }}" class="forgot-link text-muted" style="font-size: 0.75rem;">Admin?</a>
+                                <span class="text-muted small mx-1">|</span>
+                                <a href="{{ route('super_admin.password.request') }}" class="forgot-link text-muted" style="font-size: 0.75rem;">Super Admin?</a>
                             </div>
                         </div>
                         <div class="input-icon-wrap">

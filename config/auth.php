@@ -46,6 +46,10 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+        'super_admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
     ],
 
     /*
@@ -77,6 +81,11 @@ return [
         ],
 
         'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+
+        'super_admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
@@ -122,6 +131,23 @@ return [
         'admins' => [
             'provider' => 'admins',
             'table'    => 'admin_password_reset_tokens',
+            'expire'   => 60,
+            'throttle' => 60,
+        ],
+
+        // Dedicated broker for Super Admin (role: super_admin) password resets.
+        // Uses a dedicated token table to keep super admin tokens isolated.
+        'super_admins' => [
+            'provider' => 'admins',
+            'table'    => 'super_admin_password_reset_tokens',
+            'expire'   => 60,
+            'throttle' => 60,
+        ],
+
+        // Super Admin broker alias
+        'super_admin' => [
+            'provider' => 'admins',
+            'table'    => 'super_admin_password_reset_tokens',
             'expire'   => 60,
             'throttle' => 60,
         ],

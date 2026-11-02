@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\AdminPasswordResetNotification;
+use App\Notifications\SuperAdminPasswordResetNotification;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -49,12 +50,17 @@ class Admin extends Authenticatable implements CanResetPasswordContract
 
     /**
      * Send the password reset notification to the admin.
-     * Overrides the default to use an Admin-specific notification with the
-     * correct reset URL (admin.password.reset route).
+     * Overrides the default to use the role-specific notification:
+     * - SuperAdminPasswordResetNotification (for role: super_admin -> super_admin.password.reset)
+     * - AdminPasswordResetNotification (for role: admin -> admin.password.reset)
      */
     public function sendPasswordResetNotification($token): void
     {
-        $this->notify(new AdminPasswordResetNotification($token));
+        if ($this->role === 'super_admin') {
+            $this->notify(new SuperAdminPasswordResetNotification($token));
+        } else {
+            $this->notify(new AdminPasswordResetNotification($token));
+        }
     }
 
     /**

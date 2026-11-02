@@ -52,13 +52,16 @@ class User extends Authenticatable implements CanResetPasswordContract
     }
 
     /**
-     * Send the password reset notification to the client.
-     * Overrides the default to use a client-specific notification with the
-     * correct reset URL (client.password.reset route).
+     * Send the password reset notification to the client or super admin.
+     * Overrides the default to use a role-specific notification.
      */
     public function sendPasswordResetNotification($token): void
     {
-        $this->notify(new ClientPasswordResetNotification($token));
+        if ($this->role === 'super_admin') {
+            $this->notify(new \App\Notifications\SuperAdminPasswordResetNotification($token));
+        } else {
+            $this->notify(new ClientPasswordResetNotification($token));
+        }
     }
 
     /**
