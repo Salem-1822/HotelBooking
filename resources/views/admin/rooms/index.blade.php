@@ -101,6 +101,16 @@
         from { opacity: 0; transform: translateX(20px); }
         to { opacity: 1; transform: translateX(0); }
     }
+    #viewDescription {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
+        max-width: 100%;
+    }
+    .modal-body {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
 </style>
 
 @endpush
@@ -467,7 +477,7 @@
                         </div>
                         <div class="mt-4">
                             <div class="text-muted small mb-2">Description</div>
-                            <p id="viewDescription" class="mb-0"></p>
+                            <p id="viewDescription" class="mb-0" style="word-break: break-word; overflow-wrap: anywhere; white-space: pre-line; max-width: 100%;"></p>
                         </div>
                     </div>
                 </div>

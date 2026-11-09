@@ -172,14 +172,14 @@
     text-transform: uppercase; letter-spacing: 0.06em;
     margin-bottom: 0.5rem;
 }
-.room-title { font-size: 1.1rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 0.4rem; }
+.room-title { font-size: 1.1rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 0.4rem; word-break: break-word; overflow-wrap: anywhere; max-width: 100%; }
 .room-meta {
     display: flex; flex-wrap: wrap; gap: 1rem;
     margin-bottom: 0.875rem;
 }
 .room-meta-item { font-size: 0.83rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.35rem; }
 .room-meta-item i { color: var(--brand-accent); }
-.room-description { font-size: 0.87rem; color: #475569; flex: 1; margin-bottom: 0.875rem; }
+.room-description { font-size: 0.87rem; color: #475569; flex: 1; margin-bottom: 0.875rem; word-break: break-word; overflow-wrap: anywhere; white-space: pre-line; max-width: 100%; }
 .room-footer {
     display: flex; align-items: center; justify-content: space-between;
     padding-top: 0.875rem;
@@ -232,7 +232,7 @@
     box-shadow: var(--card-shadow);
 }
 .review-quote-icon { color: var(--brand-accent); font-size: 1.75rem; opacity: 0.3; margin-bottom: 0.75rem; }
-.review-text { font-style: italic; color: #475569; font-size: 0.92rem; margin-bottom: 1rem; }
+.review-text { font-style: italic; color: #475569; font-size: 0.92rem; margin-bottom: 1rem; word-break: break-word; overflow-wrap: anywhere; white-space: pre-line; max-width: 100%; }
 
 /* ══════════════════════════════════════════
    Related Hotels
@@ -265,7 +265,7 @@
 .policy-row { display: flex; gap: 1rem; padding: 0.625rem 0; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; }
 .policy-row:last-child { border-bottom: none; }
 .policy-label { width: 160px; flex-shrink: 0; color: var(--text-muted); font-weight: 500; }
-.policy-value { color: var(--text-primary); }
+.policy-value { color: var(--text-primary); word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
 
 /* ══════════════════════════════════════════
    Mobile sticky CTA
@@ -643,7 +643,7 @@
                             </div>
 
                             @if($room->description)
-                            <p class="room-description">{{ \Illuminate\Support\Str::limit($room->description, 140) }}</p>
+                            <p class="room-description break-words overflow-wrap-break-word whitespace-pre-line max-w-full" style="word-break: break-word; overflow-wrap: anywhere; white-space: pre-line; max-width: 100%;">{{ \Illuminate\Support\Str::limit($room->description, 140) }}</p>
                             @else
                             <div style="flex:1;"></div>
                             @endif
