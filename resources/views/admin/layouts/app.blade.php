@@ -521,7 +521,7 @@
                         </li>
                         <li><hr class="dropdown-divider mx-2 my-1"></li>
                         <li>
-                            <form action="{{ route('super_admin.logout') }}" method="POST">
+                            <form action="{{ route('admin.logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="dropdown-item text-danger">
                                     <i class="bi bi-box-arrow-right me-2"></i> Sign Out

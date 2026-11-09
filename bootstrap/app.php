@@ -33,9 +33,29 @@ return Application::configure(basePath: dirname(__DIR__))
                 if (\Illuminate\Support\Facades\Auth::guard('web')->check() && ($request->is('admin*') || $request->is('super-admin*'))) {
                     abort(403, 'Unauthorized access.');
                 }
+                if (\Illuminate\Support\Facades\Auth::guard('admin')->check() && $request->is('client*')) {
+                    abort(403, 'Unauthorized access.');
+                }
+                if ($request->is('super-admin*')) {
+                    return $request->expectsJson() ? null : route('super_admin.login');
+                }
+                if ($request->is('admin*')) {
+                    return $request->expectsJson() ? null : route('admin.login');
+                }
                 return $request->expectsJson() ? null : route('login');
             },
-            users: '/client/dashboard'
+            users: function (\Illuminate\Http\Request $request) {
+                if (\Illuminate\Support\Facades\Auth::guard('admin')->check()) {
+                    $admin = \Illuminate\Support\Facades\Auth::guard('admin')->user();
+                    return $admin->role === 'super_admin'
+                        ? route('super_admin.dashboard')
+                        : route('admin.dashboard');
+                }
+                if (\Illuminate\Support\Facades\Auth::guard('web')->check()) {
+                    return route('client.dashboard');
+                }
+                return route('home');
+            }
         );
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,

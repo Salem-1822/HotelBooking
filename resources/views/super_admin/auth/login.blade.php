@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'Login')
+@section('title', 'Super Admin Login')
 
 @push('styles')
     <style>
@@ -29,7 +29,7 @@
 
         /* ✨ Card Header ✨ */
         .auth-card-header {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, #1E3A8A 100%);
+            background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
             padding: 2.25rem 2.5rem 2rem;
             text-align: center;
             position: relative;
@@ -44,7 +44,7 @@
             width: 180px;
             height: 180px;
             border-radius: 50%;
-            background: rgba(212, 175, 55, 0.07);
+            background: rgba(212, 175, 55, 0.12);
             pointer-events: none;
         }
 
@@ -52,23 +52,37 @@
             font-family: 'Poppins', sans-serif;
             font-size: 1.75rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #fff 0%, var(--brand-accent) 100%);
+            background: linear-gradient(135deg, #fff 0%, #D4AF37 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.02em;
+            margin-bottom: 0.35rem;
+        }
+
+        .auth-badge {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.2);
+            color: #D4AF37;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.2rem 0.65rem;
+            border-radius: 9999px;
             margin-bottom: 0.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.35);
         }
 
         .auth-card-header h5 {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.05rem;
+            font-weight: 600;
             margin: 0;
         }
 
         .auth-card-header p {
-            color: rgba(255, 255, 255, 0.55);
+            color: rgba(255, 255, 255, 0.65);
             font-size: 0.83rem;
             margin: 0.35rem 0 0;
         }
@@ -112,8 +126,8 @@
         }
 
         .input-icon-wrap .form-control:focus {
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.08);
+            border-color: #1E3A8A;
+            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
             background: #fff;
         }
 
@@ -130,7 +144,7 @@
 
         /* ✨ Submit Button ✨ */
         .btn-auth {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, #1E3A8A 100%);
+            background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
             color: #fff;
             border: none;
             padding: 0.8rem;
@@ -147,33 +161,15 @@
         .btn-auth:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(15, 23, 42, 0.28);
-            filter: brightness(1.07);
+            filter: brightness(1.08);
+            color: #fff;
         }
 
         .btn-auth:active {
             transform: translateY(0);
         }
 
-        /* ✨ Footer Link ✨ */
-        .auth-footer-text {
-            text-align: center;
-            font-size: 0.855rem;
-            color: var(--text-muted);
-            margin-top: 1.5rem;
-        }
-
-        .auth-footer-text a {
-            color: var(--brand-primary);
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .auth-footer-text a:hover {
-            color: #1E3A8A;
-            text-decoration: underline;
-        }
-
-        /* ✨ Success Alert ✨ */
+        /* ✨ Alerts ✨ */
         .alert-success-custom {
             border-radius: 0.75rem;
             font-size: 0.85rem;
@@ -184,7 +180,6 @@
             padding: 0.9rem 1rem;
         }
 
-        /* ✨ Error Alert ✨ */
         .alert-error-custom {
             border-radius: 0.75rem;
             font-size: 0.85rem;
@@ -195,57 +190,66 @@
             padding: 0.9rem 1rem;
         }
 
-        /* ✨ Divider ✨ */
         .auth-divider {
             border-color: var(--border-color);
             margin: 1.5rem 0;
         }
 
-        /* ✨ Links ✨ */
         .forgot-link {
-            color: var(--brand-primary);
+            color: #1E3A8A;
             font-weight: 600;
             text-decoration: none;
             font-size: 0.8rem;
         }
 
         .forgot-link:hover {
-            color: #1E3A8A;
+            color: #0F172A;
             text-decoration: underline;
         }
 
-        /* Checkbox */
         .form-check-input:checked {
-            background-color: var(--brand-primary);
-            border-color: var(--brand-primary);
+            background-color: #1E3A8A;
+            border-color: #1E3A8A;
         }
 
         .security-note {
             text-align: center;
-            font-size: 0.72rem;
-            color: #9CA3AF;
+            font-size: 0.74rem;
+            color: #6B7280;
             margin-top: 1.25rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.35rem;
         }
+
+        .portal-notice {
+            background: #F8FAFC;
+            border-radius: 0.65rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.78rem;
+            color: #64748B;
+            text-align: center;
+            border: 1px dashed #CBD5E1;
+            margin-top: 1.5rem;
+        }
     </style>
 @endpush
 
 @section('content')
     <section class="auth-section">
-        <div class="auth-card reveal">
+        <div class="auth-card">
 
             {{-- Card Header --}}
             <div class="auth-card-header">
-                <div class="auth-brand reveal delay-1">HotelBooking</div>
-                <h5 class="reveal delay-1">Welcome back</h5>
-                <p class="reveal delay-2">Sign in to your account to continue.</p>
+                <div class="auth-badge"><i class="bi bi-shield-lock me-1"></i>Platform Administration</div>
+                <div class="auth-brand">HotelBooking</div>
+                <h5>Super Admin Portal</h5>
+                <p>Sign in to access platform management and system configuration.</p>
             </div>
 
             {{-- Card Body --}}
-            <div class="auth-card-body reveal delay-3">
+            <div class="auth-card-body">
 
                 @if(session('success'))
                     <div class="alert-success-custom mb-4">
@@ -268,11 +272,11 @@
 
                     {{-- Email Address --}}
                     <div class="mb-3">
-                        <label for="email" class="auth-label">Email Address</label>
+                        <label for="email" class="auth-label">Super Admin Email</label>
                         <div class="input-icon-wrap">
                             <i class="bi bi-envelope input-icon"></i>
                             <input type="email" name="email" id="email"
-                                class="form-control @error('email') is-invalid @enderror" placeholder="you@example.com"
+                                class="form-control @error('email') is-invalid @enderror" placeholder="superadmin@example.com"
                                 value="{{ old('email') }}" autocomplete="email" required autofocus>
                         </div>
                     </div>
@@ -281,13 +285,7 @@
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <label for="password" class="auth-label mb-0">Password</label>
-                            <div>
-                                <a href="{{ route('client.password.request') }}" class="forgot-link">Forgot password?</a>
-                                <span class="text-muted small mx-1">|</span>
-                                <a href="{{ route('admin.password.request') }}" class="forgot-link text-muted" style="font-size: 0.75rem;">Admin?</a>
-                                <span class="text-muted small mx-1">|</span>
-                                <a href="{{ route('super_admin.password.request') }}" class="forgot-link text-muted" style="font-size: 0.75rem;">Super Admin?</a>
-                            </div>
+                            <a href="{{ route('super_admin.password.request') }}" class="forgot-link">Forgot password?</a>
                         </div>
                         <div class="input-icon-wrap">
                             <i class="bi bi-lock input-icon"></i>
@@ -308,21 +306,19 @@
 
                     {{-- Submit --}}
                     <button type="submit" class="btn-auth">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                        <i class="bi bi-shield-check me-2"></i>Sign In as Super Admin
                     </button>
 
                     <div class="security-note">
-                        <i class="bi bi-shield-check text-success"></i>
-                        Secured by HotelBooking IDP &mdash; All sessions are encrypted
+                        <i class="bi bi-shield-shaded text-primary"></i>
+                        Authorized platform personnel only &mdash; All attempts are logged
+                    </div>
+
+                    <div class="portal-notice">
+                        Are you a hotel manager? <a href="{{ route('admin.login') }}" class="text-decoration-none fw-semibold">Admin Login</a>
+                        &bull; Client? <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Client Login</a>
                     </div>
                 </form>
-
-                <hr class="auth-divider">
-
-                <p class="auth-footer-text reveal delay-4">
-                    Don't have an account?
-                    <a href="{{ route('client.register') }}">Create Account</a>
-                </p>
 
             </div>{{-- /.auth-card-body --}}
         </div>{{-- /.auth-card --}}

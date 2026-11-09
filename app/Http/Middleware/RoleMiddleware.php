@@ -26,6 +26,12 @@ class RoleMiddleware
             if ($request->expectsJson()) {
                 abort(401, 'Unauthenticated.');
             }
+            if (in_array('super_admin', $roles, true)) {
+                return redirect()->route('super_admin.login');
+            }
+            if (in_array('admin', $roles, true)) {
+                return redirect()->route('admin.login');
+            }
             return redirect()->route('login');
         }
 

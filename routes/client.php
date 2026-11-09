@@ -6,6 +6,11 @@ use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\PasswordResetController;
 use App\Http\Controllers\Client\ReservationController;
 
+// --- Client Authentication (public/guest) ---
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 // --- Client Registration (public/guest) ---
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:10,1')->name('register.submit');
