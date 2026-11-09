@@ -664,21 +664,30 @@
                                         ]);
                                         $queryStr = count($bookParams) > 0 ? '?' . http_build_query($bookParams) : '';
                                     @endphp
-                                    @auth('web')
+                                    @if(Auth::guard('admin')->check())
+                                        <button type="button"
+                                                class="btn-book-now disabled"
+                                                disabled
+                                                title="Booking is available for client accounts only"
+                                                style="opacity: 0.65; cursor: not-allowed; background: #64748B; border-color: #64748B;">
+                                            <i class="bi bi-shield-lock me-1"></i> Clients Only
+                                        </button>
+                                    @elseif(Auth::guard('web')->check() && Auth::guard('web')->user()->role === 'client')
                                         <a href="{{ route('client.reserve.create', [$hotel, $room]) }}{{ $queryStr }}"
                                            class="btn-book-now"
                                            data-room-id="{{ $room->id }}"
                                            data-room-title="Room {{ $room->room_number }}"
-                                           data-room-price="{{ $room->price_per_night }}">
-                                            <i class="bi bi-calendar-check me-1"></i> Book Now
+                                           data-room-price="{{ $room->price_per_night }}"
+                                           title="Book this room">
+                                            <i class="bi bi-calendar-check me-1"></i> Book Room
                                         </a>
                                     @else
                                         <a href="{{ route('client.reserve.create', [$hotel, $room]) }}{{ $queryStr }}"
                                            class="btn-book-now"
-                                           title="Please log in to reserve this room">
-                                            <i class="bi bi-lock me-1"></i> Login to Book
+                                           title="Sign in to book this room">
+                                            <i class="bi bi-calendar-check me-1"></i> Book Room
                                         </a>
-                                    @endauth
+                                    @endif
                                 @else
                                     <span class="btn-book-now unavailable" aria-disabled="true">
                                         <i class="bi bi-x-circle me-1"></i> Unavailable
