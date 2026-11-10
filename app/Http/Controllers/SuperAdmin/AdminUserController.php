@@ -8,6 +8,8 @@ use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
@@ -84,6 +86,11 @@ class AdminUserController extends Controller
      */
     public function update(Request $request, Admin $admin)
     {
+        // Prevent Super Admin from blocking their own account
+        if (Auth::guard('admin')->id() === $admin->id && $request->input('status') === 'blocked') {
+            return redirect()->route('super_admin.admins.index')->withErrors(['status' => 'You cannot block your own Super Admin account.']);
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('admins')->ignore($admin->id)],
@@ -95,8 +102,11 @@ class AdminUserController extends Controller
                     return $query->where('city_id', $request->city_id);
                 }),
             ],
+            'status' => ['nullable', Rule::in(['active', 'blocked'])],
+            'blocked_reason' => ['nullable', 'string', 'required_if:status,blocked', 'max:1000'],
             'image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
         ], [
+            'blocked_reason.required_if' => 'Le motif du blocage est obligatoire lorsque le compte est bloqué.',
             'image_file.image' => 'The uploaded file must be an image.',
             'image_file.mimes' => 'The image must be a file of type: jpg, jpeg, png, webp.'
         ]);
@@ -107,6 +117,29 @@ class AdminUserController extends Controller
             'city_id' => $request->city_id,
             'hotel_id' => $request->hotel_id,
         ];
+
+        // Handle Account Status (blocking / unblocking)
+        if ($request->filled('status')) {
+            if ($request->status === 'blocked') {
+                $data['is_blocked'] = true;
+                $data['status'] = 'blocked';
+                $data['blocked_reason'] = $request->blocked_reason;
+                if (! $admin->is_blocked) {
+                    $data['blocked_at'] = now();
+                }
+
+                // Immediately revoke active sessions for this administrator
+                if (Schema::hasTable('sessions')) {
+                    DB::table('sessions')->where('user_id', $admin->id)->delete();
+                }
+            } else {
+                // Unblocking process
+                $data['is_blocked'] = false;
+                $data['status'] = 'active';
+                $data['blocked_reason'] = null;
+                $data['blocked_at'] = null;
+            }
+        }
 
         // Only update password if a new one is provided
         if ($request->filled('password')) {
@@ -122,7 +155,11 @@ class AdminUserController extends Controller
 
         $admin->update($data);
 
-        return redirect()->route('super_admin.admins.index')->with('success', 'Administrator updated successfully.');
+        $message = ($request->status === 'blocked') 
+            ? 'Administrator account has been blocked.' 
+            : 'Administrator updated successfully.';
+
+        return redirect()->route('super_admin.admins.index')->with('success', $message);
     }
 
     /**

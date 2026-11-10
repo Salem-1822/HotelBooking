@@ -19,8 +19,16 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::guard('admin')->check()) {
-            $role = Auth::guard('admin')->user()->role;
-            if ($role === 'admin') {
+            $admin = Auth::guard('admin')->user();
+            if ($admin->role === 'admin' && ($admin->is_blocked || $admin->status === 'blocked')) {
+                $adminId = $admin->id;
+                Auth::guard('admin')->logout();
+                session()->invalidate();
+                session()->regenerateToken();
+                session(['blocked_admin_id' => $adminId]);
+                return redirect()->route('admin.blocked');
+            }
+            if ($admin->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
             return redirect()->route('super_admin.dashboard');
@@ -57,8 +65,23 @@ class LoginController extends Controller
             return back()->withErrors(['email' => $message])->onlyInput('email');
         }
 
-        // Attempt authentication via the admin guard for active accounts only
-        $adminCredentials = array_merge($credentials, ['status' => 'active']);
+        // Check if regular administrator account exists and is blocked
+        $adminAccount = Admin::where('email', $credentials['email'])
+            ->where('role', 'admin')
+            ->first();
+
+        if ($adminAccount && ($adminAccount->is_blocked || $adminAccount->status === 'blocked')) {
+            if (Hash::check($credentials['password'], $adminAccount->password)) {
+                $request->session()->put('blocked_admin_id', $adminAccount->id);
+                return redirect()->route('admin.blocked');
+            }
+        }
+
+        // Attempt authentication via the admin guard for active, unblocked accounts only
+        $adminCredentials = array_merge($credentials, [
+            'status' => 'active',
+            'is_blocked' => false,
+        ]);
         if (Auth::guard('admin')->attempt($adminCredentials, $request->boolean('remember'))) {
             $user = Auth::guard('admin')->user();
 
@@ -127,6 +150,31 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('admin.login');
+    }
+
+    /**
+     * Display the dedicated blocked-account information page.
+     */
+    public function showBlocked(Request $request)
+    {
+        $adminId = $request->session()->get('blocked_admin_id') ?? $request->query('admin_id');
+
+        if (! $adminId) {
+            return redirect()->route('admin.login');
+        }
+
+        $admin = Admin::find($adminId);
+
+        if (! $admin || (! $admin->is_blocked && $admin->status !== 'blocked')) {
+            return redirect()->route('admin.login');
+        }
+
+        return view('admin.auth.blocked', [
+            'admin' => $admin,
+            'adminName' => $admin->name,
+            'blockedReason' => $admin->blocked_reason ?? 'Aucun motif spécifié par le Super Administrateur.',
+            'blockedAt' => $admin->blocked_at,
+        ]);
     }
 }
 

@@ -47,6 +47,11 @@ return Application::configure(basePath: dirname(__DIR__))
             users: function (\Illuminate\Http\Request $request) {
                 if (\Illuminate\Support\Facades\Auth::guard('admin')->check()) {
                     $admin = \Illuminate\Support\Facades\Auth::guard('admin')->user();
+                    if ($admin->role === 'admin' && ($admin->is_blocked || $admin->status === 'blocked')) {
+                        \Illuminate\Support\Facades\Auth::guard('admin')->logout();
+                        session(['blocked_admin_id' => $admin->id]);
+                        return route('admin.blocked');
+                    }
                     return $admin->role === 'super_admin'
                         ? route('super_admin.dashboard')
                         : route('admin.dashboard');

@@ -125,13 +125,13 @@
                                 @endif
                             </td>
                             <td class="py-3 border-light">
-                                @if($admin->status === 'active')
-                                    <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold border border-success border-opacity-25">
-                                        Active
+                                @if($admin->is_blocked || $admin->status === 'blocked')
+                                    <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill fw-semibold border border-danger border-opacity-25">
+                                        <i class="bi bi-slash-circle me-1"></i> Blocked
                                     </span>
                                 @else
-                                    <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2 rounded-pill fw-semibold border border-secondary border-opacity-25">
-                                        Inactive
+                                    <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold border border-success border-opacity-25">
+                                        <i class="bi bi-check-circle me-1"></i> Active
                                     </span>
                                 @endif
                             </td>
@@ -268,16 +268,28 @@
                     <div class="row g-4">
                         <div class="col-6">
                             <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Status</span>
-                            @if($admin->status === 'active')
-                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold border border-success border-opacity-25">Active</span>
+                            @if($admin->is_blocked || $admin->status === 'blocked')
+                                <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill fw-semibold border border-danger border-opacity-25">
+                                    <i class="bi bi-slash-circle me-1"></i> Blocked
+                                </span>
                             @else
-                                <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2 rounded-pill fw-semibold border border-secondary border-opacity-25">Inactive</span>
+                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold border border-success border-opacity-25">
+                                    <i class="bi bi-check-circle me-1"></i> Active
+                                </span>
                             @endif
                         </div>
                         <div class="col-6">
                             <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Date Added</span>
                             <span class="fw-medium text-dark"><i class="bi bi-calendar-event text-primary me-1"></i>{{ $admin->created_at->format('M d, Y') }}</span>
                         </div>
+                        @if(($admin->is_blocked || $admin->status === 'blocked') && $admin->blocked_reason)
+                        <div class="col-12">
+                            <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Block Reason</span>
+                            <div class="p-3 bg-danger bg-opacity-10 rounded-3 border border-danger border-opacity-25 text-danger small" style="word-break: break-word; overflow-wrap: anywhere; white-space: pre-line;">
+                                <i class="bi bi-info-circle-fill me-1"></i> {{ $admin->blocked_reason }}
+                            </div>
+                        </div>
+                        @endif
                         <div class="col-12">
                             <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Assigned City</span>
                             @if($admin->city)
@@ -340,6 +352,21 @@
                         <select name="hotel_id" id="edit_hotel_{{ $admin->id }}" class="form-select bg-white border" data-current-hotel="{{ $admin->hotel_id }}" required>
                             <option value="">-- Select Hotel --</option>
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-dark small mb-2">Account Status <span class="text-danger">*</span></label>
+                        <select name="status" id="edit_status_{{ $admin->id }}" class="form-select bg-white border admin-status-select" data-admin-id="{{ $admin->id }}" required>
+                            <option value="active" {{ (!$admin->is_blocked && $admin->status === 'active') ? 'selected' : '' }}>Active (Débloqué)</option>
+                            <option value="blocked" {{ ($admin->is_blocked || $admin->status === 'blocked') ? 'selected' : '' }}>Blocked (Bloqué)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 {{ ($admin->is_blocked || $admin->status === 'blocked') ? '' : 'd-none' }}" id="blocked_reason_container_{{ $admin->id }}">
+                        <label class="form-label fw-bold text-dark small mb-2">Motif du blocage <span class="text-danger">*</span></label>
+                        <textarea name="blocked_reason" 
+                                  id="edit_blocked_reason_{{ $admin->id }}" 
+                                  class="form-control bg-white border" 
+                                  rows="3" 
+                                  placeholder="Expliquez pourquoi vous bloquez cet administrateur...">{{ old('blocked_reason', $admin->blocked_reason) }}</textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">Update Profile Image</label>
@@ -438,6 +465,29 @@
             if (select.value) {
                 populateHotels('edit_city_' + adminId, 'edit_hotel_' + adminId, currentHotelId);
             }
+        });
+
+        // Account Status change handling (show/hide blocking reason)
+        const statusSelects = document.querySelectorAll('.admin-status-select');
+        statusSelects.forEach(select => {
+            select.addEventListener('change', function() {
+                const adminId = this.getAttribute('data-admin-id');
+                const container = document.getElementById('blocked_reason_container_' + adminId);
+                const reasonTextarea = document.getElementById('edit_blocked_reason_' + adminId);
+
+                if (this.value === 'blocked') {
+                    if (container) container.classList.remove('d-none');
+                    if (reasonTextarea) {
+                        reasonTextarea.setAttribute('required', 'required');
+                        reasonTextarea.removeAttribute('disabled');
+                    }
+                } else {
+                    if (container) container.classList.add('d-none');
+                    if (reasonTextarea) {
+                        reasonTextarea.removeAttribute('required');
+                    }
+                }
+            });
         });
     });
 </script>

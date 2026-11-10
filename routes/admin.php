@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\PasswordResetController;
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/blocked', [LoginController::class, 'showBlocked'])->name('blocked');
 
 // --- Admin Forgot Password / Reset Password (public/guest) ---
 Route::get('/forgot-password', [PasswordResetController::class, 'showForgotForm'])

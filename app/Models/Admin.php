@@ -24,6 +24,9 @@ class Admin extends Authenticatable implements CanResetPasswordContract
         'city_id',
         'hotel_id',
         'status',
+        'is_blocked',
+        'blocked_reason',
+        'blocked_at',
     ];
 
     protected $hidden = [
@@ -34,8 +37,52 @@ class Admin extends Authenticatable implements CanResetPasswordContract
     protected function casts(): array
     {
         return [
+            'is_blocked' => 'boolean',
+            'blocked_at' => 'datetime',
             // No automated hashing to avoid double-hashing with manual Hash::make calls
         ];
+    }
+
+    /**
+     * Check if the admin account is blocked.
+     */
+    public function isBlocked(): bool
+    {
+        return (bool) $this->is_blocked || $this->status === 'blocked';
+    }
+
+    /**
+     * Check if the admin account is active.
+     */
+    public function isActive(): bool
+    {
+        return ! $this->isBlocked();
+    }
+
+    /**
+     * Mark the admin account as blocked.
+     */
+    public function markAsBlocked(string $reason): void
+    {
+        $this->update([
+            'is_blocked' => true,
+            'status' => 'blocked',
+            'blocked_reason' => $reason,
+            'blocked_at' => now(),
+        ]);
+    }
+
+    /**
+     * Mark the admin account as active/unblocked.
+     */
+    public function markAsActive(): void
+    {
+        $this->update([
+            'is_blocked' => false,
+            'status' => 'active',
+            'blocked_reason' => null,
+            'blocked_at' => null,
+        ]);
     }
 
     public function city()
