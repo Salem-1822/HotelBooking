@@ -146,44 +146,43 @@ composer validate
 
 ---
 
-## ☁️ Public Demo Deployment (Render + TiDB Cloud MySQL)
+## ☁️ Public Demo Deployment (Hugging Face Spaces + TiDB Cloud MySQL)
 
-This repository is containerized with a production-ready `Dockerfile` and `docker-entrypoint.sh` for seamless Docker deployment on [Render](https://render.com) connected to an external managed MySQL database like [TiDB Cloud (Serverless MySQL)](https://tidbcloud.com).
+This repository is containerized with a production-ready `Dockerfile` and `docker-entrypoint.sh` for deployment on **Hugging Face Spaces (Docker SDK)** listening on port `7860`, connected to an external managed MySQL database such as [TiDB Cloud (Serverless MySQL)](https://tidbcloud.com).
 
 ### Deployment Architecture
-1. **Render Web Service (Docker):**
-   - **Environment:** Docker
-   - **Region:** Frankfurt (or closest to your DB)
-   - **Port:** `80` (auto-detected)
-   - **Health Check Path:** `/`
-2. **Database:**
+1. **Hugging Face Spaces (Docker):**
+   - **SDK:** Docker
+   - **Internal Port:** `7860` (standard for Hugging Face Spaces)
+   - **Web Server:** Apache 2 with `mod_rewrite` enabled pointing DocumentRoot to `/public`
+2. **Managed Database:**
    - **Provider:** TiDB Cloud Serverless (MySQL 8.0 protocol)
    - **Port:** `4000`
-   - **SSL Support:** Native via Debian CA certificates (`/etc/ssl/certs/ca-certificates.crt`)
+   - **SSL Support:** Native via Debian CA certificates bundle (`/etc/ssl/certs/ca-certificates.crt`)
 
-### Required Environment Variables on Render
-Set the following environment variables in the Render Web Service dashboard (**Environment** tab):
+### Required Environment Variables / Secrets on Hugging Face Spaces
+Set the following environment variables or Repository Secrets in your Hugging Face Space settings (**Settings** $\rightarrow$ **Variables and secrets**):
 
-| Variable | Value | Description |
+| Variable / Secret | Recommended Value | Description |
 |---|---|---|
-| `APP_NAME` | `HotelBooking` | Application title |
+| `APP_NAME` | `HotelBooking` | Application name |
 | `APP_ENV` | `production` | Production environment mode |
 | `APP_KEY` | `base64:...` | Generate using `php artisan key:generate --show` |
 | `APP_DEBUG` | `false` | Disable debug stack traces |
-| `APP_URL` | `https://your-app-name.onrender.com` | Your live Render domain |
-| `DB_CONNECTION` | `mysql` | MySQL PDO connection |
-| `DB_HOST` | `gateway01.eu-central-1.prod.aws.tidbcloud.com` | Your TiDB Cloud Host |
-| `DB_PORT` | `4000` | TiDB Cloud default port |
+| `APP_URL` | `https://your-username-space-name.hf.space` | Your Hugging Face Space URL |
+| `DB_CONNECTION` | `mysql` | MySQL PDO connection driver |
+| `DB_HOST` | `gateway01.eu-central-1.prod.aws.tidbcloud.com` | TiDB Cloud Cluster Host |
+| `DB_PORT` | `4000` | TiDB Cloud port (Default 4000) |
 | `DB_DATABASE` | `hotelbooking` | Target database name |
-| `DB_USERNAME` | `xxxxxxxx.root` | TiDB Cloud username |
-| `DB_PASSWORD` | `your_tidb_password` | TiDB Cloud password |
+| `DB_USERNAME` | `xxxxxxxx.root` | TiDB Cloud cluster username |
+| `DB_PASSWORD` | `your_tidb_password` | TiDB Cloud cluster password |
 | `MYSQL_ATTR_SSL_CA` | `/etc/ssl/certs/ca-certificates.crt` | System CA bundle for secure TLS connection |
-| `SESSION_DRIVER` | `database` | Persistent database session storage |
-| `SESSION_LIFETIME` | `120` | Session idle expiration in minutes |
+| `SESSION_DRIVER` | `database` | Stores user sessions in MySQL table |
+| `SESSION_LIFETIME` | `120` | Session idle timeout |
 | `SESSION_SECURE_COOKIE` | `true` | Enforces HTTPS-only cookies |
 | `CACHE_STORE` | `database` | Database cache driver |
 | `QUEUE_CONNECTION` | `sync` | Synchronous queue processing |
-| `MAIL_MAILER` | `log` | Safe demo log driver (or `smtp` for Brevo) |
+| `MAIL_MAILER` | `log` | Safe demo log driver (or Brevo credentials) |
 
 ### Demo Safety Safeguards
 - `APP_DEBUG=false` in production.

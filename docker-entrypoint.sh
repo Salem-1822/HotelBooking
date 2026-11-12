@@ -23,8 +23,7 @@ php artisan db:seed --class=SuperAdminSeeder --force || true
 
 # 5. Fix permissions for storage and bootstrap/cache after cache warming
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache || true
-chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache || true
+chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache || true
 
 echo "HotelBooking initialization complete. Launching Apache..."
 exec apache2-foreground
-

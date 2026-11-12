@@ -36,6 +36,9 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
+# Configure Apache to listen on port 7860 (Hugging Face Spaces default) instead of 80
+RUN sed -i 's/80/7860/g' /etc/apache2/ports.conf /etc/apache2/sites-available/*.conf
+
 # Update Apache configuration to point DocumentRoot to /public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
@@ -60,17 +63,16 @@ COPY . .
 # Install production dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Set correct permissions for storage and bootstrap/cache
+# Set correct permissions for storage and bootstrap/cache (broad permissions for non-root/dynamic UID on Hugging Face)
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+    && chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Copy entrypoint script and ensure execution permissions
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Expose standard web port
-EXPOSE 80
+# Expose Hugging Face Spaces port
+EXPOSE 7860
 
 # Define entrypoint
 ENTRYPOINT ["docker-entrypoint.sh"]
-
