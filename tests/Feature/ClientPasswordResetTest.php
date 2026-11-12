@@ -39,7 +39,7 @@ class ClientPasswordResetTest extends TestCase
     // 1. Forgot Password Page — Accessibility
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function forgot_password_page_is_accessible_to_guests(): void
     {
         $response = $this->get(route('client.password.request'));
@@ -52,7 +52,7 @@ class ClientPasswordResetTest extends TestCase
     // 2. Authenticated Client — Redirect
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function authenticated_client_is_redirected_from_forgot_password_page(): void
     {
         $user = User::factory()->create(['role' => 'client', 'status' => 'active']);
@@ -67,7 +67,7 @@ class ClientPasswordResetTest extends TestCase
     // 3. Valid Email — Generic Status Returned
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function submitting_a_registered_email_returns_generic_status(): void
     {
         Notification::fake();
@@ -92,7 +92,7 @@ class ClientPasswordResetTest extends TestCase
     // 4. Non-Existent Email — Same Generic Status (Anti-Enumeration)
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function submitting_an_unregistered_email_returns_the_same_generic_status(): void
     {
         Notification::fake();
@@ -114,7 +114,7 @@ class ClientPasswordResetTest extends TestCase
     // 5. Invalid Email Format — Validation Error
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function submitting_an_invalid_email_format_returns_a_validation_error(): void
     {
         $response = $this->post(route('client.password.email'), [
@@ -128,7 +128,7 @@ class ClientPasswordResetTest extends TestCase
     // 6. Notification Sent to Registered User
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function password_reset_notification_is_sent_to_a_registered_user(): void
     {
         Notification::fake();
@@ -160,7 +160,7 @@ class ClientPasswordResetTest extends TestCase
     // 7. No Notification Sent for Unregistered Email
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function no_notification_is_sent_for_an_unregistered_email(): void
     {
         Notification::fake();
@@ -176,7 +176,7 @@ class ClientPasswordResetTest extends TestCase
     // 8. Reset Link Rate Limiting
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function reset_link_requests_are_throttled_per_user(): void
     {
         Notification::fake();
@@ -206,7 +206,7 @@ class ClientPasswordResetTest extends TestCase
     // 9. Reset Password Page — Valid Token
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function reset_password_page_renders_with_a_valid_token(): void
     {
         $user  = User::factory()->create(['role' => 'client', 'status' => 'active']);
@@ -226,7 +226,7 @@ class ClientPasswordResetTest extends TestCase
     // 10. Reset Password Page — Invalid Token Shows Error
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function submitting_an_invalid_token_shows_an_error(): void
     {
         $user = User::factory()->create(['role' => 'client', 'status' => 'active']);
@@ -249,7 +249,7 @@ class ClientPasswordResetTest extends TestCase
     // 11. Expired Token Shows an Error
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function submitting_an_expired_token_shows_an_error(): void
     {
         $user  = User::factory()->create(['role' => 'client', 'status' => 'active']);
@@ -274,7 +274,7 @@ class ClientPasswordResetTest extends TestCase
     // 12. Successful Reset — Redirects to Login
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function successful_password_reset_redirects_to_login_page(): void
     {
         $user  = User::factory()->create(['role' => 'client', 'status' => 'active']);
@@ -294,7 +294,7 @@ class ClientPasswordResetTest extends TestCase
     // 13. Successful Reset — Success Flash Message
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function successful_password_reset_flashes_a_success_message(): void
     {
         $user  = User::factory()->create(['role' => 'client', 'status' => 'active']);
@@ -314,7 +314,7 @@ class ClientPasswordResetTest extends TestCase
     // 14. Password Is Actually Updated
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function password_is_actually_updated_after_a_successful_reset(): void
     {
         $user  = User::factory()->create([
@@ -341,7 +341,7 @@ class ClientPasswordResetTest extends TestCase
     // 15. Client Is NOT Auto-Authenticated After Reset
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function client_is_not_automatically_authenticated_after_password_reset(): void
     {
         $user  = User::factory()->create(['role' => 'client', 'status' => 'active']);
@@ -361,7 +361,7 @@ class ClientPasswordResetTest extends TestCase
     // 16. Password Confirmation Mismatch
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function password_confirmation_mismatch_is_rejected(): void
     {
         $user  = User::factory()->create(['role' => 'client', 'status' => 'active']);

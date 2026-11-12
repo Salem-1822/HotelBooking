@@ -67,7 +67,7 @@ class AdminPasswordResetTest extends TestCase
     // 1. Admin Forgot Password Page Loads
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function admin_forgot_password_page_is_accessible_to_guests(): void
     {
         $response = $this->get(route('admin.password.request'));
@@ -81,7 +81,7 @@ class AdminPasswordResetTest extends TestCase
     // 2. Valid Admin Email Returns Generic Status
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function submitting_a_registered_admin_email_returns_generic_status(): void
     {
         Notification::fake();
@@ -102,7 +102,7 @@ class AdminPasswordResetTest extends TestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function submitting_an_unregistered_email_returns_the_same_generic_status(): void
     {
         Notification::fake();
@@ -120,7 +120,7 @@ class AdminPasswordResetTest extends TestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function invalid_email_format_is_rejected_on_admin_forgot_form(): void
     {
         $response = $this->post(route('admin.password.email'), [
@@ -134,7 +134,7 @@ class AdminPasswordResetTest extends TestCase
     // 3. Reset Notification Contains Correct Admin Reset URL
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function admin_password_reset_notification_is_sent_with_correct_admin_url(): void
     {
         Notification::fake();
@@ -175,7 +175,7 @@ class AdminPasswordResetTest extends TestCase
     // 4. Reset Form Renders Correctly
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function admin_reset_password_form_renders_with_a_valid_token(): void
     {
         $admin = $this->makeAdmin();
@@ -196,7 +196,7 @@ class AdminPasswordResetTest extends TestCase
     // 5. Mismatched Passwords Are Rejected
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function admin_password_confirmation_mismatch_is_rejected(): void
     {
         $admin = $this->makeAdmin();
@@ -216,7 +216,7 @@ class AdminPasswordResetTest extends TestCase
     // 6. Invalid Token Is Rejected
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function admin_invalid_token_shows_an_error(): void
     {
         $admin = $this->makeAdmin();
@@ -239,7 +239,7 @@ class AdminPasswordResetTest extends TestCase
     // 7. Expired Token Is Rejected
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function admin_expired_token_shows_an_error(): void
     {
         $admin = $this->makeAdmin();
@@ -264,7 +264,7 @@ class AdminPasswordResetTest extends TestCase
     // 8. Successful Reset — Password Hashed, Token Invalidated, Redirect to Login
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function successful_admin_reset_updates_hashed_password_and_redirects_to_login(): void
     {
         $admin = $this->makeAdmin(['password' => Hash::make('OldPassword123!')]);
@@ -303,7 +303,7 @@ class AdminPasswordResetTest extends TestCase
     // 9. Super Admin Cannot Use the Admin Reset Flow
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function super_admin_cannot_reset_password_via_admin_flow(): void
     {
         $superAdmin = $this->makeSuperAdmin();
@@ -332,7 +332,7 @@ class AdminPasswordResetTest extends TestCase
     // 10. Client Cannot Use the Admin Reset Flow
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function client_cannot_use_admin_reset_flow(): void
     {
         // Create a Client (User model, 'users' table).
@@ -360,7 +360,7 @@ class AdminPasswordResetTest extends TestCase
     // 11. Existing Client Forgot Password Feature Still Works
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function client_forgot_password_feature_is_unaffected(): void
     {
         Notification::fake();
