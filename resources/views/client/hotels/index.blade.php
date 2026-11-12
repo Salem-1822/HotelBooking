@@ -188,6 +188,8 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-width: 0;
+    max-width: 100%;
 }
 .hotel-card:hover {
     box-shadow: var(--card-shadow-hover);
@@ -219,7 +221,15 @@
     border-radius: 2rem;
     letter-spacing: 0.02em;
 }
-.hotel-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+.hotel-body {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
 .hotel-name {
     font-size: 1.05rem; font-weight: 700;
     color: var(--brand-primary);
@@ -231,9 +241,21 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    min-width: 0;
+    max-width: 100%;
 }
 .hotel-name:hover { color: var(--brand-accent); }
-.hotel-location { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+.hotel-location {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    min-width: 0;
+    max-width: 100%;
+}
 .hotel-description {
     font-size: 0.85rem;
     color: #475569;
@@ -242,7 +264,11 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    word-break: break-word;
+    overflow-wrap: anywhere;
     flex: 1;
+    min-width: 0;
+    max-width: 100%;
 }
 .hotel-footer {
     border-top: 1px solid var(--border-color);
@@ -592,7 +618,7 @@
                         ]);
                         $hotelUrl = route('hotels.show', $hotel) . (count($hotelParams) ? '?' . http_build_query($hotelParams) : '');
                     @endphp
-                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 reveal" style="transition-delay: {{ ($index % 3) * 0.1 }}s;">
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 reveal min-w-0" style="min-width: 0; transition-delay: {{ ($index % 3) * 0.1 }}s;">
                         <article class="hotel-card" aria-label="{{ $hotel->name }}">
                             <!-- Image -->
                             <div class="hotel-img-wrap">
