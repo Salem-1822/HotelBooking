@@ -146,34 +146,51 @@ composer validate
 
 ---
 
-## ☁️ Public Demo Deployment (Render PaaS)
+## ☁️ Public Demo Deployment (Render + TiDB Cloud MySQL)
 
-This repository includes a production-ready `render.yaml` specification for deploying a public demo on [Render](https://render.com).
+This repository is containerized with a production-ready `Dockerfile` and `docker-entrypoint.sh` for seamless Docker deployment on [Render](https://render.com) connected to an external managed MySQL database like [TiDB Cloud (Serverless MySQL)](https://tidbcloud.com).
 
 ### Deployment Architecture
-1. **Web Service (`render.yaml`):**
-   - Environment: `php`
-   - Build Command:
-     ```bash
-     composer install --no-dev --optimize-autoloader --no-interaction
-     php artisan config:cache
-     php artisan route:cache
-     php artisan view:cache
-     ```
-   - Start Command:
-     ```bash
-     php artisan storage:link
-     php artisan migrate --force
-     apache2-foreground
-     ```
-2. **Managed MySQL Database:**
-   - Automatically provisions a free-tier Render MySQL database linked to the web service via environment variables.
+1. **Render Web Service (Docker):**
+   - **Environment:** Docker
+   - **Region:** Frankfurt (or closest to your DB)
+   - **Port:** `80` (auto-detected)
+   - **Health Check Path:** `/`
+2. **Database:**
+   - **Provider:** TiDB Cloud Serverless (MySQL 8.0 protocol)
+   - **Port:** `4000`
+   - **SSL Support:** Native via Debian CA certificates (`/etc/ssl/certs/ca-certificates.crt`)
+
+### Required Environment Variables on Render
+Set the following environment variables in the Render Web Service dashboard (**Environment** tab):
+
+| Variable | Value | Description |
+|---|---|---|
+| `APP_NAME` | `HotelBooking` | Application title |
+| `APP_ENV` | `production` | Production environment mode |
+| `APP_KEY` | `base64:...` | Generate using `php artisan key:generate --show` |
+| `APP_DEBUG` | `false` | Disable debug stack traces |
+| `APP_URL` | `https://your-app-name.onrender.com` | Your live Render domain |
+| `DB_CONNECTION` | `mysql` | MySQL PDO connection |
+| `DB_HOST` | `gateway01.eu-central-1.prod.aws.tidbcloud.com` | Your TiDB Cloud Host |
+| `DB_PORT` | `4000` | TiDB Cloud default port |
+| `DB_DATABASE` | `hotelbooking` | Target database name |
+| `DB_USERNAME` | `xxxxxxxx.root` | TiDB Cloud username |
+| `DB_PASSWORD` | `your_tidb_password` | TiDB Cloud password |
+| `MYSQL_ATTR_SSL_CA` | `/etc/ssl/certs/ca-certificates.crt` | System CA bundle for secure TLS connection |
+| `SESSION_DRIVER` | `database` | Persistent database session storage |
+| `SESSION_LIFETIME` | `120` | Session idle expiration in minutes |
+| `SESSION_SECURE_COOKIE` | `true` | Enforces HTTPS-only cookies |
+| `CACHE_STORE` | `database` | Database cache driver |
+| `QUEUE_CONNECTION` | `sync` | Synchronous queue processing |
+| `MAIL_MAILER` | `log` | Safe demo log driver (or `smtp` for Brevo) |
 
 ### Demo Safety Safeguards
 - `APP_DEBUG=false` in production.
 - `SESSION_SECURE_COOKIE=true` for HTTPS encryption.
 - No production secrets or personal payment credentials committed to version control.
 - Rate-limited authentication routes against brute-force attacks.
+- Automated migrations and safe idempotency during container entrypoint startup.
 
 ---
 
