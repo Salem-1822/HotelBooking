@@ -279,6 +279,11 @@
                                 <a href="{{ $actionUrl }}" class="btn-action {{ $reservation->status === 'checked_out' ? 'btn-accent' : '' }}">
                                     {{ $actionText }}
                                 </a>
+                                @if($reservation->status === 'checked_out')
+                                <div style="margin-top: 8px; font-size: 13px; color: #64748B; font-weight: 500;">
+                                    Donner mon avis &bull; Leave a Review
+                                </div>
+                                @endif
                             </div>
 
                             @if($reservation->status === 'checked_out')

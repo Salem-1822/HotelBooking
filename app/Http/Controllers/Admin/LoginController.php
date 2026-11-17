@@ -98,6 +98,17 @@ class LoginController extends Controller
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
+            $intended = session()->get('url.intended');
+            if ($intended) {
+                $parsedHost = parse_url($intended, PHP_URL_HOST);
+                $currentHost = $request->getHost();
+                if ($parsedHost && !in_array($parsedHost, [$currentHost, 'localhost', '127.0.0.1'], true)) {
+                    session()->forget('url.intended');
+                    return redirect()->route('admin.dashboard');
+                }
+                return redirect()->intended(route('admin.dashboard'));
+            }
+
             return redirect()->route('admin.dashboard');
         }
 

@@ -128,6 +128,18 @@ class AuthController extends Controller
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
+            // Handle safe post-login redirection (e.g. direct review link) with open-redirect protection
+            $intended = session()->get('url.intended');
+            if ($intended) {
+                $parsedHost = parse_url($intended, PHP_URL_HOST);
+                $currentHost = $request->getHost();
+                if ($parsedHost && !in_array($parsedHost, [$currentHost, 'localhost', '127.0.0.1'], true)) {
+                    session()->forget('url.intended');
+                    return redirect()->route('client.dashboard');
+                }
+                return redirect()->intended(route('client.dashboard'));
+            }
+
             return redirect()->route('client.dashboard');
         }
 

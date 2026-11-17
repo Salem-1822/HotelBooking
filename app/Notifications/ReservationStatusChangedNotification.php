@@ -65,7 +65,7 @@ class ReservationStatusChangedNotification extends Notification
                 $subject = 'Merci pour votre séjour – Partagez votre avis';
                 $statusLabelFr = 'Départ effectué (Check-out)';
                 $message = "Nous tenons à vous remercier chaleureusement d'avoir séjourné chez nous ! Nous espérons que votre séjour a été à la hauteur de vos attentes. Votre expérience nous intéresse : prenez quelques instants pour partager votre avis et attribuer une note à l'établissement.";
-                $actionText = 'Donner mon avis';
+                $actionText = 'Write a Review';
                 $actionUrl = $checkoutReviewUrl;
                 break;
 

@@ -579,7 +579,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    if (window.location.hash === '#review-section' || window.location.hash === '#reviewModal') {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasReviewTrigger = window.location.hash === '#review-section' || 
+                             window.location.hash === '#reviewModal' || 
+                             urlParams.get('action') === 'review' || 
+                             urlParams.get('review') === '1';
+
+    if (hasReviewTrigger) {
         const reviewModalEl = document.getElementById('reviewModal');
         if (reviewModalEl && typeof bootstrap !== 'undefined') {
             const modal = new bootstrap.Modal(reviewModalEl);
