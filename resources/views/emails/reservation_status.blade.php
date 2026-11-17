@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $subjectTitle ?? 'Notification de réservation' }}</title>
+    <title>{{ $subjectTitle ?? 'Reservation Notification' }}</title>
     <!--[if mso]>
     <style type="text/css">
         body, table, td, a { font-family: Arial, Helvetica, sans-serif !important; }
@@ -202,18 +202,18 @@
                     <tr>
                         <td class="header">
                             <h1 class="brand-title">HotelBooking</h1>
-                            <div class="brand-sub">Service Réservation</div>
+                            <div class="brand-sub">Reservation Service</div>
                         </td>
                     </tr>
 
                     <!-- CONTENT -->
                     <tr>
                         <td class="content">
-                            <h2 class="greeting">Bonjour {{ $clientName }},</h2>
+                            <h2 class="greeting">Hello {{ $clientName }},</h2>
 
                             <div style="text-align: left;">
                                 <span class="status-badge badge-{{ $reservation->status }}">
-                                    Statut : {{ $statusLabelFr }}
+                                    Status: {{ $statusLabel ?? $statusLabelFr ?? ucfirst(str_replace('_', ' ', $reservation->status)) }}
                                 </span>
                             </div>
 
@@ -224,7 +224,7 @@
                             @if($reservation->status === 'checked_out')
                             <div class="review-banner">
                                 <p class="review-banner-text">
-                                    ★ Votre retour d'expérience est précieux pour nous et aide la communauté de voyageurs.
+                                    ★ Your feedback is valuable to us and helps our traveler community.
                                 </p>
                             </div>
                             @endif
@@ -233,20 +233,20 @@
                             <div class="details-card">
                                 <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr class="detail-row">
-                                        <td class="detail-label">Référence</td>
+                                        <td class="detail-label">Reference</td>
                                         <td class="detail-value">#MOR-RSV-{{ $reservation->id }}</td>
                                     </tr>
                                     @if($reservation->hotel)
                                     <tr class="detail-row">
-                                        <td class="detail-label">Hôtel</td>
+                                        <td class="detail-label">Hotel</td>
                                         <td class="detail-value">{{ $reservation->hotel->name }}</td>
                                     </tr>
                                     @endif
                                     @if($reservation->room)
                                     <tr class="detail-row">
-                                        <td class="detail-label">Chambre</td>
+                                        <td class="detail-label">Room</td>
                                         <td class="detail-value">
-                                            Chambre {{ $reservation->room->room_number }}
+                                            Room {{ $reservation->room->room_number }}
                                             @if($reservation->room->type)
                                                 ({{ $reservation->room->type }})
                                             @endif
@@ -255,19 +255,19 @@
                                     @endif
                                     @if($reservation->check_in)
                                     <tr class="detail-row">
-                                        <td class="detail-label">Arrivée (Check-in)</td>
-                                        <td class="detail-value">{{ \Carbon\Carbon::parse($reservation->check_in)->locale('fr')->isoFormat('D MMMM YYYY') }}</td>
+                                        <td class="detail-label">Check-in</td>
+                                        <td class="detail-value">{{ \Carbon\Carbon::parse($reservation->check_in)->isoFormat('MMMM D, YYYY') }}</td>
                                     </tr>
                                     @endif
                                     @if($reservation->check_out)
                                     <tr class="detail-row">
-                                        <td class="detail-label">Départ (Check-out)</td>
-                                        <td class="detail-value">{{ \Carbon\Carbon::parse($reservation->check_out)->locale('fr')->isoFormat('D MMMM YYYY') }}</td>
+                                        <td class="detail-label">Check-out</td>
+                                        <td class="detail-value">{{ \Carbon\Carbon::parse($reservation->check_out)->isoFormat('MMMM D, YYYY') }}</td>
                                     </tr>
                                     @endif
                                     @if($reservation->total_price)
                                     <tr class="detail-row">
-                                        <td class="detail-label">Montant total</td>
+                                        <td class="detail-label">Total Amount</td>
                                         <td class="detail-value">{{ number_format($reservation->total_price, 2) }} MAD</td>
                                     </tr>
                                     @endif
@@ -281,14 +281,14 @@
                                 </a>
                                 @if($reservation->status === 'checked_out')
                                 <div style="margin-top: 8px; font-size: 13px; color: #64748B; font-weight: 500;">
-                                    Donner mon avis &bull; Leave a Review
+                                    Share Your Experience &bull; Leave a Review
                                 </div>
                                 @endif
                             </div>
 
                             @if($reservation->status === 'checked_out')
                             <p style="font-size: 13px; color: #64748B; text-align: center; margin: 0 0 10px;">
-                                Si le bouton ci-dessus ne fonctionne pas, vous pouvez copier et coller ce lien dans votre navigateur :<br>
+                                If the button above does not work, please copy and paste the following URL into your browser:<br>
                                 <a href="{{ $actionUrl }}" style="color: #0F172A; word-break: break-all;">{{ $actionUrl }}</a>
                             </p>
                             @endif
@@ -298,10 +298,10 @@
                     <!-- FOOTER -->
                     <tr>
                         <td class="footer">
-                            <div class="footer-team">L'équipe HotelBooking</div>
+                            <div class="footer-team">The HotelBooking Team</div>
                             <p class="footer-note">
-                                Cet email vous a été envoyé automatiquement suite à une mise à jour de votre réservation.<br>
-                                © {{ date('Y') }} HotelBooking. Tous droits réservés.
+                                This email was sent automatically following an update to your reservation.<br>
+                                &copy; {{ date('Y') }} HotelBooking. All rights reserved.
                             </p>
                         </td>
                     </tr>

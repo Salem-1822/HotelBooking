@@ -105,7 +105,7 @@ class ReservationStatusEmailNotificationTest extends TestCase
             ReservationStatusChangedNotification::class,
             function ($notification) use ($reservation) {
                 $mailData = $notification->toMail($this->client);
-                return $mailData->subject === 'Votre réservation est confirmée – HotelBooking'
+                return $mailData->subject === 'Your Reservation is Confirmed – HotelBooking'
                     && str_contains($mailData->render(), '#MOR-RSV-' . $reservation->id)
                     && str_contains($mailData->render(), 'Atlas Luxury Resort')
                     && str_contains($mailData->render(), route('client.reservations.show', $reservation));
@@ -139,8 +139,8 @@ class ReservationStatusEmailNotificationTest extends TestCase
             ReservationStatusChangedNotification::class,
             function ($notification) {
                 $mailData = $notification->toMail($this->client);
-                return $mailData->subject === 'Confirmation de votre arrivée – HotelBooking'
-                    && str_contains($mailData->render(), 'Arrivée effectuée');
+                return $mailData->subject === 'Check-in Confirmation – HotelBooking'
+                    && str_contains($mailData->render(), 'Checked In');
             }
         );
     }
@@ -175,8 +175,8 @@ class ReservationStatusEmailNotificationTest extends TestCase
                 $mailData = $notification->toMail($this->client);
                 $rendered = $mailData->render();
 
-                return $mailData->subject === 'Merci pour votre séjour – Partagez votre avis'
-                    && str_contains($rendered, 'Donner mon avis')
+                return $mailData->subject === 'Thank You for Your Stay – Share Your Review'
+                    && str_contains($rendered, 'Leave a Review')
                     && str_contains($rendered, $expectedReviewUrl);
             }
         );
@@ -209,8 +209,8 @@ class ReservationStatusEmailNotificationTest extends TestCase
             ReservationStatusChangedNotification::class,
             function ($notification) {
                 $mailData = $notification->toMail($this->client);
-                return $mailData->subject === 'Mise à jour de votre réservation – Annulation'
-                    && str_contains($mailData->render(), 'Annulée');
+                return $mailData->subject === 'Reservation Cancellation Notice – HotelBooking'
+                    && str_contains($mailData->render(), 'Cancelled');
             }
         );
     }

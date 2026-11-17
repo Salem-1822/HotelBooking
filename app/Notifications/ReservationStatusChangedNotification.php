@@ -38,7 +38,9 @@ class ReservationStatusChangedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $status = $this->reservation->status;
-        $clientName = $notifiable->name ?? $this->reservation->guest_name ?? 'Cher client';
+        $clientName = (!empty($notifiable->name) && trim($notifiable->name) !== '') 
+            ? $notifiable->name 
+            : ($this->reservation->guest_name ?? 'Valued Guest');
 
         $reservationDetailUrl = route('client.reservations.show', $this->reservation);
         // For check-out, append #review-section anchor so the client directly reaches the review area on the reservation details page
@@ -46,42 +48,42 @@ class ReservationStatusChangedNotification extends Notification
 
         switch ($status) {
             case 'confirmed':
-                $subject = 'Votre réservation est confirmée – HotelBooking';
-                $statusLabelFr = 'Confirmée';
-                $message = "Nous avons le plaisir de vous informer que votre réservation a été confirmée avec succès. Toute l'équipe de l'établissement prépare votre venue afin de rendre votre séjour des plus agréables.";
-                $actionText = 'Voir ma réservation';
+                $subject = 'Your Reservation is Confirmed – HotelBooking';
+                $statusLabel = 'Confirmed';
+                $message = "We are pleased to inform you that your reservation has been confirmed successfully. Our team looks forward to welcoming you and ensuring you have an exceptional stay.";
+                $actionText = 'View Reservation';
                 $actionUrl = $reservationDetailUrl;
                 break;
 
             case 'checked_in':
-                $subject = 'Confirmation de votre arrivée – HotelBooking';
-                $statusLabelFr = 'Arrivée effectuée (Check-in)';
-                $message = "Votre arrivée à l'hôtel a été enregistrée avec succès. Nous vous souhaitons un excellent et agréable séjour parmi nous.";
-                $actionText = 'Consulter les détails du séjour';
+                $subject = 'Check-in Confirmation – HotelBooking';
+                $statusLabel = 'Checked In';
+                $message = "Your check-in has been successfully registered. We wish you a wonderful and relaxing stay with us.";
+                $actionText = 'View Stay Details';
                 $actionUrl = $reservationDetailUrl;
                 break;
 
             case 'checked_out':
-                $subject = 'Merci pour votre séjour – Partagez votre avis';
-                $statusLabelFr = 'Départ effectué (Check-out)';
-                $message = "Nous tenons à vous remercier chaleureusement d'avoir séjourné chez nous ! Nous espérons que votre séjour a été à la hauteur de vos attentes. Votre expérience nous intéresse : prenez quelques instants pour partager votre avis et attribuer une note à l'établissement.";
-                $actionText = 'Write a Review';
+                $subject = 'Thank You for Your Stay – Share Your Review';
+                $statusLabel = 'Checked Out';
+                $message = "Thank you for staying with us! We hope you enjoyed your time at our property. Your feedback is very important to us: please take a moment to share your review and rate your experience.";
+                $actionText = 'Leave a Review';
                 $actionUrl = $checkoutReviewUrl;
                 break;
 
             case 'cancelled':
-                $subject = 'Mise à jour de votre réservation – Annulation';
-                $statusLabelFr = 'Annulée';
-                $message = "Nous vous confirmons que votre réservation a bien été annulée. Si vous avez des questions complémentaires concernant les conditions d'annulation ou votre dossier, n'hésitez pas à nous contacter.";
-                $actionText = 'Consulter le dossier';
+                $subject = 'Reservation Cancellation Notice – HotelBooking';
+                $statusLabel = 'Cancelled';
+                $message = "We confirm that your reservation has been cancelled. If you have any questions regarding your cancellation or booking terms, please do not hesitate to contact us.";
+                $actionText = 'View Reservation Details';
                 $actionUrl = $reservationDetailUrl;
                 break;
 
             default:
-                $subject = 'Mise à jour de votre réservation – HotelBooking';
-                $statusLabelFr = ucfirst($status);
-                $message = "Le statut de votre réservation a été mis à jour.";
-                $actionText = 'Voir ma réservation';
+                $subject = 'Reservation Update – HotelBooking';
+                $statusLabel = ucfirst(str_replace('_', ' ', $status));
+                $message = "The status of your reservation has been updated.";
+                $actionText = 'View Reservation';
                 $actionUrl = $reservationDetailUrl;
                 break;
         }
@@ -91,7 +93,8 @@ class ReservationStatusChangedNotification extends Notification
             ->view('emails.reservation_status', [
                 'reservation'   => $this->reservation,
                 'clientName'    => $clientName,
-                'statusLabelFr' => $statusLabelFr,
+                'statusLabel'   => $statusLabel,
+                'statusLabelFr' => $statusLabel,
                 'statusMessage' => $message,
                 'actionText'    => $actionText,
                 'actionUrl'     => $actionUrl,
