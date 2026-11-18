@@ -816,7 +816,9 @@
     {{-- Background image --}}
     @if($hotel->image)
         <img class="hp-cover-img" id="hpCoverBg"
-             src="{{ asset('storage/' . $hotel->image) }}" alt="Cover">
+             src="{{ asset('storage/' . $hotel->image) }}" alt="Cover"
+             loading="lazy" decoding="async"
+             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&q=70'; this.style.opacity='0.2';">
     @else
         <img class="hp-cover-img" id="hpCoverBg"
              src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&q=70"

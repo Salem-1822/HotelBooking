@@ -11,6 +11,7 @@ storage/logs/*.log
 storage/framework/cache/data/*
 storage/framework/sessions/*
 storage/framework/views/*
+public/storage
 docker-compose*.yml
 Dockerfile
 .dockerignore

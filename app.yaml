@@ -1,0 +1,12 @@
+kind: wasmer.io/App.v0
+name: hotelbooking
+package: .
+
+locality:
+  regions:
+    - fr-roub1
+
+volumes:
+  - name: hotel-storage
+    mount: /app/public/storage
+

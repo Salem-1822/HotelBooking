@@ -99,7 +99,7 @@
                                     @php
                                         $img = $admin->getProfilePhotoUrl('EBF4FF', '7F9CF5', 100);
                                     @endphp
-                                    <img src="{{ $img }}" alt="{{ $admin->name }}" class="rounded-circle shadow-sm me-3" style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #fff;">
+                                    <img src="{{ $img }}" alt="{{ $admin->name }}" class="rounded-circle shadow-sm me-3" style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #fff;" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=EBF4FF&color=7F9CF5&size=100';">
                                     <div>
                                         <h6 class="mb-0 fw-bold text-dark">{{ $admin->name }}</h6>
                                         <small class="text-muted">{{ $admin->email }}</small>
@@ -260,7 +260,7 @@
                     $adminViewImg = $admin->getProfilePhotoUrl('EBF4FF', '7F9CF5', 140);
                 @endphp
                 <div class="text-center mb-4">
-                    <img src="{{ $adminViewImg }}" alt="{{ $admin->name }}" class="rounded-circle shadow-sm border mb-3" style="width: 70px; height: 70px; object-fit: cover;">
+                    <img src="{{ $adminViewImg }}" alt="{{ $admin->name }}" class="rounded-circle shadow-sm border mb-3" style="width: 70px; height: 70px; object-fit: cover;" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=EBF4FF&color=7F9CF5&size=140';">
                     <h4 class="fw-bold mb-1">{{ $admin->name }}</h4>
                     <p class="text-muted small mb-0 fw-medium">{{ $admin->email }}</p>
                 </div>

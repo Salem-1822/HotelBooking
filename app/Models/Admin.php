@@ -145,17 +145,7 @@ class Admin extends Authenticatable implements CanResetPasswordContract
                 ? $this->profile_image
                 : 'profiles/' . $this->profile_image;
 
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
-                // asset() builds the URL from the current request context,
-                // so it correctly includes the development server port.
-                return asset('storage/' . $path);
-            }
-
-            // Legacy fallback: bare filename stored without the profiles/ prefix
-            // and the file might also sit at the root of the public disk.
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($this->profile_image)) {
-                return asset('storage/' . $this->profile_image);
-            }
+            return asset('storage/' . $path);
         }
 
         $sizeParam = $size ? '&size=' . $size : '';
@@ -167,20 +157,7 @@ class Admin extends Authenticatable implements CanResetPasswordContract
      */
     public function hasProfilePhoto(): bool
     {
-        if (empty($this->profile_image) || $this->profile_image === '#') {
-            return false;
-        }
-
-        if (\Illuminate\Support\Str::startsWith($this->profile_image, ['http://', 'https://'])) {
-            return true;
-        }
-
-        $path = \Illuminate\Support\Str::startsWith($this->profile_image, 'profiles/')
-            ? $this->profile_image
-            : 'profiles/' . $this->profile_image;
-
-        return \Illuminate\Support\Facades\Storage::disk('public')->exists($path)
-            || \Illuminate\Support\Facades\Storage::disk('public')->exists($this->profile_image);
+        return !empty($this->profile_image) && $this->profile_image !== '#';
     }
 
     /**

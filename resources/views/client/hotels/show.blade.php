@@ -320,17 +320,13 @@
     <div class="hero-gallery-wrap" id="heroGallery">
 
         {{-- Main hotel photo --}}
-        @if($hotel->image)
-            <img id="heroMainImg"
-                 src="{{ asset('storage/' . $hotel->image) }}"
-                 class="hero-main-img"
-                 alt="{{ $hotel->name }}"
-                 onerror="this.parentElement.innerHTML='<div class=\'hero-placeholder\'><i class=\'bi bi-building\'></i></div>'">
-        @else
-            <div class="hero-placeholder">
-                <i class="bi bi-building"></i>
-            </div>
-        @endif
+        <img id="heroMainImg"
+             src="{{ $hotel->image_url }}"
+             class="hero-main-img"
+             alt="{{ $hotel->name }}"
+             loading="lazy"
+             decoding="async"
+             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop'">
         <div class="hero-overlay"></div>
 
         {{-- Hero content overlay --}}
@@ -593,16 +589,11 @@
                             <div class="room-status-badge {{ $displayStatus }}">
                                 {{ $displayLabel }}
                             </div>
-                            @if($room->main_image)
-                                <img src="{{ asset('storage/' . $room->main_image) }}"
-                                     alt="Room {{ $room->room_number }}"
-                                     loading="lazy"
-                                     onerror="this.parentElement.innerHTML='<div class=\'room-card-img-placeholder\'><i class=\'bi bi-image\'></i></div>'">
-                            @else
-                                <div class="room-card-img-placeholder">
-                                    <i class="bi bi-door-open"></i>
-                                </div>
-                            @endif
+                            <img src="{{ $room->main_image_url }}"
+                                 alt="Room {{ $room->room_number }}"
+                                 loading="lazy"
+                                 decoding="async"
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&h=600&fit=crop'">
                         </div>
 
                         {{-- Room body --}}
@@ -777,14 +768,10 @@
                     <div class="col-md-4">
                         <a href="{{ route('hotels.show', $rh) }}" class="related-card">
                             <div class="related-card-img">
-                                @if($rh->image)
-                                    <img src="{{ asset('storage/' . $rh->image) }}" alt="{{ $rh->name }}"
-                                         onerror="this.parentElement.innerHTML='<div class=\'related-card-img-placeholder\'><i class=\'bi bi-building\'></i></div>'">
-                                @else
-                                    <div class="related-card-img-placeholder">
-                                        <i class="bi bi-building"></i>
-                                    </div>
-                                @endif
+                                <img src="{{ $rh->image_url }}" alt="{{ $rh->name }}"
+                                     loading="lazy"
+                                     decoding="async"
+                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop'">
                             </div>
                             <div class="related-card-body">
                                 <div style="font-weight:700; font-size:0.95rem; color:var(--brand-primary); margin-bottom:0.3rem;">

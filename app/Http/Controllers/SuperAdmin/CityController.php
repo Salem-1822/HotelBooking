@@ -65,9 +65,7 @@ class CityController extends Controller
         $imagePath = $city->image;
 
         if ($request->hasFile('image_file')) {
-            if ($city->image && !Str::startsWith($city->image, ['http://', 'https://'])) {
-                Storage::disk('public')->delete($city->image);
-            }
+            $city->deleteImageFile();
             $imagePath = $request->file('image_file')->store('cities', 'public');
         }
 
@@ -82,10 +80,7 @@ class CityController extends Controller
 
     public function destroy(City $city)
     {
-        if ($city->image && !Str::startsWith($city->image, ['http://', 'https://'])) {
-            Storage::disk('public')->delete($city->image);
-        }
-        
+        $city->deleteImageFile();
         $city->delete();
         return redirect()->route('super_admin.cities.index')->with('success', 'City deleted successfully.');
     }

@@ -627,16 +627,11 @@
                                         <i class="bi bi-star-fill me-1"></i>{{ $hotel->stars }} Stars
                                     </div>
                                 @endif
-                                @if($hotel->image)
-                                    <img src="{{ asset('storage/' . $hotel->image) }}"
-                                         alt="{{ $hotel->name }}"
-                                         loading="lazy"
-                                         onerror="this.parentElement.innerHTML='<div class=\'hotel-img-placeholder\'><i class=\'bi bi-building\'></i></div>'">
-                                @else
-                                    <div class="hotel-img-placeholder">
-                                        <i class="bi bi-building"></i>
-                                    </div>
-                                @endif
+                                <img src="{{ $hotel->image_url }}"
+                                     alt="{{ $hotel->name }}"
+                                     loading="lazy"
+                                     decoding="async"
+                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop'">
                             </div>
 
                             <!-- Body -->

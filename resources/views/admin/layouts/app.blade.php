@@ -507,7 +507,9 @@
                         data-bs-toggle="dropdown" style="gap:0.625rem;">
                         @php $layoutAdmin = Auth::guard('admin')->user(); @endphp
                         <img src="{{ $layoutAdmin->getProfilePhotoUrl('0F172A', 'fff', 80) }}"
-                            class="topbar-user-avatar" style="object-fit:cover;" alt="{{ $layoutAdmin->name }}">
+                            class="topbar-user-avatar" style="object-fit:cover;" alt="{{ $layoutAdmin->name }}"
+                            loading="lazy" decoding="async"
+                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($layoutAdmin->name) }}&background=0F172A&color=fff&size=80';">
                         <div class="d-none d-sm-block text-start">
                             <div class="topbar-username">{{ $layoutAdmin->name }}</div>
                             <div class="topbar-role">{{ str_replace('_', ' ', $layoutAdmin->role) }}</div>

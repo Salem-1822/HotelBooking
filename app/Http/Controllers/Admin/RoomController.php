@@ -136,8 +136,8 @@ class RoomController extends Controller
     protected function storeImages(Request $request, array &$data, ?Room $room = null): void
     {
         if ($request->hasFile('main_image')) {
-            if ($room && $room->main_image) {
-                Storage::disk('public')->delete($room->main_image);
+            if ($room) {
+                $room->deleteImageFiles();
             }
             $data['main_image'] = $request->file('main_image')->store('rooms/main', 'public');
         }
@@ -145,9 +145,7 @@ class RoomController extends Controller
 
     protected function deleteFiles(Room $room): void
     {
-        if ($room->main_image) {
-            Storage::disk('public')->delete($room->main_image);
-        }
+        $room->deleteImageFiles();
     }
 
     protected function jsonOrRedirect(Request $request, string $message, ?Room $room = null)

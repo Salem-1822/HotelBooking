@@ -384,14 +384,7 @@
                     @foreach($cities as $index => $city)
                         <div class="{{ $index % 4 == 0 || $index % 4 == 3 ? 'col-lg-7' : 'col-lg-5' }} col-md-6 reveal" style="transition-delay: {{ ($index % 4) * 0.1 }}s;">
                             <a href="{{ route('hotels.index', ['city_id' => $city->id]) }}" class="destination-card">
-                                @if($city->image)
-                                    <!-- Fallback to a placeholder if image doesn't exist in storage or is just a name -->
-                                    <img src="{{ asset('storage/' . $city->image) }}" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $city->name }}">
-                                @else
-                                    <div class="fallback-img-bg">
-                                        <i class="bi bi-building"></i>
-                                    </div>
-                                @endif
+                                <img src="{{ $city->image_url }}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $city->name }}">
                                 <div class="destination-content">
                                     <h3 class="destination-title">{{ $city->name }}</h3>
                                     <div class="destination-count">{{ $city->hotels_count }} Hotel{{ $city->hotels_count > 1 ? 's' : '' }}</div>
@@ -430,13 +423,7 @@
                                         <div class="hotel-badge"><i class="bi bi-star-fill text-warning me-1"></i> {{ $hotel->stars }} Stars</div>
                                     @endif
                                     
-                                    @if($hotel->image)
-                                        <img src="{{ asset('storage/' . $hotel->image) }}" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1542314831-c6a4d27a6582?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $hotel->name }}">
-                                    @else
-                                        <div class="fallback-img-bg">
-                                            <i class="bi bi-image"></i>
-                                        </div>
-                                    @endif
+                                    <img src="{{ $hotel->image_url }}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-c6a4d27a6582?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $hotel->name }}">
                                 </div>
                                 <div class="hotel-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">

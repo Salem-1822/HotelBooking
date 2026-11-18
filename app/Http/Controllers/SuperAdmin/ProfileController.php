@@ -21,9 +21,7 @@ class ProfileController extends Controller
         $admin = Auth::guard('admin')->user();
 
         if ($request->has('remove_image')) {
-            if ($admin->profile_image && Storage::disk('public')->exists('profiles/' . $admin->profile_image)) {
-                Storage::disk('public')->delete('profiles/' . $admin->profile_image);
-            }
+            $admin->deleteProfileImageFile();
             $admin->profile_image = null;
             $admin->save();
             return redirect()->back()->with('success', 'Profile photo removed successfully.');
@@ -44,14 +42,9 @@ class ProfileController extends Controller
         }
 
         if ($request->hasFile('profile_image')) {
-            // Delete old image
-            if ($admin->profile_image && Storage::disk('public')->exists('profiles/' . $admin->profile_image)) {
-                Storage::disk('public')->delete('profiles/' . $admin->profile_image);
-            }
-            // Store new image with random hash name
-            $filename = $request->file('profile_image')->hashName();
-            $request->file('profile_image')->storeAs('profiles', $filename, 'public');
-            $admin->profile_image = $filename;
+            $newPath = $request->file('profile_image')->store('profiles', 'public');
+            $admin->deleteProfileImageFile();
+            $admin->profile_image = $newPath;
         }
 
         $admin->save();

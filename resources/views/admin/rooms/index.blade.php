@@ -222,8 +222,8 @@
                 @forelse($rooms as $room)
                 <tr data-id="{{ $room->id }}" data-status="{{ $room->status }}" data-type="{{ $room->type }}" data-floor="{{ $room->floor }}">
                     <td class="pe-0">
-                        @if($room->main_image && Storage::disk('public')->exists($room->main_image))
-                        <img src="{{ asset('storage/' . $room->main_image) }}" class="room-image-thumb" alt="Room {{ $room->room_number }}">
+                        @if($room->main_image)
+                        <img src="{{ $room->main_image_url }}" class="room-image-thumb" alt="Room {{ $room->room_number }}" loading="lazy" decoding="async" onerror="this.parentElement.innerHTML='<div class=\'room-image-thumb d-flex align-items-center justify-content-center bg-light text-muted\'><i class=\'bi bi-door-closed fs-5\'></i></div>';">
                         @else
                         <div class="room-image-thumb d-flex align-items-center justify-content-center bg-light text-muted">
                             <i class="bi bi-door-closed fs-5"></i>

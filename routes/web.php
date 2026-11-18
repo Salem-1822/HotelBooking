@@ -20,3 +20,39 @@ Route::post('/contact', [\App\Http\Controllers\Client\ContactController::class, 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+/**
+ * Public Storage File Serving Fallback Route
+ * Serves files directly if the web server did not intercept them statically.
+ */
+Route::get('/storage/{path}', function (string $path) {
+    // Sanitize path against directory traversal
+    $path = str_replace(['..', "\0"], '', $path);
+    $path = ltrim($path, '/');
+
+    $candidates = [
+        public_path('storage/' . $path),
+        storage_path('app/public/' . $path),
+    ];
+
+    foreach ($candidates as $filePath) {
+        if (is_file($filePath) && file_exists($filePath)) {
+            $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+            $mimeType = match ($ext) {
+                'jpg', 'jpeg' => 'image/jpeg',
+                'png'         => 'image/png',
+                'webp'        => 'image/webp',
+                'gif'         => 'image/gif',
+                'svg'         => 'image/svg+xml',
+                default       => mime_content_type($filePath) ?: 'application/octet-stream',
+            };
+
+            return response()->file($filePath, [
+                'Content-Type'  => $mimeType,
+                'Cache-Control' => 'public, max-age=31536000, immutable',
+            ]);
+        }
+    }
+
+    abort(404);
+})->where('path', '.*')->name('storage.fallback');

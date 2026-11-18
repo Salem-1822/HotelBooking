@@ -95,10 +95,7 @@
                         <tr>
                             <td class="px-4 py-3 border-light">
                                 <div class="d-flex align-items-center">
-                                    @php
-                                        $img = Str::startsWith($city->image, ['http://', 'https://']) ? $city->image : ($city->image ? asset('storage/' . $city->image) : 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=100&h=100&fit=crop');
-                                    @endphp
-                                    <img src="{{ $img }}" alt="{{ $city->name }}" class="rounded-4 shadow-sm me-3" style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #fff;">
+                                    <img src="{{ $city->image_url }}" alt="{{ $city->name }}" class="rounded-4 shadow-sm me-3" style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #fff;" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=100&h=100&fit=crop';">
                                     <div>
                                         <h6 class="mb-0 fw-bold text-dark">{{ $city->name }}</h6>
                                         <small class="text-muted">Slug: {{ $city->slug }}</small>
@@ -200,11 +197,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
-                @php
-                    $viewImg = Str::startsWith($city->image, ['http://', 'https://']) ? $city->image : ($city->image ? asset('storage/' . $city->image) : 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=300&h=200&fit=crop');
-                @endphp
                 <div class="text-center mb-4">
-                    <img src="{{ $viewImg }}" alt="{{ $city->name }}" class="rounded-4 shadow-sm mb-3" style="width: 100%; max-height: 160px; object-fit: cover;">
+                    <img src="{{ $city->image_url }}" alt="{{ $city->name }}" class="rounded-4 shadow-sm mb-3" style="width: 100%; max-height: 160px; object-fit: cover;" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&h=400&fit=crop';">
                     <h4 class="fw-bold mb-1">{{ $city->name }}</h4>
                     <p class="text-muted small mb-0 fw-medium">Slug: {{ $city->slug }}</p>
                 </div>

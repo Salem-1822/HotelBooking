@@ -169,9 +169,7 @@ class HotelProfileController extends Controller
 
         // ── Cover Image (existing 'image' column) ─────────────────────────
         if ($request->hasFile('image')) {
-            if ($hotel->image) {
-                Storage::disk('public')->delete($hotel->image);
-            }
+            $hotel->deleteImageFile();
             $validated['image'] = $request->file('image')->store('hotels/covers', 'public');
         } else {
             // Do not overwrite image with null if no new file was uploaded

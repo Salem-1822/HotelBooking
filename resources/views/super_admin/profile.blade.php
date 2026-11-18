@@ -22,15 +22,11 @@
             <div class="card-body p-4 text-center">
                 {{-- Avatar Section --}}
                 <div class="mb-4 position-relative d-inline-block">
-                    @if($admin->profile_image && \Storage::disk('public')->exists('profiles/' . $admin->profile_image))
-                        <img src="{{ asset('storage/profiles/' . $admin->profile_image) }}" id="profilePreview"
-                            alt="Profile"
-                            style="width:120px;height:120px;object-fit:cover;border-radius:50%;border:4px solid #EFF6FF;box-shadow:0 8px 24px rgba(30,58,138,0.15);">
-                    @else
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=1E3A8A&color=fff&size=200"
-                            id="profilePreview" alt="Profile"
-                            style="width:120px;height:120px;object-fit:cover;border-radius:50%;border:4px solid #EFF6FF;box-shadow:0 8px 24px rgba(30,58,138,0.15);">
-                    @endif
+                    <img src="{{ $admin->getProfilePhotoUrl('1E3A8A', 'fff', 200) }}" id="profilePreview"
+                        alt="Profile"
+                        loading="lazy" decoding="async"
+                        onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=1E3A8A&color=fff&size=200';"
+                        style="width:120px;height:120px;object-fit:cover;border-radius:50%;border:4px solid #EFF6FF;box-shadow:0 8px 24px rgba(30,58,138,0.15);">
                     <button type="button" onclick="document.getElementById('profile_image').click();"
                         class="position-absolute bottom-0 end-0 btn d-flex align-items-center justify-content-center"
                         style="width:34px;height:34px;border-radius:50%;background:var(--brand-primary,#1E3A8A);color:#fff;border:2px solid #fff;padding:0;box-shadow:0 4px 10px rgba(30,58,138,0.3);" title="Change Photo">

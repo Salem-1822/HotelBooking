@@ -43,12 +43,17 @@ RUN sed -i 's/80/7860/g' /etc/apache2/ports.conf /etc/apache2/sites-available/*.
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Configure Apache Directory permissions for .htaccess and mod_rewrite
-RUN echo '<Directory /var/www/html/public>\n\
+# Configure Apache Directory permissions for .htaccess, mod_rewrite, and public storage symlink
+RUN printf '<Directory /var/www/html/public>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
-</Directory>' > /etc/apache2/conf-available/laravel.conf \
+</Directory>\n\
+<Directory /var/www/html/storage/app/public>\n\
+    Options Indexes FollowSymLinks\n\
+    AllowOverride None\n\
+    Require all granted\n\
+</Directory>\n' > /etc/apache2/conf-available/laravel.conf \
     && a2enconf laravel
 
 # Install Composer from official image

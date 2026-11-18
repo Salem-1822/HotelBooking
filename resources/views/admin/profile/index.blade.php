@@ -20,7 +20,9 @@
                 <div class="card-body text-center p-4">
                     <div class="position-relative d-inline-block mb-4 mt-2">
                         <img src="{{ $admin->profile_image_url }}" alt="{{ $admin->name }}" 
-                            class="rounded-circle img-thumbnail shadow-sm" style="width: 130px; height: 130px; object-fit: cover; border-width: 3px;">
+                            class="rounded-circle img-thumbnail shadow-sm" style="width: 130px; height: 130px; object-fit: cover; border-width: 3px;"
+                            loading="lazy" decoding="async"
+                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=0F172A&color=fff&size=200';">
 
                         @if($admin->hasProfilePhoto())
                             <form action="{{ route('admin.profile.photo.destroy') }}" method="POST" class="position-absolute" style="bottom: 0; right: 0;">
