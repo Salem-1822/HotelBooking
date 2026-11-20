@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'Contact Us')
+@section('title', __('contact.contact_us_title'))
 
 @push('styles')
 <style>
@@ -48,6 +48,13 @@
         margin-top: 0.25rem;
     }
 
+    @if(app()->getLocale() === 'ar')
+    .info-item i {
+        margin-right: 0;
+        margin-left: 1rem;
+    }
+    @endif
+
     .contact-form-panel {
         padding: 3rem;
     }
@@ -63,8 +70,8 @@
     <!-- Hero Section -->
     <section class="contact-hero">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-3 reveal">Contact Us</h1>
-            <p class="lead mb-0 text-white-50 reveal delay-1">We're here to help and answer any question you might have.</p>
+            <h1 class="display-4 fw-bold mb-3 reveal">{{ __('contact.contact_us_title') }}</h1>
+            <p class="lead mb-0 text-white-50 reveal delay-1">{{ __('contact.contact_subtitle') }}</p>
         </div>
     </section>
 
@@ -94,25 +101,25 @@
                         <!-- Contact Info -->
                         <div class="col-md-5 d-none d-md-block">
                             <div class="contact-info-panel">
-                                <h4>Get in Touch</h4>
+                                <h4>{{ __('contact.get_in_touch') }}</h4>
                                 <div class="info-item">
                                     <i class="bi bi-geo-alt-fill"></i>
                                     <div>
-                                        <h6 class="mb-1 fw-bold">Our Location</h6>
-                                        <p class="text-white-50 mb-0">Casablanca, Morocco<br>Headquarters</p>
+                                        <h6 class="mb-1 fw-bold">{{ __('contact.our_location') }}</h6>
+                                        <p class="text-white-50 mb-0">{!! __('contact.our_location_val') !!}</p>
                                     </div>
                                 </div>
                                 <div class="info-item">
                                     <i class="bi bi-envelope-paper-fill"></i>
                                     <div>
-                                        <h6 class="mb-1 fw-bold">Email Us</h6>
+                                        <h6 class="mb-1 fw-bold">{{ __('contact.email_us') }}</h6>
                                         <p class="text-white-50 mb-0">support@hotelbooking.com</p>
                                     </div>
                                 </div>
                                 <div class="info-item">
                                     <i class="bi bi-telephone-fill"></i>
                                     <div>
-                                        <h6 class="mb-1 fw-bold">Call Us</h6>
+                                        <h6 class="mb-1 fw-bold">{{ __('contact.call_us') }}</h6>
                                         <p class="text-white-50 mb-0">+212 500 000 000</p>
                                     </div>
                                 </div>
@@ -122,38 +129,38 @@
                         <!-- Contact Form -->
                         <div class="col-md-7">
                             <div class="contact-form-panel">
-                                <h3 class="fw-bold mb-4">Send us a Message</h3>
+                                <h3 class="fw-bold mb-4">{{ __('contact.send_us_a_message') }}</h3>
                                 <form action="{{ route('contact.store') }}" method="POST">
                                     @csrf
                                     
                                     <div class="row g-3">
                                         <div class="col-sm-6">
-                                            <label for="name" class="form-label fw-semibold">Your Name <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', Auth::guard('web')->user()?->name) }}" placeholder="John Doe" required>
+                                            <label for="name" class="form-label fw-semibold">{{ __('contact.your_name') }} <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', Auth::guard('web')->user()?->name) }}" placeholder="{{ __('contact.name_placeholder') }}" required>
                                             @error('name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         
                                         <div class="col-sm-6">
-                                            <label for="email" class="form-label fw-semibold">Your Email <span class="text-danger">*</span></label>
-                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', Auth::guard('web')->user()?->email) }}" placeholder="john@example.com" required>
+                                            <label for="email" class="form-label fw-semibold">{{ __('contact.your_email') }} <span class="text-danger">*</span></label>
+                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', Auth::guard('web')->user()?->email) }}" placeholder="{{ __('contact.email_placeholder') }}" required>
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="subject" class="form-label fw-semibold">Subject <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('subject') is-invalid @enderror" id="subject" name="subject" value="{{ old('subject') }}" placeholder="How can we help you?" required>
+                                            <label for="subject" class="form-label fw-semibold">{{ __('contact.subject') }} <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control @error('subject') is-invalid @enderror" id="subject" name="subject" value="{{ old('subject') }}" placeholder="{{ __('contact.subject_placeholder') }}" required>
                                             @error('subject')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="message" class="form-label fw-semibold">Message <span class="text-danger">*</span></label>
-                                            <textarea class="form-control @error('message') is-invalid @enderror" id="message" name="message" rows="5" placeholder="Type your message here..." required>{{ old('message') }}</textarea>
+                                            <label for="message" class="form-label fw-semibold">{{ __('contact.message') }} <span class="text-danger">*</span></label>
+                                            <textarea class="form-control @error('message') is-invalid @enderror" id="message" name="message" rows="5" placeholder="{{ __('contact.message_placeholder') }}" required>{{ old('message') }}</textarea>
                                             @error('message')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -161,7 +168,7 @@
 
                                         <div class="col-12 mt-4">
                                             <button type="submit" class="btn btn-accent w-100 py-2 fw-bold text-uppercase" style="letter-spacing: 1px;">
-                                                Send Message <i class="bi bi-send ms-2"></i>
+                                                {{ __('contact.send_message') }} <i class="bi bi-send ms-2"></i>
                                             </button>
                                         </div>
                                     </div>

@@ -380,4 +380,17 @@ class LocalizationTest extends TestCase
             ->get(route('client.reservations.confirmation', $res));
         $confAr->assertOk()->assertSee('تم إرسال طلب الحجز بنجاح!')->assertSee('الانتقال إلى لوحة التحكم');
     }
+
+    /** 12. Contact page renders in all languages */
+    public function test_contact_page_renders_in_all_languages(): void
+    {
+        $contactEn = $this->withSession(['locale' => 'en'])->get(route('contact'));
+        $contactEn->assertOk()->assertSee('Contact Us')->assertSee('Get in Touch');
+
+        $contactFr = $this->withSession(['locale' => 'fr'])->get(route('contact'));
+        $contactFr->assertOk()->assertSee('Contactez-nous')->assertSee('Entrer en contact');
+
+        $contactAr = $this->withSession(['locale' => 'ar'])->get(route('contact'));
+        $contactAr->assertOk()->assertSee('اتصل بنا')->assertSee('تواصل معنا');
+    }
 }
