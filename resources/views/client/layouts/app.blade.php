@@ -235,6 +235,31 @@
         }
 
         /* Password toggle button & input wrapping rules */
+        .input-icon-wrap {
+            position: relative;
+        }
+
+        .input-icon-wrap .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+            font-size: 1rem;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .input-icon-wrap .form-control {
+            padding-left: 3.25rem !important;
+            padding-right: 1.25rem !important;
+        }
+
+        .input-icon-wrap .form-control.has-toggle {
+            padding-left: 3.25rem !important;
+            padding-right: 3.25rem !important;
+        }
+
         .password-toggle-btn {
             position: absolute;
             right: 0.85rem;
@@ -248,8 +273,8 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 4;
-            font-size: 1.05rem;
+            z-index: 5;
+            font-size: 1.1rem;
             line-height: 1;
             transition: color 0.15s ease;
         }
@@ -260,31 +285,52 @@
             outline: none;
             color: var(--brand-primary, #0F172A);
         }
-        .input-icon-wrap .form-control.has-toggle {
-            padding-left: 2.75rem;
-            padding-right: 2.75rem;
-        }
 
+        /* RTL Overrides for input icons, inputs & toggles */
         [dir="rtl"] .password-toggle-btn,
         html[dir="rtl"] .password-toggle-btn {
             right: auto !important;
             left: 0.85rem !important;
         }
+
         [dir="rtl"] .input-icon-wrap .input-icon,
         html[dir="rtl"] .input-icon-wrap .input-icon {
             right: 1rem !important;
             left: auto !important;
         }
+
         [dir="rtl"] .input-icon-wrap .form-control,
         html[dir="rtl"] .input-icon-wrap .form-control {
-            padding-right: 2.75rem !important;
-            padding-left: 1rem !important;
+            padding-right: 3.25rem !important;
+            padding-left: 1.25rem !important;
+            text-align: right !important;
         }
+
         [dir="rtl"] .input-icon-wrap .form-control.has-toggle,
         html[dir="rtl"] .input-icon-wrap .form-control.has-toggle {
-            padding-right: 2.75rem !important;
-            padding-left: 2.75rem !important;
+            padding-right: 3.25rem !important;
+            padding-left: 3.25rem !important;
+            text-align: right !important;
         }
+
+        [dir="rtl"] .input-icon-wrap input[type="email"],
+        [dir="rtl"] .input-icon-wrap .auth-email-input,
+        html[dir="rtl"] .input-icon-wrap input[type="email"],
+        html[dir="rtl"] .input-icon-wrap .auth-email-input {
+            direction: ltr !important;
+            text-align: right !important;
+            padding-right: 3.25rem !important;
+            padding-left: 1.25rem !important;
+        }
+
+        [dir="rtl"] .input-icon-wrap input[type="email"]::placeholder,
+        [dir="rtl"] .input-icon-wrap .auth-email-input::placeholder,
+        html[dir="rtl"] .input-icon-wrap input[type="email"]::placeholder,
+        html[dir="rtl"] .input-icon-wrap .auth-email-input::placeholder {
+            text-align: right !important;
+            direction: rtl !important;
+        }
+
         [dir="rtl"] .alert-success-custom,
         [dir="rtl"] .alert-error-custom,
         [dir="rtl"] .alert-status-custom,
@@ -500,11 +546,16 @@
                     });
                 }, 50);
             }
+        });
 
-            // Reusable password visibility toggle
+        // Reusable password visibility toggle
+        function initPasswordToggles() {
             document.querySelectorAll('.password-toggle-btn').forEach(function (btn) {
+                if (btn.dataset.toggleInitialized) return;
+                btn.dataset.toggleInitialized = 'true';
                 btn.addEventListener('click', function (e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     const targetId = this.getAttribute('data-target');
                     const input = document.getElementById(targetId);
                     if (!input) return;
@@ -526,7 +577,12 @@
                     }
                 });
             });
-        });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initPasswordToggles);
+        } else {
+            initPasswordToggles();
+        }
     </script>
     @stack('scripts')
 </body>

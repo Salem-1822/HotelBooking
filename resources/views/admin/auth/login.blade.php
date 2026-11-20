@@ -117,8 +117,8 @@
         }
 
         .input-icon-wrap .form-control {
-            padding-left: 2.75rem;
-            padding-right: 1rem;
+            padding-left: 3.25rem !important;
+            padding-right: 1.25rem !important;
             border-radius: 0.75rem;
             border: 1.5px solid var(--border-color);
             background: #F9FAFB;
@@ -127,8 +127,8 @@
         }
 
         .input-icon-wrap .form-control.has-toggle {
-            padding-right: 2.75rem;
-            padding-left: 2.75rem;
+            padding-left: 3.25rem !important;
+            padding-right: 3.25rem !important;
         }
 
         .password-toggle-btn {
@@ -144,8 +144,8 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 4;
-            font-size: 1.05rem;
+            z-index: 5;
+            font-size: 1.1rem;
             line-height: 1;
             transition: color 0.15s ease;
         }
@@ -159,24 +159,48 @@
             color: #1E3A8A;
         }
 
-        [dir="rtl"] .password-toggle-btn {
-            right: auto;
-            left: 0.85rem;
+        [dir="rtl"] .password-toggle-btn,
+        html[dir="rtl"] .password-toggle-btn {
+            right: auto !important;
+            left: 0.85rem !important;
         }
 
-        [dir="rtl"] .input-icon-wrap .input-icon {
-            left: auto;
-            right: 1rem;
+        [dir="rtl"] .input-icon-wrap .input-icon,
+        html[dir="rtl"] .input-icon-wrap .input-icon {
+            left: auto !important;
+            right: 1rem !important;
         }
 
-        [dir="rtl"] .input-icon-wrap .form-control {
-            padding-right: 2.75rem;
-            padding-left: 1rem;
+        [dir="rtl"] .input-icon-wrap .form-control,
+        html[dir="rtl"] .input-icon-wrap .form-control {
+            padding-right: 3.25rem !important;
+            padding-left: 1.25rem !important;
+            text-align: right !important;
         }
 
-        [dir="rtl"] .input-icon-wrap .form-control.has-toggle {
-            padding-right: 2.75rem;
-            padding-left: 2.75rem;
+        [dir="rtl"] .input-icon-wrap .form-control.has-toggle,
+        html[dir="rtl"] .input-icon-wrap .form-control.has-toggle {
+            padding-right: 3.25rem !important;
+            padding-left: 3.25rem !important;
+            text-align: right !important;
+        }
+
+        [dir="rtl"] .input-icon-wrap input[type="email"],
+        [dir="rtl"] .input-icon-wrap .auth-email-input,
+        html[dir="rtl"] .input-icon-wrap input[type="email"],
+        html[dir="rtl"] .input-icon-wrap .auth-email-input {
+            direction: ltr !important;
+            text-align: right !important;
+            padding-right: 3.25rem !important;
+            padding-left: 1.25rem !important;
+        }
+
+        [dir="rtl"] .input-icon-wrap input[type="email"]::placeholder,
+        [dir="rtl"] .input-icon-wrap .auth-email-input::placeholder,
+        html[dir="rtl"] .input-icon-wrap input[type="email"]::placeholder,
+        html[dir="rtl"] .input-icon-wrap .auth-email-input::placeholder {
+            text-align: right !important;
+            direction: rtl !important;
         }
 
         .input-icon-wrap .form-control:focus {
@@ -330,7 +354,7 @@
                         <div class="input-icon-wrap">
                             <i class="bi bi-envelope input-icon"></i>
                             <input type="email" name="email" id="email"
-                                class="form-control @error('email') is-invalid @enderror" placeholder="admin@hotelbooking.com"
+                                class="form-control auth-email-input @error('email') is-invalid @enderror" placeholder="admin@hotelbooking.com"
                                 value="{{ old('email') }}" autocomplete="email" required autofocus>
                         </div>
                     </div>

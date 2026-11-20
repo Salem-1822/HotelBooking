@@ -88,8 +88,8 @@
     }
 
     .input-icon-wrap .form-control {
-        padding-left: 2.75rem;
-        padding-right: 1rem;
+        padding-left: 3.25rem !important;
+        padding-right: 1.25rem !important;
         border-radius: 0.75rem;
         border: 1.5px solid var(--border-color);
         background: #F9FAFB;
@@ -97,14 +97,35 @@
         transition: all 0.2s ease;
     }
 
-    [dir="rtl"] .input-icon-wrap .input-icon {
-        left: auto;
-        right: 1rem;
+    [dir="rtl"] .input-icon-wrap .input-icon,
+    html[dir="rtl"] .input-icon-wrap .input-icon {
+        left: auto !important;
+        right: 1rem !important;
     }
 
-    [dir="rtl"] .input-icon-wrap .form-control {
-        padding-right: 2.75rem;
-        padding-left: 1rem;
+    [dir="rtl"] .input-icon-wrap .form-control,
+    html[dir="rtl"] .input-icon-wrap .form-control {
+        padding-right: 3.25rem !important;
+        padding-left: 1.25rem !important;
+        text-align: right !important;
+    }
+
+    [dir="rtl"] .input-icon-wrap input[type="email"],
+    [dir="rtl"] .input-icon-wrap .auth-email-input,
+    html[dir="rtl"] .input-icon-wrap input[type="email"],
+    html[dir="rtl"] .input-icon-wrap .auth-email-input {
+        direction: ltr !important;
+        text-align: right !important;
+        padding-right: 3.25rem !important;
+        padding-left: 1.25rem !important;
+    }
+
+    [dir="rtl"] .input-icon-wrap input[type="email"]::placeholder,
+    [dir="rtl"] .input-icon-wrap .auth-email-input::placeholder,
+    html[dir="rtl"] .input-icon-wrap input[type="email"]::placeholder,
+    html[dir="rtl"] .input-icon-wrap .auth-email-input::placeholder {
+        text-align: right !important;
+        direction: rtl !important;
     }
 
     .input-icon-wrap .form-control:focus {
@@ -252,7 +273,7 @@
                                 type="email"
                                 name="email"
                                 id="email"
-                                class="form-control @error('email') is-invalid @enderror"
+                                class="form-control auth-email-input @error('email') is-invalid @enderror"
                                 placeholder="admin@example.com"
                                 value="{{ old('email') }}"
                                 autocomplete="email"
