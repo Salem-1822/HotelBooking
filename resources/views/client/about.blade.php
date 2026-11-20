@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'About Us | HotelBooking')
+@section('title', __('about.title') . ' | HotelBooking')
 
 @push('styles')
 <style>
@@ -253,14 +253,14 @@
 <!-- 1. HERO SECTION -->
 <section class="about-hero">
     <div class="container">
-        <span class="hero-label reveal">About HotelBooking</span>
-        <h1 class="hero-title reveal delay-1">A Better Way to Discover<br>Your Next Stay</h1>
+        <span class="hero-label reveal">{{ __('about.hero_label') }}</span>
+        <h1 class="hero-title reveal delay-1">{{ __('about.hero_title') }}</h1>
         <p class="hero-text reveal delay-2">
-            HotelBooking is a web platform designed to simplify the process of discovering hotels, exploring rooms, and managing reservations with clarity and reliability.
+            {{ __('about.hero_text') }}
         </p>
         <div class="d-flex gap-3 justify-content-center mt-5 reveal delay-3">
             <a href="{{ route('hotels.index') }}" class="btn btn-primary px-5 py-3 fw-bold text-uppercase shadow-sm" style="letter-spacing: 0.05em; border-radius: 0.5rem; background-color: var(--brand-primary); border: none;">
-                Explore Hotels
+                {{ __('about.explore_hotels') }}
             </a>
         </div>
     </div>
@@ -271,28 +271,28 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 pe-lg-5 reveal">
-                <span class="text-uppercase fw-bold text-muted" style="letter-spacing: 0.1em; font-size: 0.85rem;">Our Mission</span>
-                <h2 class="section-title mt-2">More Than a Booking Platform</h2>
+                <span class="text-uppercase fw-bold text-muted" style="letter-spacing: 0.1em; font-size: 0.85rem;">{{ __('about.mission.label') }}</span>
+                <h2 class="section-title mt-2">{{ __('about.mission.title') }}</h2>
                 <p class="text-muted mb-4" style="line-height: 1.8; font-size: 1.05rem;">
-                    We believe that preparing for a trip should be just as enjoyable as the stay itself. HotelBooking is built to provide travelers with a transparent, clear, and efficient reservation experience. 
+                    {{ __('about.mission.p1') }}
                 </p>
                 <p class="text-muted mb-4" style="line-height: 1.8; font-size: 1.05rem;">
-                    From finding a suitable hotel to exploring detailed room information and managing your reservations online, we simplify the entire process so you can focus on your journey.
+                    {{ __('about.mission.p2') }}
                 </p>
                 <div class="d-flex align-items-center gap-4 mt-5">
                     <div>
-                        <h4 class="fw-bold text-dark mb-1">Simple</h4>
-                        <span class="text-muted small">Navigation</span>
+                        <h4 class="fw-bold text-dark mb-1">{{ __('about.mission.simple') }}</h4>
+                        <span class="text-muted small">{{ __('about.mission.simple_sub') }}</span>
                     </div>
                     <div style="width: 1px; height: 40px; background: #E2E8F0;"></div>
                     <div>
-                        <h4 class="fw-bold text-dark mb-1">Secure</h4>
-                        <span class="text-muted small">Reservations</span>
+                        <h4 class="fw-bold text-dark mb-1">{{ __('about.mission.secure') }}</h4>
+                        <span class="text-muted small">{{ __('about.mission.secure_sub') }}</span>
                     </div>
                     <div style="width: 1px; height: 40px; background: #E2E8F0;"></div>
                     <div>
-                        <h4 class="fw-bold text-dark mb-1">Clear</h4>
-                        <span class="text-muted small">Information</span>
+                        <h4 class="fw-bold text-dark mb-1">{{ __('about.mission.clear') }}</h4>
+                        <span class="text-muted small">{{ __('about.mission.clear_sub') }}</span>
                     </div>
                 </div>
             </div>
@@ -312,16 +312,16 @@
 <!-- 3. HOW IT WORKS -->
 <section class="section-padding bg-light-neutral">
     <div class="container text-center">
-        <h2 class="section-title reveal">How HotelBooking Works</h2>
-        <p class="section-subtitle mx-auto reveal delay-1">Follow a seamless process to find and secure your ideal accommodation in a few straightforward steps.</p>
+        <h2 class="section-title reveal">{{ __('about.how_it_works.title') }}</h2>
+        <p class="section-subtitle mx-auto reveal delay-1">{{ __('about.how_it_works.subtitle') }}</p>
         
         <div class="row g-4 mt-2">
             <div class="col-md-6 col-lg-3 reveal delay-1">
                 <div class="step-card text-start">
                     <span class="step-number">01</span>
                     <i class="bi bi-search step-icon"></i>
-                    <h3 class="step-title">Explore</h3>
-                    <p class="step-desc">Discover our list of hotels and select your preferred destination.</p>
+                    <h3 class="step-title">{{ __('about.how_it_works.step1_title') }}</h3>
+                    <p class="step-desc">{{ __('about.how_it_works.step1_desc') }}</p>
                 </div>
             </div>
             
@@ -329,8 +329,8 @@
                 <div class="step-card text-start">
                     <span class="step-number">02</span>
                     <i class="bi bi-door-open step-icon"></i>
-                    <h3 class="step-title">Choose</h3>
-                    <p class="step-desc">Browse through available rooms, check pricing, and review essential amenities.</p>
+                    <h3 class="step-title">{{ __('about.how_it_works.step2_title') }}</h3>
+                    <p class="step-desc">{{ __('about.how_it_works.step2_desc') }}</p>
                 </div>
             </div>
             
@@ -338,8 +338,8 @@
                 <div class="step-card text-start">
                     <span class="step-number">03</span>
                     <i class="bi bi-calendar2-check step-icon"></i>
-                    <h3 class="step-title">Book</h3>
-                    <p class="step-desc">Select your stay dates, finalize the details, and securely confirm your reservation.</p>
+                    <h3 class="step-title">{{ __('about.how_it_works.step3_title') }}</h3>
+                    <p class="step-desc">{{ __('about.how_it_works.step3_desc') }}</p>
                 </div>
             </div>
             
@@ -347,8 +347,8 @@
                 <div class="step-card text-start">
                     <span class="step-number">04</span>
                     <i class="bi bi-luggage step-icon"></i>
-                    <h3 class="step-title">Enjoy</h3>
-                    <p class="step-desc">Manage your booking directly from your account and prepare for your stay.</p>
+                    <h3 class="step-title">{{ __('about.how_it_works.step4_title') }}</h3>
+                    <p class="step-desc">{{ __('about.how_it_works.step4_desc') }}</p>
                 </div>
             </div>
         </div>
@@ -360,9 +360,9 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-5 mb-5 mb-lg-0 reveal">
-                <h2 class="section-title">What We Offer</h2>
+                <h2 class="section-title">{{ __('about.offer.title') }}</h2>
                 <p class="text-muted mb-4" style="line-height: 1.8;">
-                    HotelBooking is equipped with everything you need to manage your travel accommodation efficiently and reliably.
+                    {{ __('about.offer.desc') }}
                 </p>
                 
                 <ul class="feature-list mt-5">
@@ -371,8 +371,8 @@
                             <i class="bi bi-building"></i>
                         </div>
                         <div class="feature-content">
-                            <h5>Discover Hotels</h5>
-                            <p>Access detailed profiles, locations, and images for every property.</p>
+                            <h5>{{ __('about.offer.item1_title') }}</h5>
+                            <p>{{ __('about.offer.item1_desc') }}</p>
                         </div>
                     </li>
                     <li class="feature-item">
@@ -380,8 +380,8 @@
                             <i class="bi bi-check-circle"></i>
                         </div>
                         <div class="feature-content">
-                            <h5>Easy Booking</h5>
-                            <p>Follow a clear, step-by-step reservation process to secure your room.</p>
+                            <h5>{{ __('about.offer.item2_title') }}</h5>
+                            <p>{{ __('about.offer.item2_desc') }}</p>
                         </div>
                     </li>
                     <li class="feature-item">
@@ -389,8 +389,8 @@
                             <i class="bi bi-person-workspace"></i>
                         </div>
                         <div class="feature-content">
-                            <h5>Manage Reservations</h5>
-                            <p>Create an account to review, track, and manage your current and past bookings.</p>
+                            <h5>{{ __('about.offer.item3_title') }}</h5>
+                            <p>{{ __('about.offer.item3_desc') }}</p>
                         </div>
                     </li>
                     <li class="feature-item">
@@ -398,8 +398,8 @@
                             <i class="bi bi-star"></i>
                         </div>
                         <div class="feature-content">
-                            <h5>Guest Reviews</h5>
-                            <p>Read authentic feedback from past guests to help you make the right choice.</p>
+                            <h5>{{ __('about.offer.item4_title') }}</h5>
+                            <p>{{ __('about.offer.item4_desc') }}</p>
                         </div>
                     </li>
                 </ul>
@@ -413,9 +413,9 @@
                     </div>
                 </div>
                 <div class="bg-light-neutral p-4 rounded-4 border-0">
-                    <h4 class="fw-bold text-dark mb-3">Designed for Better Stays</h4>
+                    <h4 class="fw-bold text-dark mb-3">{{ __('about.offer.designed_title') }}</h4>
                     <p class="text-muted mb-0" style="line-height: 1.7;">
-                        Whether you're traveling for business or planning a getaway, our platform focuses on what matters: clear information, responsive design, and a user-focused navigation experience that puts you in control.
+                        {{ __('about.offer.designed_desc') }}
                     </p>
                 </div>
             </div>
@@ -426,10 +426,10 @@
 <!-- 5. FINAL CTA -->
 <section class="cta-section reveal">
     <div class="container">
-        <h2 class="cta-title">Ready to discover your next stay?</h2>
-        <p class="text-white-50 mb-5 fs-5">Begin planning your perfect trip with a clear and reliable platform.</p>
+        <h2 class="cta-title">{{ __('about.cta.title') }}</h2>
+        <p class="text-white-50 mb-5 fs-5">{{ __('about.cta.subtitle') }}</p>
         <a href="{{ route('hotels.index') }}" class="btn btn-accent btn-lg px-5 py-3 fw-bold text-uppercase shadow" style="letter-spacing: 1px; border-radius: 0.5rem;">
-            Explore Hotels <i class="bi bi-arrow-right ms-2"></i>
+            {{ __('about.cta.button') }} <i class="bi bi-arrow-right ms-2"></i>
         </a>
     </div>
 </section>

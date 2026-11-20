@@ -161,4 +161,32 @@ class LocalizationTest extends TestCase
         $responseAr->assertSee('dir="rtl"', false);
         $responseAr->assertSee('لوحة التحكم');
     }
+
+    /** 7. Homepage and About pages render in all languages */
+    public function test_homepage_and_about_render_in_all_languages(): void
+    {
+        // Homepage FR
+        $homeFr = $this->withSession(['locale' => 'fr'])->get('/');
+        $homeFr->assertOk();
+        $homeFr->assertSee('Découvrez Votre Séjour Idéal');
+        $homeFr->assertSee('Destinations Populaires');
+
+        // Homepage AR
+        $homeAr = $this->withSession(['locale' => 'ar'])->get('/');
+        $homeAr->assertOk();
+        $homeAr->assertSee('اكتشف إقامتك المثالية');
+        $homeAr->assertSee('وجهات مميزة');
+
+        // About FR
+        $aboutFr = $this->withSession(['locale' => 'fr'])->get('/about');
+        $aboutFr->assertOk();
+        $aboutFr->assertSee('À propos de nous');
+        $aboutFr->assertSee('Notre Mission');
+
+        // About AR
+        $aboutAr = $this->withSession(['locale' => 'ar'])->get('/about');
+        $aboutAr->assertOk();
+        $aboutAr->assertSee('من نحن');
+        $aboutAr->assertSee('رسالتنا');
+    }
 }

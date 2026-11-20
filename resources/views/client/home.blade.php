@@ -337,8 +337,8 @@
     <!-- Hero Section -->
     <section class="hero-section text-center">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-3 reveal" style="font-family: 'Poppins', sans-serif;">Discover Your Perfect Stay</h1>
-            <p class="lead mb-5 mx-auto reveal delay-1" style="max-width: 600px; color: rgba(255,255,255,0.8);">Experience world-class luxury and comfort at our carefully selected hotels across top destinations.</p>
+            <h1 class="display-4 fw-bold mb-3 reveal" style="font-family: 'Poppins', sans-serif;">{{ __('home.hero_title') }}</h1>
+            <p class="lead mb-5 mx-auto reveal delay-1" style="max-width: 600px; color: rgba(255,255,255,0.8);">{{ __('home.hero_subtitle') }}</p>
         </div>
     </section>
 
@@ -348,33 +348,33 @@
             <form action="{{ route('hotels.index') }}" method="GET">
                 <div class="row g-0 align-items-center">
                     <div class="col-lg-3 col-md-6 px-3 search-input-group">
-                        <label class="search-label"><i class="bi bi-geo-alt-fill me-1 text-accent"></i> Destination</label>
+                        <label class="search-label"><i class="bi bi-geo-alt-fill me-1 text-accent"></i> {{ __('home.search.destination') }}</label>
                         <select class="form-select search-input" name="city_id">
-                            <option value="">Where are you going?</option>
+                            <option value="">{{ __('home.search.where_going') }}</option>
                             @foreach($cities as $city)
                                 <option value="{{ $city->id }}">{{ $city->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-lg-3 col-md-6 px-3 search-input-group">
-                        <label class="search-label"><i class="bi bi-calendar-check me-1 text-accent"></i> Check-in</label>
+                        <label class="search-label"><i class="bi bi-calendar-check me-1 text-accent"></i> {{ __('home.search.check_in') }}</label>
                         <input type="date" class="form-control search-input" name="check_in" min="{{ date('Y-m-d') }}">
                     </div>
                     <div class="col-lg-3 col-md-6 px-3 search-input-group">
-                        <label class="search-label"><i class="bi bi-calendar-check-fill me-1 text-accent"></i> Check-out</label>
+                        <label class="search-label"><i class="bi bi-calendar-check-fill me-1 text-accent"></i> {{ __('home.search.check_out') }}</label>
                         <input type="date" class="form-control search-input" name="check_out" min="{{ date('Y-m-d', strtotime('+1 day')) }}">
                     </div>
                     <div class="col-lg-2 col-md-6 px-3 search-input-group border-0">
-                        <label class="search-label"><i class="bi bi-person-fill me-1 text-accent"></i> Guests</label>
+                        <label class="search-label"><i class="bi bi-person-fill me-1 text-accent"></i> {{ __('home.search.guests') }}</label>
                         <select class="form-select search-input" name="guests">
-                            <option value="1">1 Guest</option>
-                            <option value="2" selected>2 Guests</option>
-                            <option value="3">3 Guests</option>
-                            <option value="4">4+ Guests</option>
+                            <option value="1">1 {{ __('common.room') }} (1)</option>
+                            <option value="2" selected>2 (2)</option>
+                            <option value="3">3 (3)</option>
+                            <option value="4">4+ (4+)</option>
                         </select>
                     </div>
                     <div class="col-lg-1 px-3 mt-3 mt-lg-0 text-center text-lg-end">
-                        <button type="submit" class="btn btn-accent w-100 py-3" style="border-radius: 0.875rem;">
+                        <button type="submit" class="btn btn-accent w-100 py-3" style="border-radius: 0.875rem;" title="{{ __('home.search.search_hotels') }}">
                             <i class="bi bi-search fs-5"></i>
                         </button>
                     </div>
@@ -387,8 +387,8 @@
     <section id="destinations" class="py-5 mt-5">
         <div class="container">
             <div class="text-center mb-5 reveal">
-                <h2 class="section-title">Popular Destinations</h2>
-                <p class="section-subtitle">Explore our top locations and find the perfect setting for your next unforgettable getaway.</p>
+                <h2 class="section-title">{{ __('home.destinations.title') }}</h2>
+                <p class="section-subtitle">{{ __('home.destinations.subtitle') }}</p>
             </div>
             
             @if($cities->count() > 0)
@@ -399,7 +399,7 @@
                                 <img src="{{ $city->image_url }}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $city->name }}">
                                 <div class="destination-content">
                                     <h3 class="destination-title">{{ $city->name }}</h3>
-                                    <div class="destination-count">{{ $city->hotels_count }} Hotel{{ $city->hotels_count > 1 ? 's' : '' }}</div>
+                                    <div class="destination-count">{{ __('home.destinations.hotels_count', ['count' => $city->hotels_count]) }}</div>
                                 </div>
                             </a>
                         </div>
@@ -408,7 +408,7 @@
             @else
                 <div class="text-center py-5 bg-white" style="border-radius: 1rem; border: 1px dashed var(--border-color);">
                     <i class="bi bi-map text-muted" style="font-size: 3rem;"></i>
-                    <h5 class="mt-3 text-muted">Destinations coming soon</h5>
+                    <h5 class="mt-3 text-muted">{{ __('home.destinations.subtitle') }}</h5>
                 </div>
             @endif
         </div>
@@ -419,10 +419,10 @@
         <div class="container">
             <div class="d-flex align-items-end justify-content-between mb-5 reveal">
                 <div>
-                    <h2 class="section-title mb-2">Featured Hotels</h2>
-                    <p class="text-muted mb-0">Hand-picked luxury accommodations for your perfect stay.</p>
+                    <h2 class="section-title mb-2">{{ __('home.featured.title') }}</h2>
+                    <p class="text-muted mb-0">{{ __('home.featured.subtitle') }}</p>
                 </div>
-                <a href="{{ route('hotels.index') }}" class="btn btn-outline-dark d-none d-md-inline-block" style="border-radius: 2rem; padding: 0.5rem 1.5rem; font-weight: 500;">View All <i class="bi bi-arrow-right ms-1"></i></a>
+                <a href="{{ route('hotels.index') }}" class="btn btn-outline-dark d-none d-md-inline-block" style="border-radius: 2rem; padding: 0.5rem 1.5rem; font-weight: 500;">{{ __('common.all') }} <i class="bi bi-arrow-right ms-1"></i></a>
             </div>
 
             @if($featuredHotels->count() > 0)
@@ -432,27 +432,27 @@
                             <div class="hotel-card">
                                 <div class="hotel-img-wrapper">
                                     @if($hotel->stars)
-                                        <div class="hotel-badge"><i class="bi bi-star-fill text-warning me-1"></i> {{ $hotel->stars }} Stars</div>
+                                        <div class="hotel-badge"><i class="bi bi-star-fill text-warning me-1"></i> {{ $hotel->stars }} {{ __('common.stars') }}</div>
                                     @endif
                                     
                                     <img src="{{ $hotel->image_url }}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-c6a4d27a6582?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $hotel->name }}">
                                 </div>
                                 <div class="hotel-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <a href="#" class="hotel-title">{{ $hotel->name }}</a>
+                                        <a href="{{ route('hotels.show', $hotel) }}" class="hotel-title">{{ $hotel->name }}</a>
                                         @if($hotel->avg_rating)
                                             <div class="d-flex align-items-center bg-light px-2 py-1 rounded" style="font-size: 0.85rem; font-weight: 600;">
                                                 <i class="bi bi-star-fill text-warning me-1"></i> {{ number_format($hotel->avg_rating, 1) }}
                                             </div>
                                         @endif
                                     </div>
-                                    <div class="hotel-location"><i class="bi bi-geo-alt me-1"></i> {{ $hotel->city->name ?? 'Location unavailable' }}</div>
+                                    <div class="hotel-location"><i class="bi bi-geo-alt me-1"></i> {{ $hotel->city->name ?? '' }}</div>
                                     
                                     <div class="hotel-footer">
                                         <div class="hotel-price">
-                                            {{ number_format($hotel->starting_price ?? $hotel->price_per_night, 2) }} MAD <span>/ night</span>
+                                            {{ number_format($hotel->starting_price ?? $hotel->price_per_night, 2) }} {{ __('common.currency') }} <span>{{ __('common.per_night') }}</span>
                                         </div>
-                                        <a href="{{ route('hotels.show', $hotel) }}" class="btn btn-sm btn-accent" style="border-radius: 0.5rem;">View Hotel</a>
+                                        <a href="{{ route('hotels.show', $hotel) }}" class="btn btn-sm btn-accent" style="border-radius: 0.5rem;">{{ __('home.featured.view_details') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -460,12 +460,12 @@
                     @endforeach
                 </div>
                 <div class="text-center mt-4 d-md-none">
-                    <a href="{{ route('hotels.index') }}" class="btn btn-outline-dark" style="border-radius: 2rem; padding: 0.5rem 1.5rem;">View All Hotels</a>
+                    <a href="{{ route('hotels.index') }}" class="btn btn-outline-dark" style="border-radius: 2rem; padding: 0.5rem 1.5rem;">{{ __('common.all') }}</a>
                 </div>
             @else
                 <div class="text-center py-5 bg-light" style="border-radius: 1rem; border: 1px dashed var(--border-color);">
                     <i class="bi bi-building text-muted" style="font-size: 3rem;"></i>
-                    <h5 class="mt-3 text-muted">No hotels available at the moment</h5>
+                    <h5 class="mt-3 text-muted">{{ __('home.featured.no_hotels') }}</h5>
                 </div>
             @endif
         </div>
@@ -478,25 +478,25 @@
                 <div class="col-md-3 col-6 reveal delay-1">
                     <div class="stat-item">
                         <div class="stat-number animated-counter" data-target="{{ $stats['total_hotels'] ?? 0 }}">0</div>
-                        <div class="stat-label">Luxury Hotels</div>
+                        <div class="stat-label">{{ __('home.stats.total_hotels') }}</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6 reveal delay-2">
                     <div class="stat-item">
                         <div class="stat-number animated-counter" data-target="{{ $stats['total_cities'] ?? 0 }}">0</div>
-                        <div class="stat-label">Destinations</div>
+                        <div class="stat-label">{{ __('home.stats.destinations') }}</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6 reveal delay-3">
                     <div class="stat-item">
                         <div class="stat-number animated-counter" data-target="{{ $stats['total_rooms'] ?? 0 }}">0</div>
-                        <div class="stat-label">Premium Rooms</div>
+                        <div class="stat-label">{{ __('home.stats.luxury_rooms') }}</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6 reveal delay-4">
                     <div class="stat-item">
                         <div class="stat-number animated-counter" data-target="{{ $stats['total_guests'] ?? 0 }}">0</div>
-                        <div class="stat-label">Happy Guests</div>
+                        <div class="stat-label">{{ __('home.stats.happy_guests') }}</div>
                     </div>
                 </div>
             </div>
@@ -506,8 +506,8 @@
     <!-- Why Choose Us -->
     <section class="py-5 my-5">
         <div class="container text-center">
-            <h2 class="section-title reveal">Why Choose HotelBooking</h2>
-            <p class="section-subtitle reveal delay-1">We provide a premium experience from the moment you start searching until you check out.</p>
+            <h2 class="section-title reveal">{{ __('home.features.title') }}</h2>
+            <p class="section-subtitle reveal delay-1">{{ __('home.features.subtitle') }}</p>
             
             <div class="row g-4 mt-2">
                 <div class="col-lg-4 col-md-6 reveal delay-1">
@@ -515,8 +515,8 @@
                         <div class="feature-icon">
                             <i class="bi bi-shield-check"></i>
                         </div>
-                        <h4 class="fw-bold mb-3" style="font-size: 1.25rem;">Secure Booking</h4>
-                        <p class="text-muted">Your payment and personal information are protected by industry-leading security protocols.</p>
+                        <h4 class="fw-bold mb-3" style="font-size: 1.25rem;">{{ __('home.features.secure_title') }}</h4>
+                        <p class="text-muted">{{ __('home.features.secure_desc') }}</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 reveal delay-2">
@@ -524,8 +524,8 @@
                         <div class="feature-icon">
                             <i class="bi bi-tags"></i>
                         </div>
-                        <h4 class="fw-bold mb-3" style="font-size: 1.25rem;">Best Price Guarantee</h4>
-                        <p class="text-muted">Find a lower price on another website? We'll match it and give you an extra discount.</p>
+                        <h4 class="fw-bold mb-3" style="font-size: 1.25rem;">{{ __('home.features.price_title') }}</h4>
+                        <p class="text-muted">{{ __('home.features.price_desc') }}</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 offset-md-3 offset-lg-0 reveal delay-3">
@@ -533,8 +533,8 @@
                         <div class="feature-icon">
                             <i class="bi bi-headset"></i>
                         </div>
-                        <h4 class="fw-bold mb-3" style="font-size: 1.25rem;">24/7 Support</h4>
-                        <p class="text-muted">Our dedicated customer service team is available around the clock to assist you.</p>
+                        <h4 class="fw-bold mb-3" style="font-size: 1.25rem;">{{ __('home.features.support_title') }}</h4>
+                        <p class="text-muted">{{ __('home.features.support_desc') }}</p>
                     </div>
                 </div>
             </div>
@@ -544,8 +544,8 @@
     <!-- Reviews -->
     <section class="py-5 bg-white">
         <div class="container">
-            <h2 class="section-title text-center reveal">What Our Guests Say</h2>
-            <p class="section-subtitle text-center reveal delay-1">Real experiences from real travelers.</p>
+            <h2 class="section-title text-center reveal">{{ __('home.reviews.title') }}</h2>
+            <p class="section-subtitle text-center reveal delay-1">{{ __('home.reviews.subtitle') }}</p>
             
             <div class="row g-4 mt-2">
                 @forelse($guestReviews as $index => $review)
@@ -565,8 +565,8 @@
                             <div class="d-flex align-items-center">
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($review->user->name ?? 'Guest') }}&background=0F172A&color=fff" class="rounded-circle me-3" width="48" height="48" alt="">
                                 <div>
-                                    <h6 class="mb-0 fw-bold">{{ $review->user->name ?? 'Guest User' }}</h6>
-                                    <small class="text-muted">Stayed at {{ $review->hotel->name ?? 'Hotel' }}</small>
+                                    <h6 class="mb-0 fw-bold">{{ $review->user->name ?? 'Guest' }}</h6>
+                                    <small class="text-muted">{{ __('home.reviews.stayed_at', ['hotel' => $review->hotel->name ?? 'Hotel']) }}</small>
                                 </div>
                             </div>
                         </div>
@@ -575,8 +575,8 @@
                     <div class="col-12 reveal delay-1">
                         <div class="text-center py-5" style="border-radius: 1rem; border: 1px dashed var(--border-color); background: #fff;">
                             <i class="bi bi-chat-square-quote" style="font-size: 3rem; color: var(--brand-accent); opacity: 0.5;"></i>
-                            <h5 class="mt-3 mb-2" style="color: var(--brand-primary); font-weight: 700;">No guest reviews yet.</h5>
-                            <p class="text-muted mb-0" style="max-width: 380px; margin: 0 auto;">Guest reviews will appear here after their first stay. Be the first to share your experience!</p>
+                            <h5 class="mt-3 mb-2" style="color: var(--brand-primary); font-weight: 700;">{{ __('home.reviews.no_reviews_title') }}</h5>
+                            <p class="text-muted mb-0" style="max-width: 380px; margin: 0 auto;">{{ __('home.reviews.no_reviews_desc') }}</p>
                         </div>
                     </div>
                 @endforelse
@@ -589,9 +589,9 @@
         <section class="cta-section reveal">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
-                    <h2 class="fw-bold mb-4" style="font-family: 'Poppins', sans-serif;">Ready to book your next trip?</h2>
-                    <p class="lead mb-5 mx-auto" style="color: rgba(255,255,255,0.8); max-width: 500px;">Join thousands of satisfied travelers who have found their perfect stay with HotelBooking.</p>
-                    <a href="#hotels" class="btn btn-accent btn-lg px-5 py-3" style="border-radius: 0.875rem;">Explore All Hotels</a>
+                    <h2 class="fw-bold mb-4" style="font-family: 'Poppins', sans-serif;">{{ __('home.cta.title') }}</h2>
+                    <p class="lead mb-5 mx-auto" style="color: rgba(255,255,255,0.8); max-width: 500px;">{{ __('home.cta.subtitle') }}</p>
+                    <a href="{{ route('hotels.index') }}" class="btn btn-accent btn-lg px-5 py-3" style="border-radius: 0.875rem;">{{ __('home.cta.button') }}</a>
                 </div>
             </div>
         </section>
