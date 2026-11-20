@@ -31,4 +31,10 @@ return [
     'privacy_policy' => 'Privacy Policy',
     'terms_of_service' => 'Terms of Service',
     'rights_reserved' => 'All rights reserved.',
+    'newsletter' => 'Newsletter',
+    'newsletter_desc' => 'Subscribe to get special offers and updates.',
+    'email_placeholder' => 'Email address',
+    'subscribe' => 'Subscribe',
+    'footer_tagline' => 'Experience luxury and comfort at our carefully curated selection of hotels worldwide. Your perfect stay is just a click away.',
+    'all_rights_reserved' => '&copy; :year HotelBooking. All rights reserved.',
 ];

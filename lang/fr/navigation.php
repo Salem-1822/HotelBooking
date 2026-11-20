@@ -31,4 +31,10 @@ return [
     'privacy_policy' => 'Politique de confidentialité',
     'terms_of_service' => 'Conditions d\'utilisation',
     'rights_reserved' => 'Tous droits réservés.',
+    'newsletter' => 'Newsletter',
+    'newsletter_desc' => 'Abonnez-vous pour recevoir des offres exclusives et des mises à jour.',
+    'email_placeholder' => 'Adresse email',
+    'subscribe' => 'S’abonner',
+    'footer_tagline' => 'Découvrez le luxe et le confort dans notre sélection d’hôtels soigneusement choisie. Votre séjour parfait à portée de clic.',
+    'all_rights_reserved' => '&copy; :year HotelBooking. Tous droits réservés.',
 ];

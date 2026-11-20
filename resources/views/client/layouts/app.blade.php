@@ -371,8 +371,7 @@
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
                     <div class="navbar-brand mb-3" style="font-size: 1.8rem;">HotelBooking</div>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem;">Experience luxury and comfort at our
-                        carefully curated selection of hotels worldwide. Your perfect stay is just a click away.</p>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem;">{{ __('navigation.footer_tagline') }}</p>
                     <div class="d-flex gap-3 mt-4">
                         <a href="#" class="text-white text-decoration-none fs-5"><i class="bi bi-facebook"></i></a>
                         <a href="#" class="text-white text-decoration-none fs-5"><i class="bi bi-twitter-x"></i></a>
@@ -393,19 +392,17 @@
                     <a href="#" class="footer-link">{{ __('navigation.terms_of_service') }}</a>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                    <h5 class="footer-heading">Newsletter</h5>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem;">Subscribe to get special offers and
-                        updates.</p>
+                    <h5 class="footer-heading">{{ __('navigation.newsletter') }}</h5>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem;">{{ __('navigation.newsletter_desc') }}</p>
                     <div class="input-group mt-3">
-                        <input type="email" class="form-control bg-transparent text-white" placeholder="Email address"
+                        <input type="email" class="form-control bg-transparent text-white" placeholder="{{ __('navigation.email_placeholder') }}"
                             style="border-color: rgba(255,255,255,0.2);">
-                        <button class="btn btn-accent" type="button">Subscribe</button>
+                        <button class="btn btn-accent" type="button">{{ __('navigation.subscribe') }}</button>
                     </div>
                 </div>
             </div>
             <div class="border-top mt-5 pt-4 text-center" style="border-color: rgba(255,255,255,0.1) !important;">
-                <p class="mb-0" style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">&copy; {{ date('Y') }}
-                    HotelBooking. All rights reserved.</p>
+                <p class="mb-0" style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">{!! __('navigation.all_rights_reserved', ['year' => date('Y')]) !!}</p>
             </div>
         </div>
     </footer>

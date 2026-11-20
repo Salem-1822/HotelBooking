@@ -31,4 +31,10 @@ return [
     'privacy_policy' => 'سياسة الخصوصية',
     'terms_of_service' => 'شروط الخدمة',
     'rights_reserved' => 'جميع الحقوق محفوظة.',
+    'newsletter' => 'النشرة البريدية',
+    'newsletter_desc' => 'اشترك للحصول على العروض الحصرية وآخر التحديثات.',
+    'email_placeholder' => 'عنوان البريد الإلكتروني',
+    'subscribe' => 'اشتراك',
+    'footer_tagline' => 'عش تجربة الفخامة والراحة في تشكيلتنا المختارة بعناية من أفضل الفنادق. إقامتك المثالية على بعد نقرة واحدة.',
+    'all_rights_reserved' => '&copy; :year HotelBooking. جميع الحقوق محفوظة.',
 ];
