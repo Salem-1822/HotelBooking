@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
-    <title>Hotel Performance Report - {{ $hotel->name }}</title>
+    <title>{{ __('admin.reports_title') }} - {{ $hotel->name }}</title>
     <style>
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -114,7 +114,7 @@
 
     <div class="header">
         <div class="hotel-name">{{ $hotel->name }}</div>
-        <div class="report-title">Hotel Performance & Revenue Report</div>
+        <div class="report-title">{{ __('admin.reports_title') }}</div>
     </div>
 
     <table class="meta-table">
@@ -137,37 +137,37 @@
     @if($totalReservations === 0)
         <div class="empty-state">
             <div class="empty-icon">📂</div>
-            <strong>No Report Data Available</strong>
-            <p style="margin: 5px 0 0 0; font-size: 11px;">There are currently no reservations logged for this hotel in the system.</p>
+            <strong>{{ __('admin.no_report_data') }}</strong>
+            <p style="margin: 5px 0 0 0; font-size: 11px;">{{ __('admin.no_report_data_desc') }}</p>
         </div>
     @else
         <table class="kpi-grid">
             <tr>
                 <td>
                     <div class="kpi-val">{{ number_format($totalRevenue, 2) }} MAD</div>
-                    <div class="kpi-name">Total Revenue</div>
+                    <div class="kpi-name">{{ __('admin.total_revenue') }}</div>
                 </td>
                 <td>
                     <div class="kpi-val">{{ $totalReservations }}</div>
-                    <div class="kpi-name">Total Bookings</div>
+                    <div class="kpi-name">{{ __('admin.total_reservations') }}</div>
                 </td>
                 <td>
                     <div class="kpi-val">{{ $completedReservations }}</div>
-                    <div class="kpi-name">Completed Stays</div>
+                    <div class="kpi-name">{{ __('admin.completed_stays') }}</div>
                 </td>
             </tr>
             <tr>
                 <td>
                     <div class="kpi-val">{{ $pendingReservations }}</div>
-                    <div class="kpi-name">Pending Bookings</div>
+                    <div class="kpi-name">{{ __('admin.pending_bookings') }}</div>
                 </td>
                 <td>
                     <div class="kpi-val">{{ $cancelledReservations }}</div>
-                    <div class="kpi-name">Cancelled Bookings</div>
+                    <div class="kpi-name">{{ __('admin.cancelled_bookings') }}</div>
                 </td>
                 <td>
                     <div class="kpi-val">{{ $totalCustomers }}</div>
-                    <div class="kpi-name">Total Customers</div>
+                    <div class="kpi-name">{{ __('admin.total_customers') }}</div>
                 </td>
             </tr>
         </table>

@@ -1,5 +1,7 @@
 @extends('client.layouts.app')
 
+@section('title', __('admin.forgot_password_title'))
+
 @push('styles')
 <style>
     /* ── Page Layout ── */
@@ -206,10 +208,10 @@
         <div class="auth-card-header">
             <div class="auth-brand reveal delay-1">HotelBooking</div>
             <div class="admin-badge reveal delay-1">
-                <i class="bi bi-shield-fill"></i> Admin Portal
+                <i class="bi bi-shield-fill"></i> {{ __('admin.admin_portal') }}
             </div>
-            <h5 class="reveal delay-1">Forgot Password?</h5>
-            <p class="reveal delay-2">Enter your admin email and we'll send reset instructions.</p>
+            <h5 class="reveal delay-1">{{ __('admin.forgot_password_title') }}</h5>
+            <p class="reveal delay-2">{{ __('admin.forgot_password_subtitle') }}</p>
         </div>
 
         {{-- Card Body --}}
@@ -224,8 +226,7 @@
 
             @unless(session('status'))
                 <p class="auth-info-note">
-                    We'll send a password reset link to your admin email address.<br>
-                    The link expires in {{ config('auth.passwords.admins.expire', 60) }} minutes.
+                    {!! __('admin.forgot_password_note', ['expire' => config('auth.passwords.admins.expire', 60)]) !!}
                 </p>
 
                 <form method="POST" action="{{ route('admin.password.email') }}" novalidate>
@@ -233,7 +234,7 @@
 
                     {{-- Email Address --}}
                     <div class="mb-4">
-                        <label for="email" class="auth-label">Admin Email Address</label>
+                        <label for="email" class="auth-label">{{ __('admin.admin_email_address') }}</label>
                         <div class="input-icon-wrap">
                             <i class="bi bi-envelope input-icon"></i>
                             <input
@@ -255,7 +256,7 @@
 
                     {{-- Submit --}}
                     <button type="submit" class="btn-auth">
-                        <i class="bi bi-send me-2"></i>Send Reset Link
+                        <i class="bi bi-send me-2"></i>{{ __('admin.send_reset_link') }}
                     </button>
                 </form>
             @endunless
@@ -263,8 +264,8 @@
             <hr class="auth-divider">
 
             <p class="auth-footer-text reveal delay-4">
-                Remember your password?
-                <a href="{{ route('login') }}">Back to Sign In</a>
+                {{ __('admin.remember_password') }}
+                <a href="{{ route('admin.login') }}">{{ __('admin.back_to_sign_in') }}</a>
             </p>
 
         </div>{{-- /.auth-card-body --}}

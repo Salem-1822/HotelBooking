@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Reports & Analytics')
+@section('title', __('admin.reports_title'))
 
 @push('styles')
 <style>
@@ -120,13 +120,13 @@
     <div class="page-header-bar d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
             <h4 class="fw-extrabold text-dark mb-1 d-flex align-items-center gap-2">
-                <i class="bi bi-graph-up-arrow text-primary"></i> Reports & Analytics
+                <i class="bi bi-graph-up-arrow text-primary"></i> {{ __('admin.reports_title') }}
             </h4>
-            <p class="text-muted mb-0 small">Real-time hotel performance overview and booking revenue analysis.</p>
+            <p class="text-muted mb-0 small">{{ __('admin.reports_desc') }}</p>
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('admin.reports.export') }}" class="btn btn-primary px-3 py-2 btn-sm rounded-3 shadow-sm">
-                <i class="bi bi-download me-1.5"></i> Export PDF
+                <i class="bi bi-download me-1.5"></i> {{ __('admin.export_pdf') }}
             </a>
         </div>
     </div>
@@ -138,12 +138,12 @@
                 <div class="d-inline-flex align-items-center justify-content-center bg-light text-muted rounded-circle p-4 mb-4" style="width: 100px; height: 100px;">
                     <i class="bi bi-folder-x" style="font-size: 3.5rem;"></i>
                 </div>
-                <h5 class="fw-bold text-dark mb-2">No Report Data Available</h5>
+                <h5 class="fw-bold text-dark mb-2">{{ __('admin.no_report_data') }}</h5>
                 <p class="text-muted mx-auto mb-4" style="max-width: 400px; font-size: 0.9rem;">
-                    We couldn't find any reservation activity for your hotel in the database. Once bookings are registered, stats will calculate automatically.
+                    {{ __('admin.no_report_data_desc') }}
                 </p>
                 <a href="{{ route('admin.reservations.index') }}" class="btn btn-dark rounded-3 px-4 py-2 btn-sm fw-semibold shadow-sm">
-                    <i class="bi bi-plus-lg me-1.5"></i> Create First Reservation
+                    <i class="bi bi-plus-lg me-1.5"></i> {{ __('admin.create_first_reservation') }}
                 </a>
             </div>
         </div>
@@ -156,7 +156,7 @@
                     <div class="card-body p-4 d-flex flex-column justify-content-between">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
-                                <span class="kpi-label text-muted d-block mb-1">Total Revenue</span>
+                                <span class="kpi-label text-muted d-block mb-1">{{ __('admin.total_revenue') }}</span>
                                 <h3 class="kpi-value text-dark mb-0">{{ number_format($totalRevenue, 2) }} <span style="font-size: 1.2rem; font-weight: 600; color: #64748b;">MAD</span></h3>
                             </div>
                             <div class="kpi-icon-wrapper bg-success bg-opacity-10 text-success">
@@ -165,9 +165,9 @@
                         </div>
                         <div class="d-flex align-items-center gap-2 mt-2">
                             <span class="badge-premium bg-success bg-opacity-10 text-success">
-                                <i class="bi bi-arrow-up-right me-0.5"></i> Actualized
+                                <i class="bi bi-arrow-up-right me-0.5"></i> {{ __('admin.actualized_revenue') }}
                             </span>
-                            <span class="kpi-description text-muted">Confirmed and Stayed bookings</span>
+                            <span class="kpi-description text-muted">{{ __('admin.confirmed_and_stayed') }}</span>
                         </div>
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                     <div class="card-body p-4 d-flex flex-column justify-content-between">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
-                                <span class="kpi-label text-muted d-block mb-1">Total Reservations</span>
+                                <span class="kpi-label text-muted d-block mb-1">{{ __('admin.total_reservations') }}</span>
                                 <h3 class="kpi-value text-dark mb-0">{{ $totalReservations }}</h3>
                             </div>
                             <div class="kpi-icon-wrapper bg-primary bg-opacity-10 text-primary">
@@ -187,8 +187,8 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-2 mt-2">
-                            <span class="badge-premium bg-primary bg-opacity-10 text-primary">All Bookings</span>
-                            <span class="kpi-description text-muted">Sum of all statuses</span>
+                            <span class="badge-premium bg-primary bg-opacity-10 text-primary">{{ __('admin.all_status') }}</span>
+                            <span class="kpi-description text-muted">{{ __('admin.all_bookings_sum') }}</span>
                         </div>
                     </div>
                 </div>
@@ -200,7 +200,7 @@
                     <div class="card-body p-4 d-flex flex-column justify-content-between">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
-                                <span class="kpi-label text-muted d-block mb-1">Completed Stays</span>
+                                <span class="kpi-label text-muted d-block mb-1">{{ __('admin.completed_stays') }}</span>
                                 <h3 class="kpi-value text-dark mb-0">{{ $completedReservations }}</h3>
                             </div>
                             <div class="kpi-icon-wrapper bg-emerald bg-opacity-10 text-emerald" style="background-color: rgba(16, 185, 129, 0.1); color: #059669;">
@@ -208,8 +208,8 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-2 mt-2">
-                            <span class="badge-premium text-emerald" style="background-color: rgba(16, 185, 129, 0.1); color: #059669;">Checked Out</span>
-                            <span class="kpi-description text-muted">Guests departed successfully</span>
+                            <span class="badge-premium text-emerald" style="background-color: rgba(16, 185, 129, 0.1); color: #059669;">{{ __('admin.checked_out') }}</span>
+                            <span class="kpi-description text-muted">{{ __('admin.checked_out_guests') }}</span>
                         </div>
                     </div>
                 </div>
@@ -221,7 +221,7 @@
                     <div class="card-body p-4 d-flex flex-column justify-content-between">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
-                                <span class="kpi-label text-muted d-block mb-1">Pending Bookings</span>
+                                <span class="kpi-label text-muted d-block mb-1">{{ __('admin.pending_bookings') }}</span>
                                 <h3 class="kpi-value text-dark mb-0">{{ $pendingReservations }}</h3>
                             </div>
                             <div class="kpi-icon-wrapper bg-warning bg-opacity-10 text-warning">
@@ -229,8 +229,8 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-2 mt-2">
-                            <span class="badge-premium bg-warning bg-opacity-10 text-warning">Pending Action</span>
-                            <span class="kpi-description text-muted">Awaiting confirmation</span>
+                            <span class="badge-premium bg-warning bg-opacity-10 text-warning">{{ __('admin.action_required') }}</span>
+                            <span class="kpi-description text-muted">{{ __('admin.awaiting_confirmation') }}</span>
                         </div>
                     </div>
                 </div>
@@ -242,7 +242,7 @@
                     <div class="card-body p-4 d-flex flex-column justify-content-between">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
-                                <span class="kpi-label text-muted d-block mb-1">Cancelled Bookings</span>
+                                <span class="kpi-label text-muted d-block mb-1">{{ __('admin.cancelled_bookings') }}</span>
                                 <h3 class="kpi-value text-dark mb-0">{{ $cancelledReservations }}</h3>
                             </div>
                             <div class="kpi-icon-wrapper bg-danger bg-opacity-10 text-danger">
@@ -250,8 +250,8 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-2 mt-2">
-                            <span class="badge-premium bg-danger bg-opacity-10 text-danger">Cancelled</span>
-                            <span class="kpi-description text-muted">No-shows and cancellations</span>
+                            <span class="badge-premium bg-danger bg-opacity-10 text-danger">{{ __('admin.cancelled') }}</span>
+                            <span class="kpi-description text-muted">{{ __('admin.no_shows_cancellations') }}</span>
                         </div>
                     </div>
                 </div>
@@ -263,7 +263,7 @@
                     <div class="card-body p-4 d-flex flex-column justify-content-between">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
-                                <span class="kpi-label text-muted d-block mb-1">Total Customers</span>
+                                <span class="kpi-label text-muted d-block mb-1">{{ __('admin.total_customers') }}</span>
                                 <h3 class="kpi-value text-dark mb-0">{{ $totalCustomers }}</h3>
                             </div>
                             <div class="kpi-icon-wrapper bg-info bg-opacity-10 text-info" style="background-color: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
@@ -271,8 +271,8 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-2 mt-2">
-                            <span class="badge-premium text-info" style="background-color: rgba(139, 92, 246, 0.1); color: #8b5cf6;">Unique Guests</span>
-                            <span class="kpi-description text-muted">Scoped to your hotel</span>
+                            <span class="badge-premium text-info" style="background-color: rgba(139, 92, 246, 0.1); color: #8b5cf6;">{{ __('admin.unique_guests') }}</span>
+                            <span class="kpi-description text-muted">{{ __('admin.scoped_to_hotel') }}</span>
                         </div>
                     </div>
                 </div>

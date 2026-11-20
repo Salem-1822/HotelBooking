@@ -1,6 +1,6 @@
 @extends($layout)
 
-@section('title', 'Manage Rooms')
+@section('title', __('admin.manage_rooms'))
 
 @push('styles')
 <style>
@@ -120,11 +120,11 @@
 
 <div class="page-title-bar mb-4">
     <div class="title-group">
-        <h4 class="fw-bold mb-1">Manage Rooms</h4>
-        <p class="mb-0 text-muted">Create and update room inventory for your hotel without page reload.</p>
+        <h4 class="fw-bold mb-1">{{ __('admin.manage_rooms') }}</h4>
+        <p class="mb-0 text-muted">{{ __('admin.manage_rooms_desc') }}</p>
     </div>
     <button class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#addRoomModal">
-        <i class="bi bi-plus-lg me-2"></i> Add Room
+        <i class="bi bi-plus-lg me-2"></i> {{ __('admin.add_room') }}
     </button>
 </div>
 
@@ -132,36 +132,36 @@
     <div class="col-sm-6 col-xl-3">
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body">
-                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Total Rooms</p>
+                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">{{ __('admin.total_rooms') }}</p>
                 <h3 class="mb-1 fw-bold counter" data-count="{{ $totalRooms }}">0</h3>
-                <span class="badge bg-light text-dark">Hotel scope</span>
+                <span class="badge bg-light text-dark">{{ __('admin.hotel_scope') }}</span>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-xl-3">
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body">
-                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Available</p>
+                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">{{ __('admin.available') }}</p>
                 <h3 class="mb-1 fw-bold counter text-success" data-count="{{ $availableRooms }}">0</h3>
-                <span class="badge bg-success bg-opacity-10 text-success">Ready</span>
+                <span class="badge bg-success bg-opacity-10 text-success">{{ __('admin.ready') }}</span>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-xl-3">
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body">
-                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Occupied</p>
+                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">{{ __('admin.occupied') }}</p>
                 <h3 class="mb-1 fw-bold counter text-danger" data-count="{{ $occupiedRooms }}">0</h3>
-                <span class="badge bg-danger bg-opacity-10 text-danger">In Use</span>
+                <span class="badge bg-danger bg-opacity-10 text-danger">{{ __('admin.in_use') }}</span>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-xl-3">
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body">
-                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Maintenance</p>
+                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">{{ __('admin.maintenance') }}</p>
                 <h3 class="mb-1 fw-bold counter text-warning" data-count="{{ $maintenanceRooms }}">0</h3>
-                <span class="badge bg-warning bg-opacity-10 text-warning">Service</span>
+                <span class="badge bg-warning bg-opacity-10 text-warning">{{ __('admin.service') }}</span>
             </div>
         </div>
     </div>
@@ -175,12 +175,12 @@
                     <div class="input-group">
                         <span class="input-group-text bg-light border-0 text-muted"><i class="bi bi-search"></i></span>
                         <input type="text" id="roomSearchInput" class="form-control bg-light border-0" 
-                               placeholder="Search room number or type...">
+                               placeholder="{{ __('admin.search_rooms_placeholder') }}">
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <select id="filterStatus" class="form-select bg-light border-0">
-                        <option value="">All Statuses</option>
+                        <option value="">{{ __('admin.filter_all_statuses') }}</option>
                         @foreach($statusOptions as $key => $label)
                         <option value="{{ $key }}">{{ $label }}</option>
                         @endforeach
@@ -188,14 +188,14 @@
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <select id="filterType" class="form-select bg-light border-0">
-                        <option value="">All Types</option>
+                        <option value="">{{ __('admin.filter_all_types') }}</option>
                         @foreach($roomTypes as $type)
                         <option value="{{ $type }}">{{ $type }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-lg-2 d-flex gap-2">
-                    <button type="submit" class="btn btn-dark w-100">Filter</button>
+                    <button type="submit" class="btn btn-dark w-100">{{ __('admin.filter') }}</button>
                     <button type="button" id="clearFilters" class="btn btn-light border"><i class="bi bi-arrow-clockwise"></i></button>
                 </div>
             </div>
@@ -208,14 +208,14 @@
         <table class="table table-hover align-middle mb-0 room-table table-animate" id="roomsTable">
             <thead class="table-light text-uppercase small text-muted">
                 <tr>
-                    <th>Image</th>
-                    <th>Room Number</th>
-                    <th>Type</th>
-                    <th>Capacity</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>Updated At</th>
-                    <th class="text-center">Actions</th>
+                    <th>{{ __('admin.th_image') }}</th>
+                    <th>{{ __('admin.th_room_number') }}</th>
+                    <th>{{ __('admin.th_type') }}</th>
+                    <th>{{ __('admin.th_capacity') }}</th>
+                    <th>{{ __('admin.th_price') }}</th>
+                    <th>{{ __('admin.th_status') }}</th>
+                    <th>{{ __('admin.th_updated_at') }}</th>
+                    <th class="text-center">{{ __('admin.th_actions') }}</th>
                 </tr>
             </thead>
             <tbody id="roomsTableBody">
@@ -254,27 +254,27 @@
                     @if($routePrefix === 'super_admin.')
                     <td class="text-end">
                         <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-sm btn-light border" data-action="view" data-id="{{ $room->id }}" title="View Room">
+                            <button type="button" class="btn btn-sm btn-light border" data-action="view" data-id="{{ $room->id }}" title="{{ __('admin.view') }}">
                                 <i class="bi bi-eye"></i>
                             </button>
-                            <button type="button" class="btn btn-sm btn-light border" data-action="edit" data-id="{{ $room->id }}" title="Edit Room">
+                            <button type="button" class="btn btn-sm btn-light border" data-action="edit" data-id="{{ $room->id }}" title="{{ __('admin.edit') }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <button type="button" class="btn btn-sm btn-light border text-danger" data-action="delete" data-id="{{ $room->id }}" title="Delete Room">
+                            <button type="button" class="btn btn-sm btn-light border text-danger" data-action="delete" data-id="{{ $room->id }}" title="{{ __('admin.delete') }}">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
                     </td>
                     @else
                     <td class="text-end pe-4">
-                        <button type="button" class="btn btn-sm btn-outline-dark px-3 mb-1" data-action="view" data-id="{{ $room->id }}" title="View Room">
-                            <i class="bi bi-eye-fill me-1"></i> View
+                        <button type="button" class="btn btn-sm btn-outline-dark px-3 mb-1" data-action="view" data-id="{{ $room->id }}" title="{{ __('admin.view') }}">
+                            <i class="bi bi-eye-fill me-1"></i> {{ __('admin.view') }}
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-primary px-3 mb-1" data-action="edit" data-id="{{ $room->id }}" title="Edit Room">
-                            <i class="bi bi-pencil-fill me-1"></i> Edit
+                        <button type="button" class="btn btn-sm btn-outline-primary px-3 mb-1" data-action="edit" data-id="{{ $room->id }}" title="{{ __('admin.edit') }}">
+                            <i class="bi bi-pencil-fill me-1"></i> {{ __('admin.edit') }}
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-danger px-3 mb-1" data-action="delete" data-id="{{ $room->id }}" title="Delete Room">
-                            <i class="bi bi-trash-fill me-1"></i> Delete
+                        <button type="button" class="btn btn-sm btn-outline-danger px-3 mb-1" data-action="delete" data-id="{{ $room->id }}" title="{{ __('admin.delete') }}">
+                            <i class="bi bi-trash-fill me-1"></i> {{ __('admin.delete') }}
                         </button>
                     </td>
                     @endif
@@ -284,8 +284,8 @@
                     <td colspan="{{ $routePrefix === 'super_admin.' ? 9 : 8 }}" class="text-center py-5">
                         <div class="text-muted">
                             <i class="bi bi-door-open fs-1 mb-3"></i>
-                            <h5 class="fw-bold">No rooms found</h5>
-                            <p class="mb-0">Add your first room using the button above to manage availability and pricing.</p>
+                            <h5 class="fw-bold">{{ __('admin.no_rooms_found') }}</h5>
+                            <p class="mb-0">{{ __('admin.no_rooms_found_desc') }}</p>
                         </div>
                     </td>
                 </tr>
@@ -299,7 +299,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Room</h5>
+                <h5 class="modal-title">{{ __('admin.add_room') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="createRoomForm" method="POST" action="{{ route($routePrefix . 'rooms.store') }}" enctype="multipart/form-data">
@@ -307,14 +307,14 @@
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Room Number</label>
+                            <label class="form-label">{{ __('admin.room_number_label') }}</label>
                             <input name="room_number" type="text" class="form-control" placeholder="e.g. 101" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Room Type</label>
+                            <label class="form-label">{{ __('admin.room_type_label') }}</label>
                             <select name="type" class="form-select" required>
-                                <option value="">Select Type</option>
+                                <option value="">{{ __('admin.select_type') }}</option>
                                 @foreach($roomTypes as $type)
                                 <option value="{{ $type }}">{{ $type }}</option>
                                 @endforeach
@@ -322,17 +322,17 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Price Per Night (DH)</label>
+                            <label class="form-label">{{ __('admin.price_per_night_label') }}</label>
                             <input name="price_per_night" type="number" min="0" step="0.01" class="form-control" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Capacity</label>
+                            <label class="form-label">{{ __('admin.capacity_label') }}</label>
                             <input name="capacity" type="number" min="1" class="form-control" placeholder="e.g. 2" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Status</label>
+                            <label class="form-label">{{ __('admin.status_label') }}</label>
                             <select name="status" class="form-select" required>
                                 @foreach($statusOptions as $key => $label)
                                 <option value="{{ $key }}">{{ $label }}</option>
@@ -341,20 +341,20 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Description <span class="text-muted fw-normal">(Optional)</span></label>
+                            <label class="form-label">{{ __('admin.description_optional') }}</label>
                             <textarea name="description" rows="3" class="form-control"></textarea>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Room Image <span class="text-muted fw-normal">(Optional)</span></label>
+                            <label class="form-label">{{ __('admin.room_image_optional') }}</label>
                             <input name="main_image" type="file" accept="image/*" class="form-control">
                             <div class="invalid-feedback"></div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Create Room</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.close') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('admin.create_room_btn') }}</button>
                 </div>
             </form>
         </div>
@@ -365,7 +365,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit Room</h5>
+                <h5 class="modal-title">{{ __('admin.edit_room') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="editRoomForm" enctype="multipart/form-data">
@@ -374,14 +374,14 @@
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Room Number</label>
+                            <label class="form-label">{{ __('admin.room_number_label') }}</label>
                             <input name="room_number" type="text" class="form-control" placeholder="e.g. 101" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Room Type</label>
+                            <label class="form-label">{{ __('admin.room_type_label') }}</label>
                             <select name="type" class="form-select" required>
-                                <option value="">Select Type</option>
+                                <option value="">{{ __('admin.select_type') }}</option>
                                 @foreach($roomTypes as $type)
                                 <option value="{{ $type }}">{{ $type }}</option>
                                 @endforeach
@@ -389,17 +389,17 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Price Per Night (DH)</label>
+                            <label class="form-label">{{ __('admin.price_per_night_label') }}</label>
                             <input name="price_per_night" type="number" min="0" step="0.01" class="form-control" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Capacity</label>
+                            <label class="form-label">{{ __('admin.capacity_label') }}</label>
                             <input name="capacity" type="number" min="1" class="form-control" placeholder="e.g. 2" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Status</label>
+                            <label class="form-label">{{ __('admin.status_label') }}</label>
                             <select name="status" class="form-select" required>
                                 @foreach($statusOptions as $key => $label)
                                 <option value="{{ $key }}">{{ $label }}</option>
@@ -408,21 +408,21 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Description <span class="text-muted fw-normal">(Optional)</span></label>
+                            <label class="form-label">{{ __('admin.description_optional') }}</label>
                             <textarea name="description" rows="3" class="form-control"></textarea>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Room Image <span class="text-muted fw-normal">(Optional)</span></label>
+                            <label class="form-label">{{ __('admin.room_image_optional') }}</label>
                             <input name="main_image" type="file" accept="image/*" class="form-control">
-                            <div class="form-text">Upload only when replacing the current main image.</div>
+                            <div class="form-text">{{ __('admin.upload_replace_hint') }}</div>
                             <div class="invalid-feedback"></div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.close') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('admin.save_changes') }}</button>
                 </div>
             </form>
         </div>
@@ -433,7 +433,7 @@
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Room Details</h5>
+                <h5 class="modal-title">{{ __('admin.room_details') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -453,30 +453,30 @@
                         </div>
                         <div class="row g-3">
                             <div class="col-sm-6">
-                                <div class="text-muted small">Room Number</div>
+                                <div class="text-muted small">{{ __('admin.room_number_label') }}</div>
                                 <div id="viewRoomNumber" class="fw-semibold"></div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="text-muted small">Type</div>
+                                <div class="text-muted small">{{ __('admin.room_type_label') }}</div>
                                 <div id="viewRoomType" class="fw-semibold"></div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="text-muted small">Capacity</div>
+                                <div class="text-muted small">{{ __('admin.capacity_label') }}</div>
                                 <div id="viewCapacity" class="fw-semibold"></div>
                             </div>
                             <div class="col-md-6">
-                                <div class="text-muted small">Price Per Night</div>
+                                <div class="text-muted small">{{ __('admin.price_per_night_label') }}</div>
                                 <div id="viewPrice" class="fw-semibold"></div>
                             </div>
                             @if($hotels)
                             <div class="col-md-6">
-                                <div class="text-muted small">Hotel</div>
+                                <div class="text-muted small">{{ __('admin.hotel') }}</div>
                                 <div id="viewHotelName" class="fw-semibold"></div>
                             </div>
                             @endif
                         </div>
                         <div class="mt-4">
-                            <div class="text-muted small mb-2">Description</div>
+                            <div class="text-muted small mb-2">{{ __('admin.description_optional') }}</div>
                             <p id="viewDescription" class="mb-0" style="word-break: break-word; overflow-wrap: anywhere; white-space: pre-line; max-width: 100%;"></p>
                         </div>
                     </div>
@@ -490,15 +490,15 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Delete Room</h5>
+                <h5 class="modal-title">{{ __('admin.delete_room') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="mb-0">Are you sure you want to delete room <strong id="deleteRoomNumber"></strong>? This action cannot be undone.</p>
+                <p class="mb-0">{{ __('admin.delete_room_confirm', ['number' => '']) }}<strong id="deleteRoomNumber"></strong></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button id="confirmDeleteRoom" type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.cancel') }}</button>
+                <button id="confirmDeleteRoom" type="button" class="btn btn-danger">{{ __('admin.delete') }}</button>
             </div>
         </div>
     </div>

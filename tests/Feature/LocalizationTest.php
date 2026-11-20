@@ -393,4 +393,92 @@ class LocalizationTest extends TestCase
         $contactAr = $this->withSession(['locale' => 'ar'])->get(route('contact'));
         $contactAr->assertOk()->assertSee('اتصل بنا')->assertSee('تواصل معنا');
     }
+
+    /** 13. Admin auth pages render in all languages */
+    public function test_admin_auth_pages_render_in_all_languages(): void
+    {
+        // Admin Login
+        $loginEn = $this->withSession(['locale' => 'en'])->get(route('admin.login'));
+        $loginEn->assertOk()->assertSee('Admin Portal')->assertSee('Administrator Email');
+
+        $loginFr = $this->withSession(['locale' => 'fr'])->get(route('admin.login'));
+        $loginFr->assertOk()->assertSee('Portail Administrateur')->assertSee('Email Administrateur');
+
+        $loginAr = $this->withSession(['locale' => 'ar'])->get(route('admin.login'));
+        $loginAr->assertOk()->assertSee('بوابة المدير')->assertSee('البريد الإلكتروني للمدير');
+
+        // Admin Forgot Password
+        $forgotEn = $this->withSession(['locale' => 'en'])->get(route('admin.password.request'));
+        $forgotEn->assertOk()->assertSee('Forgot Password?')->assertSee('Send Reset Link');
+
+        $forgotFr = $this->withSession(['locale' => 'fr'])->get(route('admin.password.request'));
+        $forgotFr->assertOk()->assertSee('Mot de passe oublié ?')->assertSee('Envoyer le lien de réinitialisation');
+
+        $forgotAr = $this->withSession(['locale' => 'ar'])->get(route('admin.password.request'));
+        $forgotAr->assertOk()->assertSee('نسيت كلمة المرور؟')->assertSee('إرسال رابط الاستعادة');
+    }
+
+    /** 14. Admin portal management pages render in all languages */
+    public function test_admin_portal_pages_render_in_all_languages(): void
+    {
+        // Rooms
+        $roomsEn = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'en'])->get(route('admin.rooms.index'));
+        $roomsEn->assertOk()->assertSee('Manage Rooms')->assertSee('Total Rooms');
+
+        $roomsFr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'fr'])->get(route('admin.rooms.index'));
+        $roomsFr->assertOk()->assertSee('Gestion des chambres')->assertSee('Total des chambres');
+
+        $roomsAr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'ar'])->get(route('admin.rooms.index'));
+        $roomsAr->assertOk()->assertSee('إدارة الغرف')->assertSee('إجمالي الغرف');
+
+        // Reservations
+        $resEn = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'en'])->get(route('admin.reservations.index'));
+        $resEn->assertOk()->assertSee('Manage Reservations')->assertSee('Total Reservations');
+
+        $resFr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'fr'])->get(route('admin.reservations.index'));
+        $resFr->assertOk()->assertSee('Gestion des réservations')->assertSee('Total des réservations');
+
+        $resAr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'ar'])->get(route('admin.reservations.index'));
+        $resAr->assertOk()->assertSee('إدارة الحجوزات')->assertSee('إجمالي الحجوزات');
+
+        // Customers
+        $custEn = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'en'])->get(route('admin.customers.index'));
+        $custEn->assertOk()->assertSee('Customer Management')->assertSee('Total Customers');
+
+        $custFr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'fr'])->get(route('admin.customers.index'));
+        $custFr->assertOk()->assertSee('Gestion des clients')->assertSee('Total des clients');
+
+        $custAr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'ar'])->get(route('admin.customers.index'));
+        $custAr->assertOk()->assertSee('إدارة النزلاء')->assertSee('إجمالي النزلاء');
+
+        // Reviews
+        $revEn = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'en'])->get(route('admin.reviews.index'));
+        $revEn->assertOk()->assertSee('Hotel Reviews')->assertSee('Total Reviews');
+
+        $revFr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'fr'])->get(route('admin.reviews.index'));
+        $revFr->assertOk()->assertSee('Avis sur l\'hôtel')->assertSee('Total des avis');
+
+        $revAr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'ar'])->get(route('admin.reviews.index'));
+        $revAr->assertOk()->assertSee('تقييمات الفندق')->assertSee('إجمالي التقييمات');
+
+        // Reports
+        $repEn = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'en'])->get(route('admin.reports.index'));
+        $repEn->assertOk()->assertSee('Reports & Analytics')->assertSee('Export PDF');
+
+        $repFr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'fr'])->get(route('admin.reports.index'));
+        $repFr->assertOk()->assertSee('Rapports & Analyses')->assertSee('Exporter en PDF');
+
+        $repAr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'ar'])->get(route('admin.reports.index'));
+        $repAr->assertOk()->assertSee('التقارير والإحصائيات')->assertSee('تصدير PDF');
+
+        // Hotel Profile
+        $profEn = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'en'])->get(route('admin.hotel-profile'));
+        $profEn->assertOk()->assertSee('Basic Information')->assertSee('Hotel Name');
+
+        $profFr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'fr'])->get(route('admin.hotel-profile'));
+        $profFr->assertOk()->assertSee('Informations générales')->assertSee('Nom de l\'hôtel');
+
+        $profAr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'ar'])->get(route('admin.hotel-profile'));
+        $profAr->assertOk()->assertSee('المعلومات الأساسية')->assertSee('اسم الفندق');
+    }
 }

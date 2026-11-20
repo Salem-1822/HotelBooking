@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Customers')
+@section('title', __('admin.customer_management'))
 
 @push('styles')
 <style>
@@ -51,8 +51,8 @@
 @section('content')
 <div class="page-title-bar mb-4">
     <div class="title-group">
-        <h4 class="fw-bold mb-1">Customer Management</h4>
-        <p class="mb-0 text-muted">View customer details, reservation history, and activity stats.</p>
+        <h4 class="fw-bold mb-1">{{ __('admin.customer_management') }}</h4>
+        <p class="mb-0 text-muted">{{ __('admin.customer_management_desc') }}</p>
     </div>
 </div>
 
@@ -62,10 +62,10 @@
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body d-flex flex-column justify-content-between">
                 <div>
-                    <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Total Customers</p>
+                    <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">{{ __('admin.total_customers') }}</p>
                     <h3 class="mb-1 fw-bold text-dark">{{ $totalCustomers }}</h3>
                 </div>
-                <span class="badge bg-light text-dark align-self-start">All registered</span>
+                <span class="badge bg-light text-dark align-self-start">{{ __('admin.all_registered') }}</span>
             </div>
         </div>
     </div>
@@ -73,10 +73,10 @@
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body d-flex flex-column justify-content-between">
                 <div>
-                    <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">New Customers</p>
+                    <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">{{ __('admin.new_customers') }}</p>
                     <h3 class="mb-1 fw-bold text-info">{{ $newCustomers }}</h3>
                 </div>
-                <span class="badge bg-info bg-opacity-10 text-info align-self-start">1 reservation</span>
+                <span class="badge bg-info bg-opacity-10 text-info align-self-start">{{ __('admin.one_reservation') }}</span>
             </div>
         </div>
     </div>
@@ -84,10 +84,10 @@
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body d-flex flex-column justify-content-between">
                 <div>
-                    <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Returning Customers</p>
+                    <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">{{ __('admin.returning_customers') }}</p>
                     <h3 class="mb-1 fw-bold text-success">{{ $returningCustomers }}</h3>
                 </div>
-                <span class="badge bg-success bg-opacity-10 text-success align-self-start">2+ reservations</span>
+                <span class="badge bg-success bg-opacity-10 text-success align-self-start">{{ __('admin.two_plus_reservations') }}</span>
             </div>
         </div>
     </div>
@@ -95,10 +95,10 @@
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body d-flex flex-column justify-content-between">
                 <div>
-                    <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Active Customers</p>
+                    <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">{{ __('admin.active_customers') }}</p>
                     <h3 class="mb-1 fw-bold text-primary">{{ $activeCustomers }}</h3>
                 </div>
-                <span class="badge bg-primary bg-opacity-10 text-primary align-self-start">Active stay/booking</span>
+                <span class="badge bg-primary bg-opacity-10 text-primary align-self-start">{{ __('admin.active_stay') }}</span>
             </div>
         </div>
     </div>
@@ -110,14 +110,14 @@
         <table class="table table-hover align-middle mb-0 customer-table">
             <thead class="table-light text-uppercase small text-muted">
                 <tr>
-                    <th class="ps-4" style="width: 80px;">Avatar</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th class="text-center">Total Bookings</th>
-                    <th>Last Reservation</th>
-                    <th>Tier Status</th>
-                    <th class="text-center">Actions</th>
+                    <th class="ps-4" style="width: 80px;">{{ __('admin.th_avatar') }}</th>
+                    <th>{{ __('admin.th_full_name') }}</th>
+                    <th>{{ __('admin.th_email') }}</th>
+                    <th>{{ __('admin.th_phone') }}</th>
+                    <th class="text-center">{{ __('admin.th_total_bookings') }}</th>
+                    <th>{{ __('admin.th_last_reservation') }}</th>
+                    <th>{{ __('admin.th_tier_status') }}</th>
+                    <th class="text-center">{{ __('admin.th_actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -145,25 +145,25 @@
                     </td>
                     <td>
                         @if($customer->reservations_count >= 5)
-                            <span class="badge bg-danger bg-opacity-10 text-danger px-2.5 py-1.5 fw-bold">VIP</span>
+                            <span class="badge bg-danger bg-opacity-10 text-danger px-2.5 py-1.5 fw-bold">{{ __('admin.vip') }}</span>
                         @elseif($customer->reservations_count >= 2)
-                            <span class="badge bg-success bg-opacity-10 text-success px-2.5 py-1.5 fw-bold">Returning</span>
+                            <span class="badge bg-success bg-opacity-10 text-success px-2.5 py-1.5 fw-bold">{{ __('admin.returning') }}</span>
                         @else
-                            <span class="badge bg-info bg-opacity-10 text-info px-2.5 py-1.5 fw-bold">New</span>
+                            <span class="badge bg-info bg-opacity-10 text-info px-2.5 py-1.5 fw-bold">{{ __('admin.new') }}</span>
                         @endif
                     </td>
                     <td class="text-end pe-4">
                         <button type="button" class="btn btn-sm btn-outline-dark px-3 mb-1" data-bs-toggle="modal" data-bs-target="#viewCustomerModal{{ $customer->id }}">
-                            <i class="bi bi-eye-fill me-1"></i> View
+                            <i class="bi bi-eye-fill me-1"></i> {{ __('admin.view') }}
                         </button>
                         <button type="button" class="btn btn-sm btn-outline-primary px-3 mb-1" data-bs-toggle="modal" data-bs-target="#editCustomerModal{{ $customer->id }}">
-                            <i class="bi bi-pencil-fill me-1"></i> Edit
+                            <i class="bi bi-pencil-fill me-1"></i> {{ __('admin.edit') }}
                         </button>
-                        <form action="{{ route('admin.customers.destroy', $customer->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this customer? Customers with reservation history cannot be deleted.');">
+                        <form action="{{ route('admin.customers.destroy', $customer->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('admin.delete_customer_confirm') }}');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-outline-danger px-3 mb-1">
-                                <i class="bi bi-trash-fill me-1"></i> Delete
+                                <i class="bi bi-trash-fill me-1"></i> {{ __('admin.delete') }}
                             </button>
                         </form>
 
@@ -177,8 +177,8 @@
                                     <div class="modal-body p-4 p-md-5 pt-0">
                                         <div class="page-title-bar mb-4">
                                             <div class="title-group">
-                                                <h4 class="fw-bold mb-1">Customer Detail: {{ $customer->name }}</h4>
-                                                <p class="mb-0 text-muted">Detailed view and reservation history</p>
+                                                <h4 class="fw-bold mb-1">{{ __('admin.customer_detail_title', ['name' => $customer->name]) }}</h4>
+                                                <p class="mb-0 text-muted">{{ __('admin.detailed_view_history') }}</p>
                                             </div>
                                         </div>
 
@@ -187,23 +187,23 @@
                                             <div class="col-md-6">
                                                 <div class="card info-card h-100 border-0 shadow-sm p-4" style="border-radius: 1rem;">
                                                     <h6 class="fw-bold text-uppercase mb-4" style="letter-spacing: 0.05em; font-size: 0.85rem;">
-                                                        <i class="bi bi-person-fill text-primary me-2"></i> Customer Information
+                                                        <i class="bi bi-person-fill text-primary me-2"></i> {{ __('admin.customer_information') }}
                                                     </h6>
                                                     <div class="row g-3">
                                                         <div class="col-sm-6">
-                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Full Name</div>
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">{{ __('admin.th_full_name') }}</div>
                                                             <div class="fw-medium text-dark">{{ $customer->name }}</div>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Phone</div>
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">{{ __('admin.th_phone') }}</div>
                                                             <div class="fw-medium text-dark">{{ $customer->phone }}</div>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Email</div>
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">{{ __('admin.th_email') }}</div>
                                                             <div class="fw-medium text-dark">{{ $customer->email ?? '—' }}</div>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Created</div>
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">{{ __('admin.created_at') }}</div>
                                                             <div class="fw-medium text-dark">{{ $customer->created_at->format('M d, Y') }}</div>
                                                         </div>
                                                     </div>
@@ -214,31 +214,31 @@
                                             <div class="col-md-6">
                                                 <div class="card info-card h-100 border-0 shadow-sm p-4" style="border-radius: 1rem;">
                                                     <h6 class="fw-bold text-uppercase mb-4" style="letter-spacing: 0.05em; font-size: 0.85rem;">
-                                                        <i class="bi bi-pie-chart-fill text-success me-2"></i> Reservation Summary
+                                                        <i class="bi bi-pie-chart-fill text-success me-2"></i> {{ __('admin.reservation_summary') }}
                                                     </h6>
                                                     <div class="row g-3">
                                                         <div class="col-sm-6">
-                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Total Reservations</div>
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">{{ __('admin.total_reservations') }}</div>
                                                             <div><span class="badge bg-light text-dark border">{{ $customer->reservations_count }}</span></div>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Status</div>
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">{{ __('admin.th_status') }}</div>
                                                             <div>
                                                                 @if($customer->reservations_count >= 5)
-                                                                    <span class="badge bg-danger bg-opacity-10 text-danger px-2 py-1">VIP</span>
+                                                                    <span class="badge bg-danger bg-opacity-10 text-danger px-2 py-1">{{ __('admin.vip') }}</span>
                                                                 @elseif($customer->reservations_count >= 2)
-                                                                    <span class="badge bg-success bg-opacity-10 text-success px-2 py-1">Returning</span>
+                                                                    <span class="badge bg-success bg-opacity-10 text-success px-2 py-1">{{ __('admin.returning') }}</span>
                                                                 @else
-                                                                    <span class="badge bg-info bg-opacity-10 text-info px-2 py-1">New</span>
+                                                                    <span class="badge bg-info bg-opacity-10 text-info px-2 py-1">{{ __('admin.new') }}</span>
                                                                 @endif
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">First Reservation</div>
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">{{ __('admin.first_reservation') }}</div>
                                                             <div class="fw-medium text-dark">{{ $customer->reservations->last()?->check_in ? \Carbon\Carbon::parse($customer->reservations->last()->check_in)->format('M d, Y') : '—' }}</div>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Last Reservation</div>
+                                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">{{ __('admin.last_reservation') }}</div>
                                                             <div class="fw-medium text-dark">{{ $customer->reservations->first()?->check_in ? \Carbon\Carbon::parse($customer->reservations->first()->check_in)->format('M d, Y') : '—' }}</div>
                                                         </div>
                                                     </div>
@@ -250,20 +250,20 @@
                                         <div class="card border-0 shadow-sm" style="border-radius: 1rem; overflow: hidden;">
                                             <div class="card-header bg-white border-bottom py-3">
                                                 <h6 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.85rem;">
-                                                    <i class="bi bi-clock-history text-muted me-2"></i> Reservation History
+                                                    <i class="bi bi-clock-history text-muted me-2"></i> {{ __('admin.reservation_history') }}
                                                 </h6>
                                             </div>
                                             <div class="table-responsive">
                                                 <table class="table table-hover align-middle mb-0">
                                                     <thead class="table-light text-uppercase small text-muted">
                                                         <tr>
-                                                            <th class="ps-4">ID</th>
-                                                            <th>Date Created</th>
-                                                            <th>Check-in</th>
-                                                            <th>Check-out</th>
-                                                            <th>Room</th>
-                                                            <th>Status</th>
-                                                            <th class="text-end pe-4">Total Price</th>
+                                                            <th class="ps-4">{{ __('admin.th_id') }}</th>
+                                                            <th>{{ __('admin.created_at') }}</th>
+                                                            <th>{{ __('admin.check_in_date') }}</th>
+                                                            <th>{{ __('admin.check_out_date') }}</th>
+                                                            <th>{{ __('admin.th_room') }}</th>
+                                                            <th>{{ __('admin.th_status') }}</th>
+                                                            <th class="text-end pe-4">{{ __('admin.th_total_price') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -289,11 +289,11 @@
                                                                         default       => 'bg-light text-dark',
                                                                     };
                                                                     $badgeLabel = match($res->status) {
-                                                                        'confirmed'   => 'Confirmed',
-                                                                        'checked_in'  => 'Checked In',
-                                                                        'checked_out' => 'Checked Out',
-                                                                        'pending'     => 'Pending',
-                                                                        'cancelled'   => 'Cancelled',
+                                                                        'confirmed'   => __('admin.confirmed'),
+                                                                        'checked_in'  => __('admin.checked_in'),
+                                                                        'checked_out' => __('admin.checked_out'),
+                                                                        'pending'     => __('admin.pending'),
+                                                                        'cancelled'   => __('admin.cancelled'),
                                                                         default       => ucfirst($res->status),
                                                                     };
                                                                 @endphp
@@ -303,7 +303,7 @@
                                                         </tr>
                                                         @empty
                                                         <tr>
-                                                            <td colspan="7" class="text-center py-4 text-muted">No reservations found.</td>
+                                                            <td colspan="7" class="text-center py-4 text-muted">{{ __('admin.no_reservations_found') }}</td>
                                                         </tr>
                                                         @endforelse
                                                     </tbody>
@@ -323,26 +323,26 @@
                                         @csrf
                                         @method('PATCH')
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="editCustomerModalLabel{{ $customer->id }}">Edit Customer</h5>
+                                            <h5 class="modal-title" id="editCustomerModalLabel{{ $customer->id }}">{{ __('admin.edit_customer_title') }}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="mb-3">
-                                                <label for="name{{ $customer->id }}" class="form-label">Full Name</label>
+                                                <label for="name{{ $customer->id }}" class="form-label">{{ __('admin.th_full_name') }}</label>
                                                 <input type="text" class="form-control" id="name{{ $customer->id }}" name="name" value="{{ $customer->name }}" required>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="phone{{ $customer->id }}" class="form-label">Phone</label>
+                                                <label for="phone{{ $customer->id }}" class="form-label">{{ __('admin.th_phone') }}</label>
                                                 <input type="text" class="form-control" id="phone{{ $customer->id }}" name="phone" value="{{ $customer->phone }}" required>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="email{{ $customer->id }}" class="form-label">Email</label>
+                                                <label for="email{{ $customer->id }}" class="form-label">{{ __('admin.th_email') }}</label>
                                                 <input type="email" class="form-control" id="email{{ $customer->id }}" name="email" value="{{ $customer->email }}">
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.cancel') }}</button>
+                                            <button type="submit" class="btn btn-primary">{{ __('admin.save_changes') }}</button>
                                         </div>
                                     </form>
                                 </div>
@@ -354,7 +354,7 @@
                 <tr>
                     <td colspan="8" class="text-center py-5">
                         <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
-                        <p class="mt-3 text-muted mb-0">No customers found for this hotel.</p>
+                        <p class="mt-3 text-muted mb-0">{{ __('admin.no_customers_found') }}</p>
                     </td>
                 </tr>
                 @endforelse

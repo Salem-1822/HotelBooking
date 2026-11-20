@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', __('admin.dashboard_title'))
 
 @push('styles')
 <style>
@@ -206,7 +206,7 @@
         </div>
         <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
             <div class="d-inline-flex flex-column align-items-lg-end">
-                <span class="text-uppercase fw-bold" style="font-size: 0.75rem; color: #94A3B8; letter-spacing: 0.1em;">Occupancy Rate</span>
+                <span class="text-uppercase fw-bold" style="font-size: 0.75rem; color: #94A3B8; letter-spacing: 0.1em;">{{ __('admin.occupancy_rate') }}</span>
                 <div class="d-flex align-items-center gap-2 mt-1">
                     <h2 class="mb-0 fw-bold" style="color: #D4AF37; font-size: 2.5rem;">{{ $occupancyRate }}%</h2>
                     <div class="ms-2" style="width: 80px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
@@ -226,7 +226,7 @@
             <div class="stat-icon stat-primary"><i class="bi bi-door-closed-fill"></i></div>
             <div class="mt-auto">
                 <div class="stat-value">{{ $totalRooms }}</div>
-                <div class="stat-label">Total Rooms</div>
+                <div class="stat-label">{{ __('admin.total_rooms') }}</div>
             </div>
         </div>
     </div>
@@ -237,7 +237,7 @@
             <div class="stat-icon stat-success"><i class="bi bi-check-circle-fill"></i></div>
             <div class="mt-auto">
                 <div class="stat-value">{{ $availableRooms }}</div>
-                <div class="stat-label">Available</div>
+                <div class="stat-label">{{ __('admin.available') }}</div>
             </div>
         </div>
     </div>
@@ -248,7 +248,7 @@
             <div class="stat-icon stat-info"><i class="bi bi-person-badge-fill"></i></div>
             <div class="mt-auto">
                 <div class="stat-value">{{ $occupiedRooms }}</div>
-                <div class="stat-label">Occupied</div>
+                <div class="stat-label">{{ __('admin.occupied') }}</div>
             </div>
         </div>
     </div>
@@ -259,7 +259,7 @@
             <div class="stat-icon stat-warning"><i class="bi bi-tools"></i></div>
             <div class="mt-auto">
                 <div class="stat-value">{{ $maintenanceRooms }}</div>
-                <div class="stat-label">Maintenance</div>
+                <div class="stat-label">{{ __('admin.maintenance') }}</div>
             </div>
         </div>
     </div>
@@ -270,7 +270,7 @@
             <div class="stat-icon stat-accent"><i class="bi bi-box-arrow-in-right"></i></div>
             <div class="mt-auto">
                 <div class="stat-value">{{ $todayCheckIns }}</div>
-                <div class="stat-label">Check-ins</div>
+                <div class="stat-label">{{ __('admin.check_ins') }}</div>
             </div>
         </div>
     </div>
@@ -281,7 +281,7 @@
             <div class="stat-icon stat-danger"><i class="bi bi-box-arrow-right"></i></div>
             <div class="mt-auto">
                 <div class="stat-value">{{ $todayCheckOuts }}</div>
-                <div class="stat-label">Check-outs</div>
+                <div class="stat-label">{{ __('admin.check_outs') }}</div>
             </div>
         </div>
     </div>
@@ -293,9 +293,9 @@
         <div class="card h-100">
             <div class="card-body p-4 p-md-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="section-title mb-0"><i class="bi bi-graph-up text-primary"></i> Performance Overview</h5>
+                    <h5 class="section-title mb-0"><i class="bi bi-graph-up text-primary"></i> {{ __('admin.performance_overview') }}</h5>
                     <select class="form-select form-select-sm w-auto">
-                        <option>Last 6 Months</option>
+                        <option>{{ __('admin.last_6_months') }}</option>
                     </select>
                 </div>
                 <div class="chart-container">
@@ -308,7 +308,7 @@
     <div class="col-xl-4">
         <div class="card h-100">
             <div class="card-body p-4 p-md-5 d-flex flex-column">
-                <h5 class="section-title"><i class="bi bi-pie-chart-fill text-primary"></i> Reservation Status</h5>
+                <h5 class="section-title"><i class="bi bi-pie-chart-fill text-primary"></i> {{ __('admin.reservation_status') }}</h5>
                 
                 <div class="flex-grow-1 d-flex align-items-center justify-content-center my-4" style="position: relative; height: 220px;">
                     <canvas id="statusChart"></canvas>
@@ -317,15 +317,15 @@
                 <div class="d-flex justify-content-between text-center mt-3 pt-3 border-top">
                     <div>
                         <div class="fs-5 fw-bold text-success">{{ $confirmedReservations }}</div>
-                        <div class="text-muted" style="font-size:0.75rem;font-weight:600;text-transform:uppercase;">Confirmed</div>
+                        <div class="text-muted" style="font-size:0.75rem;font-weight:600;text-transform:uppercase;">{{ __('admin.confirmed') }}</div>
                     </div>
                     <div>
                         <div class="fs-5 fw-bold text-warning">{{ $pendingReservations }}</div>
-                        <div class="text-muted" style="font-size:0.75rem;font-weight:600;text-transform:uppercase;">Pending</div>
+                        <div class="text-muted" style="font-size:0.75rem;font-weight:600;text-transform:uppercase;">{{ __('admin.pending') }}</div>
                     </div>
                     <div>
                         <div class="fs-5 fw-bold text-danger">{{ $cancelledReservations }}</div>
-                        <div class="text-muted" style="font-size:0.75rem;font-weight:600;text-transform:uppercase;">Cancelled</div>
+                        <div class="text-muted" style="font-size:0.75rem;font-weight:600;text-transform:uppercase;">{{ __('admin.cancelled') }}</div>
                     </div>
                 </div>
             </div>
@@ -339,20 +339,20 @@
         <div class="card h-100">
             <div class="card-body p-4 p-md-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="section-title mb-0"><i class="bi bi-calendar-check-fill text-primary"></i> Recent Reservations</h5>
-                    <a href="{{ route('admin.reservations.index') }}" class="btn btn-sm btn-light border fw-semibold" style="font-size: 0.8rem;">View All</a>
+                    <h5 class="section-title mb-0"><i class="bi bi-calendar-check-fill text-primary"></i> {{ __('admin.recent_reservations') }}</h5>
+                    <a href="{{ route('admin.reservations.index') }}" class="btn btn-sm btn-light border fw-semibold" style="font-size: 0.8rem;">{{ __('admin.view_all') }}</a>
                 </div>
                 
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Customer</th>
-                                <th>Room</th>
-                                <th>Dates</th>
-                                <th>Amount</th>
-                                <th>Status</th>
+                                <th>{{ __('admin.th_id') }}</th>
+                                <th>{{ __('admin.th_customer') }}</th>
+                                <th>{{ __('admin.th_room') }}</th>
+                                <th>{{ __('admin.th_dates') }}</th>
+                                <th>{{ __('admin.th_amount') }}</th>
+                                <th>{{ __('admin.th_status') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -384,11 +384,11 @@
                                             default       => 'bg-light text-dark',
                                         };
                                         $badgeLabel = match($res->status) {
-                                            'confirmed'   => 'Confirmed',
-                                            'checked_in'  => 'Checked In',
-                                            'checked_out' => 'Checked Out',
-                                            'pending'     => 'Pending',
-                                            'cancelled'   => 'Cancelled',
+                                            'confirmed'   => __('admin.confirmed'),
+                                            'checked_in'  => __('admin.checked_in'),
+                                            'checked_out' => __('admin.checked_out'),
+                                            'pending'     => __('admin.pending'),
+                                            'cancelled'   => __('admin.cancelled'),
                                             default       => ucfirst($res->status),
                                         };
                                     @endphp
@@ -397,7 +397,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">No recent reservations found.</td>
+                                <td colspan="6" class="text-center py-4 text-muted">{{ __('admin.no_recent_reservations') }}</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -411,30 +411,30 @@
         <!-- Quick Actions -->
         <div class="card mb-4">
             <div class="card-body p-4">
-                <h5 class="section-title"><i class="bi bi-lightning-fill text-warning"></i> Quick Actions</h5>
+                <h5 class="section-title"><i class="bi bi-lightning-fill text-warning"></i> {{ __('admin.quick_actions') }}</h5>
                 <div class="row g-3">
                     <div class="col-6">
                         <a href="{{ route('admin.reservations.index') }}" class="quick-action-btn">
                             <i class="bi bi-calendar-plus quick-action-icon"></i>
-                            New Booking
+                            {{ __('admin.new_booking') }}
                         </a>
                     </div>
                     <div class="col-6">
                         <a href="#" class="quick-action-btn">
                             <i class="bi bi-door-open quick-action-icon text-primary"></i>
-                            Room Status
+                            {{ __('admin.room_status') }}
                         </a>
                     </div>
                     <div class="col-6">
                         <a href="#" class="quick-action-btn">
                             <i class="bi bi-people quick-action-icon text-success"></i>
-                            Guests
+                            {{ __('admin.guests') }}
                         </a>
                     </div>
                     <div class="col-6">
                         <a href="#" class="quick-action-btn">
                             <i class="bi bi-file-earmark-bar-graph quick-action-icon text-info"></i>
-                            Reports
+                            {{ __('admin.reports') }}
                         </a>
                     </div>
                 </div>
@@ -444,7 +444,7 @@
         <!-- Recent Customers -->
         <div class="card">
             <div class="card-body p-4">
-                <h5 class="section-title"><i class="bi bi-star-fill text-accent"></i> Top Customers</h5>
+                <h5 class="section-title"><i class="bi bi-star-fill text-accent"></i> {{ __('admin.top_customers') }}</h5>
                 <div class="d-flex flex-column gap-3 mt-3">
                     @forelse($latestCustomers as $customer)
                     <div class="d-flex align-items-center gap-3">
@@ -454,11 +454,11 @@
                             <div class="text-muted text-truncate" style="font-size: 0.75rem;">{{ $customer->email }}</div>
                         </div>
                         <div class="text-end">
-                            <span class="badge bg-primary-subtle text-primary border rounded-pill">{{ $customer->reservations_count }} Bookings</span>
+                            <span class="badge bg-primary-subtle text-primary border rounded-pill">{{ __('admin.bookings_count', ['count' => $customer->reservations_count]) }}</span>
                         </div>
                     </div>
                     @empty
-                    <div class="text-center py-3 text-muted" style="font-size: 0.85rem;">No customer data available.</div>
+                    <div class="text-center py-3 text-muted" style="font-size: 0.85rem;">{{ __('admin.no_customer_data') }}</div>
                     @endforelse
                 </div>
             </div>
@@ -492,14 +492,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: chartLabels,
                 datasets: [
                     {
-                        label: 'Reservations',
+                        label: '{{ __('admin.manage_reservations') }}',
                         data: chartReservations,
                         backgroundColor: colorPrimary,
                         borderRadius: 6,
                         barThickness: 24
                     },
                     {
-                        label: 'Trend',
+                        label: '{{ __('admin.performance_overview') }}',
                         data: chartReservations,
                         type: 'line',
                         borderColor: colorAccent,
@@ -553,7 +553,7 @@ document.addEventListener('DOMContentLoaded', function() {
         new Chart(ctxStatus, {
             type: 'doughnut',
             data: {
-                labels: ['Confirmed', 'Pending', 'Cancelled'],
+                labels: ['{{ __('admin.confirmed') }}', '{{ __('admin.pending') }}', '{{ __('admin.cancelled') }}'],
                 datasets: [{
                     data: [{{ $confirmedReservations }}, {{ $pendingReservations }}, {{ $cancelledReservations }}],
                     backgroundColor: [colorSuccess, colorWarning, colorDanger],

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Hotel Reviews')
+@section('title', __('admin.hotel_reviews'))
 
 @push('styles')
 <style>
@@ -86,8 +86,8 @@
 
 <div class="page-title-bar mb-4">
     <div class="title-group">
-        <h4 class="fw-bold mb-1">Hotel Reviews</h4>
-        <p class="mb-0 text-muted">Manage guest reviews for your hotel.</p>
+        <h4 class="fw-bold mb-1">{{ __('admin.hotel_reviews') }}</h4>
+        <p class="mb-0 text-muted">{{ __('admin.hotel_reviews_desc') }}</p>
     </div>
 </div>
 
@@ -96,23 +96,23 @@
     <div class="col-sm-6 col-xl-3">
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body">
-                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Total Reviews</p>
+                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">{{ __('admin.total_reviews') }}</p>
                 <h3 class="mb-1 fw-bold">{{ $totalReviews }}</h3>
-                <span class="badge bg-light text-dark">Hotel scope</span>
+                <span class="badge bg-light text-dark">{{ __('admin.hotel_scope') }}</span>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-xl-3">
         <div class="card summary-card h-100 border-0 shadow-sm">
             <div class="card-body">
-                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">Average Rating</p>
+                <p class="text-uppercase text-muted mb-2" style="font-size:0.72rem;letter-spacing:0.08em;">{{ __('admin.average_rating') }}</p>
                 <h3 class="mb-1 fw-bold text-warning">
                     {{ $averageRating > 0 ? $averageRating : '—' }}
                     @if($averageRating > 0)
                         <span style="font-size:1rem;">★</span>
                     @endif
                 </h3>
-                <span class="badge bg-warning bg-opacity-10 text-warning">Out of 5</span>
+                <span class="badge bg-warning bg-opacity-10 text-warning">{{ __('admin.out_of_5') }}</span>
             </div>
         </div>
     </div>
@@ -124,11 +124,11 @@
         <table class="table table-hover align-middle mb-0 reviews-table table-animate" id="reviewsTable">
             <thead class="table-light text-uppercase small text-muted">
                 <tr>
-                    <th>Client</th>
-                    <th>Rating</th>
-                    <th>Comment</th>
-                    <th>Date</th>
-                    <th class="text-center">Actions</th>
+                    <th>{{ __('admin.th_client') }}</th>
+                    <th>{{ __('admin.th_rating') }}</th>
+                    <th>{{ __('admin.th_comment') }}</th>
+                    <th>{{ __('admin.th_date') }}</th>
+                    <th class="text-center">{{ __('admin.th_actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -177,8 +177,8 @@
                                 data-comment="{{ e($review->comment ?? '') }}"
                                 data-hotel="{{ e($review->hotel->name ?? '') }}"
                                 data-date="{{ $review->created_at->format('d M Y, H:i') }}"
-                                title="View Review">
-                                <i class="bi bi-eye-fill me-1"></i> View
+                                title="{{ __('admin.view') }}">
+                                <i class="bi bi-eye-fill me-1"></i> {{ __('admin.view') }}
                             </button>
                             <button type="button"
                                 class="btn btn-sm btn-outline-danger px-3"
@@ -186,8 +186,8 @@
                                 data-bs-target="#deleteReviewModal"
                                 data-id="{{ $review->id }}"
                                 data-client="{{ e($review->user->name ?? 'Unknown') }}"
-                                title="Delete Review">
-                                <i class="bi bi-trash-fill me-1"></i> Delete
+                                title="{{ __('admin.delete') }}">
+                                <i class="bi bi-trash-fill me-1"></i> {{ __('admin.delete') }}
                             </button>
                         </div>
                     </td>
@@ -197,8 +197,8 @@
                     <td colspan="5" class="text-center py-5">
                         <div class="text-muted">
                             <i class="bi bi-star fs-1 mb-3 d-block"></i>
-                            <h5 class="fw-bold">No reviews yet</h5>
-                            <p class="mb-0">Guest reviews for your hotel will appear here once submitted.</p>
+                            <h5 class="fw-bold">{{ __('admin.no_reviews_yet') }}</h5>
+                            <p class="mb-0">{{ __('admin.no_reviews_yet_desc') }}</p>
                         </div>
                     </td>
                 </tr>
@@ -220,40 +220,40 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">Review Details</h5>
+                <h5 class="modal-title fw-bold">{{ __('admin.review_details') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4 pb-4">
                 <div class="row g-4">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <div class="text-muted small mb-1">Client</div>
+                            <div class="text-muted small mb-1">{{ __('admin.th_client') }}</div>
                             <div class="fw-semibold" id="vrClient"></div>
                             <div class="text-muted small" id="vrEmail"></div>
                         </div>
                         <div class="mb-3">
-                            <div class="text-muted small mb-1">Hotel</div>
+                            <div class="text-muted small mb-1">{{ __('admin.hotel') }}</div>
                             <div class="fw-semibold" id="vrHotel"></div>
                         </div>
                         <div class="mb-3">
-                            <div class="text-muted small mb-1">Submitted On</div>
+                            <div class="text-muted small mb-1">{{ __('admin.submitted_on') }}</div>
                             <div class="fw-semibold" id="vrDate"></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <div class="text-muted small mb-1">Rating</div>
+                            <div class="text-muted small mb-1">{{ __('admin.th_rating') }}</div>
                             <div class="stars-display fs-5" id="vrStars"></div>
                         </div>
                         <div>
-                            <div class="text-muted small mb-1">Comment</div>
+                            <div class="text-muted small mb-1">{{ __('admin.th_comment') }}</div>
                             <p class="mb-0" id="vrComment" style="word-break:break-word;overflow-wrap:anywhere;white-space:pre-line;"></p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.close') }}</button>
             </div>
         </div>
     </div>
@@ -265,20 +265,20 @@
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title fw-bold text-danger">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Delete Review
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ __('admin.delete_review') }}
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4">
-                <p class="mb-0">Are you sure you want to permanently delete the review by <strong id="drClient"></strong>? This action cannot be undone.</p>
+                <p class="mb-0">{{ __('admin.delete_review_confirm', ['client' => '']) }}<strong id="drClient"></strong>? This action cannot be undone.</p>
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.cancel') }}</button>
                 <form id="deleteReviewForm" method="POST" action="">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash-fill me-1"></i> Delete Review
+                        <i class="bi bi-trash-fill me-1"></i> {{ __('admin.delete_review') }}
                     </button>
                 </form>
             </div>

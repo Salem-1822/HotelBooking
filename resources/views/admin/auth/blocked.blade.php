@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'Administrator Account Suspended')
+@section('title', __('admin.account_suspended_title'))
 
 @push('styles')
     <style>
@@ -152,9 +152,9 @@
         <div class="blocked-card-header">
             <div class="blocked-brand">HotelBooking</div>
             <span class="blocked-badge">
-                <i class="bi bi-shield-x"></i> Admin Portal
+                <i class="bi bi-shield-x"></i> {{ __('admin.admin_portal') }}
             </span>
-            <h5 class="text-white mb-0 fw-semibold">Administrator Account Suspended</h5>
+            <h5 class="text-white mb-0 fw-semibold">{{ __('admin.account_suspended_title') }}</h5>
         </div>
 
         <!-- Body -->
@@ -164,41 +164,41 @@
             </div>
 
             <!-- Greeting -->
-            <h4 class="fw-bold text-dark mb-2">Hello {{ $adminName }},</h4>
+            <h4 class="fw-bold text-dark mb-2">{{ __('admin.hello_admin', ['name' => $adminName]) }}</h4>
 
             <!-- Main Message -->
             <p class="text-muted mb-3" style="font-size: 1rem; line-height: 1.6;">
-                Your HotelBooking administrator account has been blocked by the Super Administrator.
+                {{ __('admin.account_blocked_msg') }}
             </p>
 
             <!-- Status Indicator -->
             <div class="mb-3">
                 <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill fw-semibold">
-                    <i class="bi bi-slash-circle me-1"></i> Account Blocked
+                    <i class="bi bi-slash-circle me-1"></i> {{ __('admin.account_blocked_badge') }}
                 </span>
             </div>
 
             <!-- Blocking Reason Box -->
             <div class="reason-box">
                 <div class="reason-title">
-                    <i class="bi bi-info-circle-fill"></i> Block Reason:
+                    <i class="bi bi-info-circle-fill"></i> {{ __('admin.block_reason_title') }}
                 </div>
                 <p class="reason-text">{{ $blockedReason }}</p>
                 @if(!empty($blockedAt))
                     <div class="text-muted small mt-2 pt-2 border-top" style="font-size: 0.78rem;">
-                        <i class="bi bi-clock-history me-1"></i> Effective Date: {{ \Carbon\Carbon::parse($blockedAt)->format('M d, Y - H:i') }}
+                        <i class="bi bi-clock-history me-1"></i> {{ __('admin.effective_date', ['date' => \Carbon\Carbon::parse($blockedAt)->format('M d, Y - H:i')]) }}
                     </div>
                 @endif
             </div>
 
             <!-- Additional Message -->
             <p class="text-muted small mb-4" style="line-height: 1.6;">
-                For more information regarding this decision, please contact the Super Administrator.
+                {{ __('admin.contact_super_admin') }}
             </p>
 
             <!-- Return Action -->
             <a href="{{ route('admin.login') }}" class="btn-return-login">
-                <i class="bi bi-arrow-left"></i> Return to Login Page
+                <i class="bi bi-arrow-left"></i> {{ __('admin.return_to_login') }}
             </a>
         </div>
     </div>

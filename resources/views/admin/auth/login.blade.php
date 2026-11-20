@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'Admin Login')
+@section('title', __('admin.login_title'))
 
 @push('styles')
     <style>
@@ -242,10 +242,10 @@
 
             {{-- Card Header --}}
             <div class="auth-card-header">
-                <div class="auth-badge"><i class="bi bi-building me-1"></i>Hotel Administration</div>
+                <div class="auth-badge"><i class="bi bi-building me-1"></i>{{ __('admin.hotel_administration') }}</div>
                 <div class="auth-brand">HotelBooking</div>
-                <h5>Admin Portal</h5>
-                <p>Sign in to manage hotel operations, rooms, and guests.</p>
+                <h5>{{ __('admin.admin_portal') }}</h5>
+                <p>{{ __('admin.login_subtitle') }}</p>
             </div>
 
             {{-- Card Body --}}
@@ -272,7 +272,7 @@
 
                     {{-- Email Address --}}
                     <div class="mb-3">
-                        <label for="email" class="auth-label">Administrator Email</label>
+                        <label for="email" class="auth-label">{{ __('admin.admin_email') }}</label>
                         <div class="input-icon-wrap">
                             <i class="bi bi-envelope input-icon"></i>
                             <input type="email" name="email" id="email"
@@ -284,8 +284,8 @@
                     {{-- Password --}}
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <label for="password" class="auth-label mb-0">Password</label>
-                            <a href="{{ route('admin.password.request') }}" class="forgot-link">Forgot password?</a>
+                            <label for="password" class="auth-label mb-0">{{ __('admin.password') }}</label>
+                            <a href="{{ route('admin.password.request') }}" class="forgot-link">{{ __('admin.forgot_password_link') }}</a>
                         </div>
                         <div class="input-icon-wrap">
                             <i class="bi bi-lock input-icon"></i>
@@ -299,24 +299,24 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="remember" id="remember">
                             <label class="form-check-label small text-muted" for="remember" style="font-size:0.82rem;">
-                                Keep me signed in
+                                {{ __('admin.keep_signed_in') }}
                             </label>
                         </div>
                     </div>
 
                     {{-- Submit --}}
                     <button type="submit" class="btn-auth">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In as Admin
+                        <i class="bi bi-box-arrow-in-right me-2"></i>{{ __('admin.sign_in_btn') }}
                     </button>
 
                     <div class="security-note">
                         <i class="bi bi-shield-check text-primary"></i>
-                        Hotel management portal &mdash; Admin sessions are encrypted
+                        {{ __('admin.security_note') }}
                     </div>
 
                     <div class="portal-notice">
-                        Super Administrator? <a href="{{ route('super_admin.login') }}" class="text-decoration-none fw-semibold">Super Admin Login</a>
-                        &bull; Client? <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Client Login</a>
+                        {{ __('admin.super_admin_prompt') }} <a href="{{ route('super_admin.login') }}" class="text-decoration-none fw-semibold">{{ __('admin.super_admin_login') }}</a>
+                        &bull; {{ __('admin.client_prompt') }} <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">{{ __('admin.client_login') }}</a>
                     </div>
                 </form>
 

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Hotel Profile')
+@section('title', __('admin.hotel_profile_title'))
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
@@ -928,7 +928,7 @@
                         <i class="bi bi-building-fill"></i>
                     </div>
                     <div>
-                        <div class="hp-card-title">Basic Information</div>
+                        <div class="hp-card-title">{{ __('admin.basic_information') }}</div>
                         <div class="hp-card-subtitle">Public-facing hotel details</div>
                     </div>
                 </div>
@@ -938,7 +938,7 @@
                     <div class="hp-field">
                         <label for="hp_name" class="hp-label">
                             <i class="bi bi-type-bold"></i>
-                            Hotel Name <span class="req">*</span>
+                            {{ __('admin.hotel_name_label') }} <span class="req">*</span>
                         </label>
                         <div class="hp-input-icon-wrap">
                             <i class="bi bi-building field-icon"></i>
@@ -959,7 +959,7 @@
                     <div class="hp-field">
                         <label class="hp-label">
                             <i class="bi bi-star-fill"></i>
-                            Star Rating
+                            {{ __('admin.star_rating_label') }}
                         </label>
                         <input type="hidden" name="stars" id="hpStarsVal"
                                value="{{ old('stars', $hotel->stars ?? '') }}">
@@ -995,7 +995,7 @@
                     <div class="hp-field mb-0">
                         <label for="hp_description" class="hp-label">
                             <i class="bi bi-text-paragraph"></i>
-                            Description
+                            {{ __('admin.description_label') }}
                         </label>
                         <textarea id="hp_description"
                                   name="description"
@@ -1031,13 +1031,13 @@
                     <div class="hp-field">
                         <label class="hp-label">
                             <i class="bi bi-pin-map-fill"></i>
-                            City
+                            {{ __('admin.city_label') }}
                         </label>
                         <div class="hp-readonly">
                             <i class="bi bi-geo-alt text-muted"></i>
                             <span>{{ $cityName }}</span>
                             <span class="badge-lock">
-                                <i class="bi bi-lock-fill me-1"></i>Super Admin
+                                <i class="bi bi-lock-fill me-1"></i>{{ __('admin.locked_by_admin') }}
                             </span>
                         </div>
                     </div>
@@ -1046,7 +1046,7 @@
                     <div class="hp-field">
                         <label for="hp_address" class="hp-label">
                             <i class="bi bi-signpost-fill"></i>
-                            Full Address <span class="req">*</span>
+                            {{ __('admin.address_label') }} <span class="req">*</span>
                         </label>
                         <div class="hp-input-icon-wrap">
                             <i class="bi bi-map field-icon"></i>
@@ -1068,7 +1068,7 @@
                         <div class="col-12 col-sm-6">
                             <label for="hp_phone" class="hp-label">
                                 <i class="bi bi-telephone-fill"></i>
-                                Phone
+                                {{ __('admin.phone_label') }}
                             </label>
                             <div class="hp-input-icon-wrap">
                                 <i class="bi bi-telephone field-icon"></i>
@@ -1210,7 +1210,7 @@
                         <i class="bi bi-stars"></i>
                     </div>
                     <div>
-                        <div class="hp-card-title">Amenities & Facilities</div>
+                        <div class="hp-card-title">{{ __('admin.amenities_label') }}</div>
                         <div class="hp-card-subtitle">Select everything your hotel offers</div>
                     </div>
                 </div>
@@ -1245,7 +1245,7 @@
                         <i class="bi bi-clipboard2-check-fill"></i>
                     </div>
                     <div>
-                        <div class="hp-card-title">Policies & House Rules</div>
+                        <div class="hp-card-title">{{ __('admin.policies_and_times') }}</div>
                         <div class="hp-card-subtitle">Shown to guests before booking</div>
                     </div>
                 </div>
@@ -1339,7 +1339,7 @@
                     <div class="hp-field mb-0">
                         <label for="hp_cancel" class="hp-label">
                             <i class="bi bi-x-circle-fill"></i>
-                            Cancellation Policy
+                            {{ __('admin.cancellation_policy') }}
                         </label>
                         <textarea id="hp_cancel"
                                   name="cancellation_policy"
@@ -1365,10 +1365,10 @@
                     <a href="{{ route('admin.dashboard') }}"
                        class="btn btn-light border"
                        style="border-radius:0.625rem;font-size:0.875rem;font-weight:600;">
-                        Cancel
+                        {{ __('admin.cancel') }}
                     </a>
                     <button type="submit" id="hpSaveBtn" class="btn btn-primary px-4">
-                        <i class="bi bi-check2-circle me-2"></i>Save Changes
+                        <i class="bi bi-check2-circle me-2"></i>{{ __('admin.save_changes') }}
                     </button>
                 </div>
             </div>
@@ -1401,7 +1401,7 @@
                     </div>
                     <div class="flex-grow-1">
                         <div class="hp-stat-value">{{ $totalRooms }}</div>
-                        <div class="hp-stat-label">Total Rooms</div>
+                        <div class="hp-stat-label">{{ __('admin.total_rooms') }}</div>
                     </div>
                     <div class="text-end" style="font-size:0.75rem;">
                         <div style="color:#16A34A;font-weight:600;">
@@ -1428,7 +1428,7 @@
                     </div>
                     <div class="flex-grow-1">
                         <div class="hp-stat-value">{{ $occupancyRate }}%</div>
-                        <div class="hp-stat-label">Occupancy Rate</div>
+                        <div class="hp-stat-label">{{ __('admin.occupancy_rate') }}</div>
                         <div class="hp-occ-bar">
                             <div class="hp-occ-fill" style="width:{{ $occupancyRate }}%;"></div>
                         </div>

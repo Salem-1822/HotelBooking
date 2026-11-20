@@ -1,5 +1,7 @@
 @extends('client.layouts.app')
 
+@section('title', __('admin.reset_password_title'))
+
 @push('styles')
 <style>
     /* ── Page Layout ── */
@@ -204,10 +206,10 @@
         <div class="auth-card-header">
             <div class="auth-brand reveal delay-1">HotelBooking</div>
             <div class="admin-badge reveal delay-1">
-                <i class="bi bi-shield-fill"></i> Admin Portal
+                <i class="bi bi-shield-fill"></i> {{ __('admin.admin_portal') }}
             </div>
-            <h5 class="reveal delay-1">Reset Your Password</h5>
-            <p class="reveal delay-2">Choose a new password for your admin account.</p>
+            <h5 class="reveal delay-1">{{ __('admin.reset_password_title') }}</h5>
+            <p class="reveal delay-2">{{ __('admin.reset_password_subtitle') }}</p>
         </div>
 
         {{-- Card Body --}}
@@ -232,7 +234,7 @@
 
                 {{-- Email Address (pre-filled from the reset link) --}}
                 <div class="mb-3">
-                    <label for="email" class="auth-label">Email Address</label>
+                    <label for="email" class="auth-label">{{ __('admin.email_address') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-envelope input-icon"></i>
                         <input
@@ -253,7 +255,7 @@
 
                 {{-- New Password --}}
                 <div class="mb-3">
-                    <label for="password" class="auth-label">New Password</label>
+                    <label for="password" class="auth-label">{{ __('admin.new_password') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-lock input-icon"></i>
                         <input
@@ -261,7 +263,7 @@
                             name="password"
                             id="password"
                             class="form-control @error('password') is-invalid @enderror"
-                            placeholder="At least 8 characters"
+                            placeholder="{{ __('admin.password_min_chars') }}"
                             autocomplete="new-password"
                             required
                         >
@@ -269,12 +271,12 @@
                     @error('password')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
-                    <p class="pw-hint">Minimum 8 characters.</p>
+                    <p class="pw-hint">{{ __('admin.password_min_chars') }}</p>
                 </div>
 
                 {{-- Confirm New Password --}}
                 <div class="mb-4">
-                    <label for="password_confirmation" class="auth-label">Confirm New Password</label>
+                    <label for="password_confirmation" class="auth-label">{{ __('admin.confirm_new_password') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-lock-fill input-icon"></i>
                         <input
@@ -282,7 +284,7 @@
                             name="password_confirmation"
                             id="password_confirmation"
                             class="form-control @error('password_confirmation') is-invalid @enderror"
-                            placeholder="Repeat your new password"
+                            placeholder="{{ __('admin.repeat_new_password') }}"
                             autocomplete="new-password"
                             required
                         >
@@ -294,15 +296,15 @@
 
                 {{-- Submit --}}
                 <button type="submit" class="btn-auth">
-                    <i class="bi bi-shield-check me-2"></i>Reset Password
+                    <i class="bi bi-shield-check me-2"></i>{{ __('admin.reset_password_title') }}
                 </button>
             </form>
 
             <hr class="auth-divider">
 
             <p class="auth-footer-text reveal delay-4">
-                Remember your password?
-                <a href="{{ route('login') }}">Back to Sign In</a>
+                {{ __('admin.remember_password') }}
+                <a href="{{ route('admin.login') }}">{{ __('admin.back_to_sign_in') }}</a>
             </p>
 
         </div>{{-- /.auth-card-body --}}
