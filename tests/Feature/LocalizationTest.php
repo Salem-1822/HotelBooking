@@ -1,0 +1,164 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Admin;
+use App\Models\City;
+use App\Models\Hotel;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
+
+class LocalizationTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected City $city;
+    protected Hotel $hotel;
+    protected Admin $admin;
+    protected Admin $superAdmin;
+    protected User $client;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->city = City::create([
+            'name' => 'Marrakech',
+            'slug' => 'marrakech',
+        ]);
+
+        $this->hotel = Hotel::create([
+            'city_id'         => $this->city->id,
+            'name'            => 'Atlas Luxury Resort',
+            'address'         => 'Hivernage, Marrakech',
+            'price_per_night' => 1200,
+            'status'          => 'active',
+        ]);
+
+        $this->admin = Admin::create([
+            'name'       => 'Karim Admin',
+            'email'      => 'karim@hotelbooking.com',
+            'password'   => Hash::make('AdminPassword123!'),
+            'role'       => 'admin',
+            'city_id'    => $this->city->id,
+            'hotel_id'   => $this->hotel->id,
+            'status'     => 'active',
+            'is_blocked' => false,
+        ]);
+
+        $this->superAdmin = Admin::create([
+            'name'       => 'Salem SuperAdmin',
+            'email'      => 'superadmin@hotelbooking.com',
+            'password'   => Hash::make('SuperPassword123!'),
+            'role'       => 'super_admin',
+            'status'     => 'active',
+            'is_blocked' => false,
+        ]);
+
+        $this->client = User::create([
+            'name'     => 'Yassine Client',
+            'email'    => 'client@hotelbooking.com',
+            'password' => Hash::make('ClientPassword123!'),
+            'role'     => 'client',
+        ]);
+    }
+
+    /** 1. English is default locale */
+    public function test_default_locale_is_english(): void
+    {
+        $response = $this->get('/');
+        $response->assertOk();
+        $this->assertEquals('en', App::getLocale());
+        $response->assertSee('lang="en"', false);
+        $response->assertSee('dir="ltr"', false);
+    }
+
+    /** 2. Switching to French sets session and cookie */
+    public function test_switching_to_french_persists(): void
+    {
+        $response = $this->get(route('locale.switch', 'fr'));
+        $response->assertRedirect();
+        $response->assertSessionHas('locale', 'fr');
+        $response->assertCookie('locale', 'fr');
+
+        $followUp = $this->withSession(['locale' => 'fr'])->get('/');
+        $followUp->assertOk();
+        $followUp->assertSee('lang="fr"', false);
+        $followUp->assertSee('dir="ltr"', false);
+        $followUp->assertSee('Accueil');
+    }
+
+    /** 3. Switching to Arabic sets session, cookie, and RTL */
+    public function test_switching_to_arabic_sets_rtl(): void
+    {
+        $response = $this->get(route('locale.switch', 'ar'));
+        $response->assertRedirect();
+        $response->assertSessionHas('locale', 'ar');
+        $response->assertCookie('locale', 'ar');
+
+        $followUp = $this->withSession(['locale' => 'ar'])->get('/');
+        $followUp->assertOk();
+        $followUp->assertSee('lang="ar"', false);
+        $followUp->assertSee('dir="rtl"', false);
+        $followUp->assertSee('الرئيسية');
+        $followUp->assertSee('bootstrap.rtl.min.css', false);
+    }
+
+    /** 4. Unsupported locale is rejected safely and falls back to en */
+    public function test_unsupported_locale_is_rejected_safely(): void
+    {
+        $response = $this->get(route('locale.switch', 'es'));
+        $response->assertRedirect();
+        $response->assertSessionMissing('locale');
+
+        $followUp = $this->withSession(['locale' => 'invalid_lang'])->get('/');
+        $followUp->assertOk();
+        $this->assertEquals('en', App::getLocale());
+        $followUp->assertSee('lang="en"', false);
+    }
+
+    /** 5. Admin layout respects selected locale */
+    public function test_admin_layout_respects_locale(): void
+    {
+        $responseEn = $this->actingAs($this->admin, 'admin')->get(route('admin.dashboard'));
+        $responseEn->assertOk();
+        $responseEn->assertSee('Dashboard');
+
+        $responseFr = $this->actingAs($this->admin, 'admin')
+            ->withSession(['locale' => 'fr'])
+            ->get(route('admin.dashboard'));
+        $responseFr->assertOk();
+        $responseFr->assertSee('Tableau de bord');
+
+        $responseAr = $this->actingAs($this->admin, 'admin')
+            ->withSession(['locale' => 'ar'])
+            ->get(route('admin.dashboard'));
+        $responseAr->assertOk();
+        $responseAr->assertSee('dir="rtl"', false);
+        $responseAr->assertSee('لوحة التحكم');
+    }
+
+    /** 6. Super Admin layout respects selected locale */
+    public function test_super_admin_layout_respects_locale(): void
+    {
+        $responseEn = $this->actingAs($this->superAdmin, 'admin')->get(route('super_admin.dashboard'));
+        $responseEn->assertOk();
+        $responseEn->assertSee('Dashboard');
+
+        $responseFr = $this->actingAs($this->superAdmin, 'admin')
+            ->withSession(['locale' => 'fr'])
+            ->get(route('super_admin.dashboard'));
+        $responseFr->assertOk();
+        $responseFr->assertSee('Tableau de bord');
+
+        $responseAr = $this->actingAs($this->superAdmin, 'admin')
+            ->withSession(['locale' => 'ar'])
+            ->get(route('super_admin.dashboard'));
+        $responseAr->assertOk();
+        $responseAr->assertSee('dir="rtl"', false);
+        $responseAr->assertSee('لوحة التحكم');
+    }
+}

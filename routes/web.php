@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\HotelController;
+use App\Http\Controllers\LocaleController;
+
+// Language Switcher Route
+Route::get('/lang/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');
 
 // Client public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');

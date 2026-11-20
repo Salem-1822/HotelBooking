@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Welcome') | HotelBooking</title>
+    <title>@yield('title', __('common.app_name')) | HotelBooking</title>
 
     <!-- Fonts: Poppins + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +14,11 @@
         rel="stylesheet">
 
     <!-- Bootstrap 5 & Icons -->
+    @if(app()->getLocale() === 'ar')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    @else
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    @endif
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <style>
@@ -248,28 +252,28 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
-                            href="{{ route('home') }}">Home</a>
+                            href="{{ route('home') }}">{{ __('navigation.home') }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('hotels.index') || request()->routeIs('hotels.show') ? 'active' : '' }}"
-                            href="{{ route('hotels.index') }}">Hotels</a>
+                            href="{{ route('hotels.index') }}">{{ __('navigation.hotels') }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}"
-                            href="{{ route('about') }}">About</a>
+                            href="{{ route('about') }}">{{ __('navigation.about') }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}"
-                            href="{{ route('contact') }}">Contact</a>
+                            href="{{ route('contact') }}">{{ __('navigation.contact') }}</a>
                     </li>
                     @auth('web')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('client.dashboard') ? 'active' : '' }}"
-                                href="{{ route('client.dashboard') }}">Dashboard</a>
+                                href="{{ route('client.dashboard') }}">{{ __('navigation.dashboard') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('client.reservations.*') ? 'active' : '' }}"
-                                href="{{ route('client.reservations.index') }}">My Reservations</a>
+                                href="{{ route('client.reservations.index') }}">{{ __('navigation.my_reservations') }}</a>
                         </li>
                     @endauth
                 </ul>
@@ -279,18 +283,23 @@
                         <button class="btn lang-dropdown-btn d-flex align-items-center gap-2" type="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-globe" style="font-size: 1.1rem; color: rgba(255,255,255,0.7);"></i>
-                            <span style="font-size: 0.85rem; font-weight: 500;">English</span>
+                            <span style="font-size: 0.85rem; font-weight: 500;">
+                                @if(app()->getLocale() === 'fr') Français
+                                @elseif(app()->getLocale() === 'ar') العربية
+                                @else English
+                                @endif
+                            </span>
                             <i class="bi bi-chevron-expand" style="font-size: 0.8rem; color: rgba(255,255,255,0.5);"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-sm"
                             style="border-radius: 0.625rem; border: 1px solid rgba(255,255,255,0.1); background: #1E293B; padding: 0.5rem; min-width: 150px;">
-                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 {{ app()->getLocale() === 'en' ? 'active' : '' }}" href="{{ route('locale.switch', 'en') }}"
                                     style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
                                         class="fs-6">🇺🇸</span> English</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 {{ app()->getLocale() === 'fr' ? 'active' : '' }}" href="{{ route('locale.switch', 'fr') }}"
                                     style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
                                         class="fs-6">🇫🇷</span> Français</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 {{ app()->getLocale() === 'ar' ? 'active' : '' }}" href="{{ route('locale.switch', 'ar') }}"
                                     style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
                                         class="fs-6">🇲🇦</span> العربية</a></li>
                         </ul>
@@ -311,7 +320,7 @@
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm"
                                 style="border-radius: 0.875rem; border: 1px solid var(--border-color);">
                                 <li><a class="dropdown-item py-2" href="{{ route('client.profile.edit') }}"><i
-                                            class="bi bi-person-fill me-2 text-muted"></i> My Profile</a></li>
+                                            class="bi bi-person-fill me-2 text-muted"></i> {{ __('navigation.my_profile') }}</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -319,14 +328,14 @@
                                     <form action="{{ route('logout') }}" method="POST">
                                         @csrf
                                         <button type="submit" class="dropdown-item py-2 text-danger"><i
-                                                class="bi bi-box-arrow-right me-2"></i> Sign Out</button>
+                                                class="bi bi-box-arrow-right me-2"></i> {{ __('navigation.sign_out') }}</button>
                                     </form>
                                 </li>
                             </ul>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-outline-light-custom">Login</a>
-                        <a href="{{ route('client.register') }}" class="btn btn-accent">Register</a>
+                        <a href="{{ route('login') }}" class="btn btn-outline-light-custom">{{ __('navigation.login') }}</a>
+                        <a href="{{ route('client.register') }}" class="btn btn-accent">{{ __('navigation.register') }}</a>
                     @endauth
                 </div>
             </div>
@@ -354,19 +363,16 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-6">
-                    <h5 class="footer-heading">Quick Links</h5>
-                    <a href="{{ route('home') }}" class="footer-link">Home</a>
-                    <a href="{{ route('about') }}" class="footer-link">About Us</a>
-                    <a href="{{ route('hotels.index') }}" class="footer-link">All Hotels</a>
-                    <a href="#" class="footer-link">Destinations</a>
-                    <a href="#" class="footer-link">Offers & Promos</a>
+                    <h5 class="footer-heading">{{ __('navigation.quick_links') }}</h5>
+                    <a href="{{ route('home') }}" class="footer-link">{{ __('navigation.home') }}</a>
+                    <a href="{{ route('about') }}" class="footer-link">{{ __('navigation.about') }}</a>
+                    <a href="{{ route('hotels.index') }}" class="footer-link">{{ __('navigation.hotels') }}</a>
                 </div>
                 <div class="col-lg-2 col-md-6">
-                    <h5 class="footer-heading">Support</h5>
-                    <a href="#" class="footer-link">Help Center</a>
-                    <a href="{{ route('contact') }}" class="footer-link">Contact Us</a>
-                    <a href="#" class="footer-link">Privacy Policy</a>
-                    <a href="#" class="footer-link">Terms of Service</a>
+                    <h5 class="footer-heading">{{ __('navigation.contact') }}</h5>
+                    <a href="{{ route('contact') }}" class="footer-link">{{ __('navigation.contact') }}</a>
+                    <a href="#" class="footer-link">{{ __('navigation.privacy_policy') }}</a>
+                    <a href="#" class="footer-link">{{ __('navigation.terms_of_service') }}</a>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <h5 class="footer-heading">Newsletter</h5>

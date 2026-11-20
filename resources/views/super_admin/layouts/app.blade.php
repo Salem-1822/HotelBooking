@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Panel') | HotelBooking</title>
+    <title>@yield('title', __('navigation.super_admin_portal')) | HotelBooking</title>
 
     <!-- Fonts: Poppins + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +14,11 @@
         rel="stylesheet">
 
     <!-- Bootstrap 5 & Icons -->
+    @if(app()->getLocale() === 'ar')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    @else
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    @endif
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <style>
@@ -92,6 +96,18 @@
             width: calc(100% - var(--sidebar-width));
             transition: var(--t-layout);
         }
+
+        @if(app()->getLocale() === 'ar')
+        .sidebar { left: auto; right: 0; }
+        .main-content { margin-left: 0; margin-right: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); }
+        .sidebar-link i { margin-right: 0; margin-left: 0.75rem; }
+        .sidebar-link.active::before { left: auto; right: 0; border-radius: 3px 0 0 3px; }
+        @media (max-width: 991.98px) {
+            .sidebar { right: calc(-1 * var(--sidebar-width)); left: auto; }
+            .sidebar.show { right: 0; left: auto; }
+            .main-content { margin-right: 0; margin-left: 0; width: 100%; }
+        }
+        @endif
 
         /* ── Topbar ────────────────────────────────── */
         .topbar {
@@ -652,51 +668,51 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-logo">
             <div class="brand-title">HotelBooking</div>
-            <span class="brand-subtitle">Premium Management</span>
+            <span class="brand-subtitle">{{ __('navigation.super_admin_portal') }}</span>
         </div>
 
         <nav class="sidebar-nav">
-            <div class="nav-section-label">Main</div>
+            <div class="nav-section-label">{{ __('navigation.main') }}</div>
             <a href="{{ route('super_admin.dashboard') }}"
                 class="sidebar-link {{ request()->routeIs('super_admin.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-grid-1x2-fill"></i>
-                <span>Dashboard</span>
+                <span>{{ __('navigation.dashboard') }}</span>
             </a>
             <a href="{{ route('super_admin.hotels.index') }}"
                 class="sidebar-link {{ request()->routeIs('super_admin.hotels.*') ? 'active' : '' }}">
                 <i class="bi bi-building-fill"></i>
-                <span>Hotels</span>
+                <span>{{ __('navigation.hotels') }}</span>
             </a>
             <a href="{{ route('super_admin.cities.index') }}"
                 class="sidebar-link {{ request()->routeIs('super_admin.cities.*') ? 'active' : '' }}">
                 <i class="bi bi-geo-alt-fill"></i>
-                <span>Cities</span>
+                <span>{{ __('navigation.cities') }}</span>
             </a>
             @if(Auth::guard('admin')->user()->role === 'super_admin')
                 <a href="{{ route('super_admin.admins.index') }}"
                     class="sidebar-link {{ request()->routeIs('super_admin.admins.*') ? 'active' : '' }}">
                     <i class="bi bi-shield-lock-fill"></i>
-                    <span>Administrators</span>
+                    <span>{{ __('navigation.admins') }}</span>
                 </a>
             @endif
             <a href="{{ route('super_admin.reservations.index') }}"
                 class="sidebar-link {{ request()->routeIs('super_admin.reservations.*') ? 'active' : '' }}">
                 <i class="bi bi-calendar-check-fill"></i>
-                <span>Reservations</span>
+                <span>{{ __('navigation.reservations') }}</span>
             </a>
             
             <a href="{{ route('super_admin.messages.index') }}"
                 class="sidebar-link {{ request()->routeIs('super_admin.messages.*') ? 'active' : '' }}">
                 <i class="bi bi-envelope-fill"></i>
-                <span>Messages</span>
+                <span>{{ __('navigation.messages') }}</span>
             </a>
 
-            <div class="nav-section-label">Account</div>
+            <div class="nav-section-label">{{ __('navigation.management') }}</div>
 
             <a href="{{ route('super_admin.settings') }}"
                 class="sidebar-link {{ request()->routeIs('super_admin.settings') ? 'active' : '' }}">
                 <i class="bi bi-gear-fill"></i>
-                <span>System Config</span>
+                <span>{{ __('navigation.system_config') }}</span>
             </a>
         </nav>
 
@@ -707,19 +723,24 @@
                     style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 0.625rem; padding: 0.625rem 0.875rem; transition: all 0.2s ease;">
                     <div class="d-flex align-items-center gap-2">
                         <i class="bi bi-globe" style="font-size: 1.1rem; color: rgba(255,255,255,0.7);"></i>
-                        <span style="font-size: 0.85rem; font-weight: 500;">English</span>
+                        <span style="font-size: 0.85rem; font-weight: 500;">
+                            @if(app()->getLocale() === 'fr') Français
+                            @elseif(app()->getLocale() === 'ar') العربية
+                            @else English
+                            @endif
+                        </span>
                     </div>
                     <i class="bi bi-chevron-expand" style="font-size: 0.8rem; color: rgba(255,255,255,0.5);"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-dark w-100 shadow-sm"
                     style="border-radius: 0.625rem; border: 1px solid rgba(255,255,255,0.1); background: #1E293B; margin-bottom: 0.5rem; padding: 0.5rem;">
-                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 {{ app()->getLocale() === 'en' ? 'active' : '' }}" href="{{ route('locale.switch', 'en') }}"
                             style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
                                 class="fs-6">🇺🇸</span> English</a></li>
-                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 {{ app()->getLocale() === 'fr' ? 'active' : '' }}" href="{{ route('locale.switch', 'fr') }}"
                             style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
                                 class="fs-6">🇫🇷</span> Français</a></li>
-                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#"
+                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 {{ app()->getLocale() === 'ar' ? 'active' : '' }}" href="{{ route('locale.switch', 'ar') }}"
                             style="border-radius: 0.375rem; font-size: 0.85rem; transition: background 0.2s ease;"><span
                                 class="fs-6">🇲🇦</span> العربية</a></li>
                 </ul>
@@ -740,7 +761,7 @@
                 </button>
                 <div class="d-none d-md-block">
                     <h6 class="mb-0 fw-bold" style="color:var(--text-primary);font-size:1rem;">
-                        @yield('title', 'Admin Panel')
+                        @yield('title', __('navigation.super_admin_portal'))
                     </h6>
                 </div>
             </div>
@@ -765,12 +786,12 @@
                     <ul class="dropdown-menu premium-dropdown dropdown-menu-end mt-2">
                         <li>
                             <a class="dropdown-item" href="{{ route('super_admin.profile') }}">
-                                <i class="bi bi-person-circle me-2"></i> My Profile
+                                <i class="bi bi-person-circle me-2"></i> {{ __('navigation.my_profile') }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ route('super_admin.settings') }}">
-                                <i class="bi bi-gear me-2"></i> Settings
+                                <i class="bi bi-gear me-2"></i> {{ __('navigation.system_config') }}
                             </a>
                         </li>
                         <li>
@@ -780,7 +801,7 @@
                             <form action="{{ route('super_admin.logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="dropdown-item text-danger">
-                                    <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+                                    <i class="bi bi-box-arrow-right me-2"></i> {{ __('navigation.sign_out') }}
                                 </button>
                             </form>
                         </li>
