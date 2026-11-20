@@ -150,6 +150,9 @@
     padding: 0.2rem 0.625rem;
     letter-spacing: 0.02em;
 }
+@if(app()->getLocale() === 'ar')
+.room-status-badge { left: auto; right: 0.75rem; }
+@endif
 .room-status-badge.available  { background: #10B981; color: #fff; }
 .room-status-badge.occupied,
 .room-status-badge.reserved   { background: #F59E0B; color: #fff; }
@@ -305,8 +308,8 @@
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('hotels.index') }}">Hotels</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('hotel.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('hotels.index') }}">{{ __('hotel.hotels') }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ \Illuminate\Support\Str::limit($hotel->name, 40) }}</li>
             </ol>
         </nav>
@@ -353,7 +356,7 @@
                     @endfor
                 </div>
                 <span style="font-weight:700; color:#fff;">{{ $avgRating }}</span>
-                <span style="color:rgba(255,255,255,0.6); font-size:0.85rem;">({{ $reviewCount }} review{{ $reviewCount !== 1 ? 's' : '' }})</span>
+                <span style="color:rgba(255,255,255,0.6); font-size:0.85rem;">({{ $reviewCount }} {{ trans_choice('hotel.reviews_count', $reviewCount) }})</span>
             </div>
             @endif
         </div>
@@ -372,7 +375,7 @@
             <!-- Description -->
             @if($hotel->description)
             <section class="mb-5 overflow-hidden" aria-label="Hotel description" style="max-width: 100%;">
-                <h2 class="section-heading">About this Hotel</h2>
+                <h2 class="section-heading">{{ __('hotel.about_this_hotel') }}</h2>
                 <div class="hotel-description-content break-words overflow-hidden max-w-full"
                      style="color:#475569; font-size:0.975rem; line-height:1.8; word-break: break-word; overflow-wrap: anywhere; word-wrap: break-word; max-width: 100%;">
                     @php
@@ -388,7 +391,7 @@
             <!-- Amenities -->
             @if(!empty($hotel->amenities))
             <section class="mb-5" aria-label="Amenities">
-                <h2 class="section-heading">Amenities &amp; Services</h2>
+                <h2 class="section-heading">{{ __('hotel.amenities_services') }}</h2>
                 <div class="d-flex flex-wrap gap-2">
                     @php
                         $amenityIcons = [
@@ -423,19 +426,19 @@
             @endphp
             @if($hasPolicies || $hotel->phone || $hotel->email)
             <section class="mb-5" aria-label="Hotel information">
-                <h2 class="section-heading">Hotel Information</h2>
+                <h2 class="section-heading">{{ __('hotel.hotel_information') }}</h2>
                 <div class="row g-4">
                     @if($hotel->check_in_time || $hotel->check_out_time)
                     <div class="col-md-6">
                         @if($hotel->check_in_time)
                         <div class="policy-row">
-                            <span class="policy-label"><i class="bi bi-door-open me-2 text-accent"></i>Check-in</span>
+                            <span class="policy-label"><i class="bi bi-door-open me-2 text-accent"></i>{{ __('hotel.check_in') }}</span>
                             <span class="policy-value">{{ $hotel->check_in_time }}</span>
                         </div>
                         @endif
                         @if($hotel->check_out_time)
                         <div class="policy-row">
-                            <span class="policy-label"><i class="bi bi-door-closed me-2 text-accent"></i>Check-out</span>
+                            <span class="policy-label"><i class="bi bi-door-closed me-2 text-accent"></i>{{ __('hotel.check_out') }}</span>
                             <span class="policy-value">{{ $hotel->check_out_time }}</span>
                         </div>
                         @endif
@@ -445,25 +448,25 @@
                     <div class="col-md-6">
                         @if($hotel->cancellation_policy)
                         <div class="policy-row">
-                            <span class="policy-label"><i class="bi bi-x-circle me-2 text-accent"></i>Cancellation</span>
+                            <span class="policy-label"><i class="bi bi-x-circle me-2 text-accent"></i>{{ __('hotel.cancellation') }}</span>
                             <span class="policy-value">{{ $hotel->cancellation_policy }}</span>
                         </div>
                         @endif
                         @if($hotel->children_policy)
                         <div class="policy-row">
-                            <span class="policy-label"><i class="bi bi-person-arms-up me-2 text-accent"></i>Children</span>
+                            <span class="policy-label"><i class="bi bi-person-arms-up me-2 text-accent"></i>{{ __('hotel.children') }}</span>
                             <span class="policy-value">{{ $hotel->children_policy }}</span>
                         </div>
                         @endif
                         @if($hotel->pets_policy)
                         <div class="policy-row">
-                            <span class="policy-label"><i class="bi bi-heart me-2 text-accent"></i>Pets</span>
+                            <span class="policy-label"><i class="bi bi-heart me-2 text-accent"></i>{{ __('hotel.pets') }}</span>
                             <span class="policy-value">{{ $hotel->pets_policy }}</span>
                         </div>
                         @endif
                         @if($hotel->smoking_policy)
                         <div class="policy-row">
-                            <span class="policy-label"><i class="bi bi-slash-circle me-2 text-accent"></i>Smoking</span>
+                            <span class="policy-label"><i class="bi bi-slash-circle me-2 text-accent"></i>{{ __('hotel.smoking') }}</span>
                             <span class="policy-value">{{ $hotel->smoking_policy }}</span>
                         </div>
                         @endif
@@ -491,7 +494,7 @@
 
             <!-- Location Section -->
             <section class="mb-5" aria-label="Location" id="location">
-                <h2 class="section-heading">Localisation</h2>
+                <h2 class="section-heading">{{ __('hotel.location') }}</h2>
                 @if($hotel->latitude && $hotel->longitude)
                     <div class="mb-3" style="font-size: 0.95rem; color: #475569;">
                         <i class="bi bi-geo-alt-fill text-accent me-1"></i>
@@ -503,7 +506,7 @@
                            target="_blank" rel="noopener noreferrer" 
                            class="btn btn-outline-secondary btn-sm" 
                            style="border-radius:0.5rem; font-weight: 500;">
-                            <i class="bi bi-geo-alt-fill text-danger me-1"></i> Voir sur Google Maps
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ __('hotel.view_on_google_maps') }}
                         </a>
                     </div>
                 @elseif($hotel->address)
@@ -512,17 +515,17 @@
                         {{ $hotel->address }}
                     </div>
                     <div class="alert" style="background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.25); border-radius:0.75rem; font-size:0.875rem;">
-                        <i class="bi bi-info-circle-fill me-2 text-secondary"></i> Location map is not available.
+                        <i class="bi bi-info-circle-fill me-2 text-secondary"></i> {{ __('hotel.location_map_not_available') }}
                     </div>
                 @else
                     <div class="alert" style="background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.25); border-radius:0.75rem; font-size:0.875rem;">
-                        <i class="bi bi-info-circle-fill me-2 text-secondary"></i> Location information is not available.
+                        <i class="bi bi-info-circle-fill me-2 text-secondary"></i> {{ __('hotel.location_info_not_available') }}
                     </div>
                 @endif
             </section>
 
             <section class="mb-5" aria-label="Available rooms" id="rooms">
-                <h2 class="section-heading">Available Rooms</h2>
+                <h2 class="section-heading">{{ __('hotel.available_rooms') }}</h2>
 
                 {{-- Show date context if dates were provided --}}
                 @if(!empty($validated['check_in']) && !empty($validated['check_out']))
@@ -535,14 +538,14 @@
                          style="background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.25); border-radius:0.75rem; font-size:0.875rem;">
                         <i class="bi bi-calendar-range-fill" style="color:#3B82F6;"></i>
                         <span>
-                            Showing availability for <strong>{{ $ci->format('d M Y') }}</strong> → <strong>{{ $co->format('d M Y') }}</strong>
-                            ({{ $nights }} night{{ $nights != 1 ? 's' : '' }})
+                            {{ __('hotel.showing_availability_for') }} <strong>{{ $ci->format('d M Y') }}</strong> → <strong>{{ $co->format('d M Y') }}</strong>
+                            ({{ $nights }} {{ trans_choice('client.nights', $nights) }})
                             @if(!empty($validated['guests']))
-                                · <strong>{{ $validated['guests'] }}</strong> guest{{ $validated['guests'] != 1 ? 's' : '' }}
+                                · <strong>{{ $validated['guests'] }}</strong> {{ trans_choice('hotel.guest_count', (int)$validated['guests']) }}
                             @endif
                         </span>
                         <a href="{{ route('hotels.show', $hotel) }}" class="ms-auto text-muted" style="font-size:0.78rem; text-decoration:none; white-space:nowrap;">
-                            <i class="bi bi-x"></i> Clear dates
+                            <i class="bi bi-x"></i> {{ __('hotel.clear_dates') }}
                         </a>
                     </div>
                 @endif
@@ -550,9 +553,9 @@
                 @if($rooms->isEmpty())
                     <div class="empty-box">
                         <i class="bi bi-door-open"></i>
-                        <p>No rooms are currently listed for this hotel.</p>
+                        <p>{{ __('hotel.no_rooms_listed_for_hotel') }}</p>
                         <a href="{{ route('hotels.index') }}" class="btn btn-sm btn-outline-secondary mt-3" style="border-radius:0.5rem;">
-                            Browse Other Hotels
+                            {{ __('hotel.browse_other_hotels') }}
                         </a>
                     </div>
                 @else
@@ -562,11 +565,11 @@
                          style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:0.75rem; font-size:0.875rem;">
                         <i class="bi bi-check-circle-fill text-success"></i>
                         <span>
-                            <strong>{{ $availableCount }}</strong> room{{ $availableCount !== 1 ? 's' : '' }} available
+                            {!! trans_choice('hotel.rooms_available_count', $availableCount, ['count' => $availableCount]) !!}
                             @if(!empty($validated['check_in']) && !empty($validated['check_out']))
-                                for your selected dates
+                                {{ __('hotel.for_your_dates') }}
                             @else
-                                right now
+                                {{ __('hotel.right_now') }}
                             @endif
                         </span>
                     </div>
@@ -574,7 +577,7 @@
                     <div class="alert d-flex align-items-center gap-2 mb-3"
                          style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:0.75rem; font-size:0.875rem;">
                         <i class="bi bi-x-circle-fill text-danger"></i>
-                        <span>No rooms are available for your selected dates. Try different dates.</span>
+                        <span>{{ __('hotel.no_rooms_for_dates') }}</span>
                     </div>
                     @endif
 
@@ -584,7 +587,7 @@
                         <div class="room-card-img">
                             @php
                                 $displayStatus = $room->is_bookable ? 'available' : ($room->status === 'available' ? 'reserved' : $room->status);
-                                $displayLabel  = $room->is_bookable ? 'Available' : (!empty($validated['check_in']) && !empty($validated['check_out']) ? 'Taken' : ucfirst($room->status));
+                                $displayLabel  = $room->is_bookable ? __('hotel.room_available_badge') : (!empty($validated['check_in']) && !empty($validated['check_out']) ? __('hotel.room_reserved_badge') : ucfirst($room->status));
                             @endphp
                             <div class="room-status-badge {{ $displayStatus }}">
                                 {{ $displayLabel }}
@@ -603,14 +606,14 @@
                             @endif
 
                             <div class="room-title">
-                                Room {{ $room->room_number }}
+                                {{ __('client.room', ['number' => $room->room_number]) }}
                             </div>
 
                             <div class="room-meta">
                                 @if($room->capacity)
                                 <div class="room-meta-item">
                                     <i class="bi bi-person-fill"></i>
-                                    Up to {{ $room->capacity }} guest{{ $room->capacity > 1 ? 's' : '' }}
+                                    {{ trans_choice('hotel.up_to_guests', $room->capacity, ['count' => $room->capacity]) }}
                                 </div>
                                 @endif
                                 @if($room->bed_type)
@@ -628,7 +631,7 @@
                                 @if($room->floor)
                                 <div class="room-meta-item">
                                     <i class="bi bi-layers-fill"></i>
-                                    Floor {{ $room->floor }}
+                                    {{ __('hotel.floor', ['number' => $room->floor]) }}
                                 </div>
                                 @endif
                             </div>
@@ -643,7 +646,7 @@
                                 <div>
                                     <div class="room-price">
                                         {{ number_format($room->price_per_night, 2) }} MAD
-                                        <small>/ night</small>
+                                        <small>{{ __('hotel.per_night') }}</small>
                                     </div>
                                 </div>
                                 @if($room->is_bookable)
@@ -661,7 +664,7 @@
                                                 disabled
                                                 title="Booking is available for client accounts only"
                                                 style="opacity: 0.65; cursor: not-allowed; background: #64748B; border-color: #64748B;">
-                                            <i class="bi bi-shield-lock me-1"></i> Clients Only
+                                            <i class="bi bi-shield-lock me-1"></i> {{ __('hotel.clients_only') }}
                                         </button>
                                     @elseif(Auth::guard('web')->check() && Auth::guard('web')->user()->role === 'client')
                                         <a href="{{ route('client.reserve.create', [$hotel, $room]) }}{{ $queryStr }}"
@@ -670,18 +673,18 @@
                                            data-room-title="Room {{ $room->room_number }}"
                                            data-room-price="{{ $room->price_per_night }}"
                                            title="Book this room">
-                                            <i class="bi bi-calendar-check me-1"></i> Book Room
+                                            <i class="bi bi-calendar-check me-1"></i> {{ __('hotel.book_room') }}
                                         </a>
                                     @else
                                         <a href="{{ route('client.reserve.create', [$hotel, $room]) }}{{ $queryStr }}"
                                            class="btn-book-now"
                                            title="Sign in to book this room">
-                                            <i class="bi bi-calendar-check me-1"></i> Book Room
+                                            <i class="bi bi-calendar-check me-1"></i> {{ __('hotel.book_room') }}
                                         </a>
                                     @endif
                                 @else
                                     <span class="btn-book-now unavailable" aria-disabled="true">
-                                        <i class="bi bi-x-circle me-1"></i> Unavailable
+                                        <i class="bi bi-x-circle me-1"></i> {{ __('hotel.unavailable') }}
                                     </span>
                                 @endif
                             </div>
@@ -693,12 +696,12 @@
 
             <!-- ── REVIEWS ──────────────────────────────────── -->
             <section class="mb-5" aria-label="Guest reviews" id="reviews">
-                <h2 class="section-heading">Guest Reviews</h2>
+                <h2 class="section-heading">{{ __('hotel.guest_reviews') }}</h2>
 
                 @if($reviewCount === 0)
                     <div class="empty-box">
                         <i class="bi bi-chat-left-quote"></i>
-                        <p>No reviews yet for this hotel. Be the first to share your experience after your stay!</p>
+                        <p>{{ __('hotel.no_reviews_yet_desc') }}</p>
                     </div>
                 @else
                     {{-- Rating summary --}}
@@ -711,7 +714,7 @@
                                        style="color:#F59E0B; font-size:0.9rem;"></i>
                                 @endfor
                             </div>
-                            <div class="text-muted mt-1" style="font-size:0.8rem;">{{ $reviewCount }} review{{ $reviewCount !== 1 ? 's' : '' }}</div>
+                            <div class="text-muted mt-1" style="font-size:0.8rem;">{{ $reviewCount }} {{ trans_choice('hotel.reviews_count', $reviewCount) }}</div>
                         </div>
                         <div class="col">
                             @for($s = 5; $s >= 1; $s--)
@@ -762,7 +765,7 @@
             <!-- ── RELATED HOTELS ───────────────────────────── -->
             @if($relatedHotels->isNotEmpty())
             <section class="mb-5" aria-label="Similar hotels">
-                <h2 class="section-heading">More Hotels in {{ $hotel->city->name ?? 'This City' }}</h2>
+                <h2 class="section-heading">{{ __('hotel.more_hotels_in', ['city' => $hotel->city->name ?? __('hotel.this_city')]) }}</h2>
                 <div class="row g-3">
                     @foreach($relatedHotels as $rh)
                     <div class="col-md-4">
@@ -780,12 +783,12 @@
                                 @if($rh->avg_rating)
                                 <div style="font-size:0.8rem; color:var(--text-muted);">
                                     <i class="bi bi-star-fill text-warning" style="font-size:0.72rem;"></i>
-                                    {{ $rh->avg_rating }} &nbsp;·&nbsp; {{ $rh->reviews_count }} reviews
+                                    {{ $rh->avg_rating }} &nbsp;·&nbsp; {{ $rh->reviews_count }} {{ trans_choice('hotel.reviews_count', $rh->reviews_count) }}
                                 </div>
                                 @endif
                                 @if($rh->starting_price)
                                 <div style="font-size:0.9rem; font-weight:700; color:var(--brand-primary); margin-top:0.5rem;">
-                                    From {{ number_format($rh->starting_price, 0) }} MAD<small style="font-weight:400; font-size:0.75rem; color:var(--text-muted);">/night</small>
+                                    {{ __('hotel.from_price', ['price' => number_format($rh->starting_price, 0)]) }}<small style="font-weight:400; font-size:0.75rem; color:var(--text-muted);">{{ __('hotel.per_night') }}</small>
                                 </div>
                                 @endif
                             </div>
@@ -808,10 +811,10 @@
                             ?? $hotel->price_per_night;
                     @endphp
                     @if($minRoomPrice)
-                    <div class="price-from-label">Rooms starting from</div>
+                    <div class="price-from-label">{{ __('hotel.rooms_starting_from') }}</div>
                     <div class="price-hero">
                         {{ number_format($minRoomPrice, 2) }} MAD
-                        <small>/ night</small>
+                        <small>{{ __('hotel.per_night') }}</small>
                     </div>
                     @endif
                 </div>
@@ -826,38 +829,38 @@
                 @if($hotel->stars)
                 <div class="hotel-quick-fact">
                     <i class="bi bi-star-fill"></i>
-                    <strong>{{ $hotel->stars }}-Star</strong>&nbsp;Hotel
+                    <strong>{{ __('hotel.star_hotel', ['stars' => $hotel->stars]) }}</strong>
                 </div>
                 @endif
                 @if($avgRating)
                 <div class="hotel-quick-fact">
                     <i class="bi bi-chat-left-quote-fill"></i>
-                    <strong>{{ $avgRating }}</strong>&nbsp;/ 5 rating
+                    <strong>{{ __('hotel.rating_out_of_5', ['rating' => $avgRating]) }}</strong>
                     <span class="text-muted">({{ $reviewCount }})</span>
                 </div>
                 @endif
                 @if($rooms->isNotEmpty())
                 <div class="hotel-quick-fact">
                     <i class="bi bi-door-open-fill"></i>
-                    <strong>{{ $rooms->count() }}</strong>&nbsp;room type{{ $rooms->count() !== 1 ? 's' : '' }} available
+                    <strong>{!! trans_choice('hotel.room_types_available', $rooms->count(), ['count' => $rooms->count()]) !!}</strong>
                 </div>
                 @endif
                 @if($hotel->check_in_time)
                 <div class="hotel-quick-fact">
                     <i class="bi bi-clock-fill"></i>
-                    Check-in: <strong>{{ $hotel->check_in_time }}</strong>
+                    {{ __('hotel.check_in') }}: <strong>{{ $hotel->check_in_time }}</strong>
                 </div>
                 @endif
                 @if($hotel->check_out_time)
                 <div class="hotel-quick-fact">
                     <i class="bi bi-clock"></i>
-                    Check-out: <strong>{{ $hotel->check_out_time }}</strong>
+                    {{ __('hotel.check_out') }}: <strong>{{ $hotel->check_out_time }}</strong>
                 </div>
                 @endif
 
                 <!-- Selected room feedback -->
                 <div id="selectedRoomInfo" class="mt-3 p-2" style="background:rgba(212,175,55,0.07); border:1px solid rgba(212,175,55,0.25); border-radius:0.625rem; display:none; font-size:0.875rem;">
-                    <div style="font-weight:600; color:var(--brand-primary); margin-bottom:0.25rem;">Selected Room</div>
+                    <div style="font-weight:600; color:var(--brand-primary); margin-bottom:0.25rem;">{{ __('hotel.selected_room') }}</div>
                     <div id="selectedRoomTitle" style="color:var(--text-muted);"></div>
                     <div id="selectedRoomPrice" style="font-weight:700; color:var(--brand-primary);"></div>
                 </div>
@@ -865,22 +868,22 @@
                 <div class="mt-4 d-grid gap-2">
                     @if($rooms->where('is_bookable', true)->count() > 0)
                         <a href="#rooms" class="btn btn-accent py-3" style="border-radius:0.75rem; font-weight:700;">
-                            <i class="bi bi-calendar-check me-2"></i> Select a Room
+                            <i class="bi bi-calendar-check me-2"></i> {{ __('hotel.select_a_room') }}
                         </a>
                     @else
                         <button class="btn py-3" style="border-radius:0.75rem; background:#94A3B8; color:#fff; cursor:not-allowed;" disabled>
-                            No rooms available
+                            {{ __('hotel.no_rooms_available') }}
                         </button>
                     @endif
                     <a href="{{ route('hotels.index') }}" class="btn btn-outline-secondary py-2"
                        style="border-radius:0.75rem;">
-                        ← Back to Hotels
+                        ← {{ __('hotel.back_to_hotels') }}
                     </a>
                 </div>
 
                 @if($hotel->phone)
                 <div class="text-center mt-4" style="font-size:0.82rem; color:var(--text-muted);">
-                    Questions? Call us:<br>
+                    {{ __('hotel.questions_call_us') }}<br>
                     <a href="tel:{{ $hotel->phone }}" style="color:var(--brand-primary); font-weight:600;">{{ $hotel->phone }}</a>
                 </div>
                 @endif
@@ -898,16 +901,16 @@
         @if($minRoomPrice ?? null)
         <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">From</div>
         <div style="font-size:1.25rem; font-weight:800; color:var(--brand-primary);">
-            {{ number_format($minRoomPrice, 2) }} MAD<small style="font-size:0.72rem; font-weight:400; color:var(--text-muted);">/night</small>
+            {{ number_format($minRoomPrice, 2) }} MAD<small style="font-size:0.72rem; font-weight:400; color:var(--text-muted);">{{ __('hotel.per_night') }}</small>
         </div>
         @endif
     </div>
     @if($rooms->where('is_bookable', true)->count() > 0)
         <a href="#rooms" class="btn btn-accent px-4 py-2" style="border-radius:0.625rem; font-weight:700;">
-            <i class="bi bi-calendar-check me-1"></i> Book Now
+            <i class="bi bi-calendar-check me-1"></i> {{ __('hotel.book_now') }}
         </a>
     @else
-        <span class="btn px-4 py-2" style="border-radius:0.625rem; background:#94A3B8; color:#fff;">Unavailable</span>
+        <span class="btn px-4 py-2" style="border-radius:0.625rem; background:#94A3B8; color:#fff;">{{ __('hotel.unavailable') }}</span>
     @endif
 </div>
 

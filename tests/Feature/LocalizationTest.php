@@ -259,4 +259,32 @@ class LocalizationTest extends TestCase
             ->get(route('client.profile.edit'));
         $profAr->assertOk()->assertSee('ملفي الشخصي')->assertSee('المعلومات الشخصية');
     }
+
+    /** 10. Hotel listings and details render in all languages */
+    public function test_hotel_listings_and_details_render_in_all_languages(): void
+    {
+        // Listings EN
+        $hotelsEn = $this->withSession(['locale' => 'en'])->get(route('hotels.index'));
+        $hotelsEn->assertOk()->assertSee('Browse Our Hotels')->assertSee('Filter by City');
+
+        // Listings FR
+        $hotelsFr = $this->withSession(['locale' => 'fr'])->get(route('hotels.index'));
+        $hotelsFr->assertOk()->assertSee('Découvrez nos hôtels')->assertSee('Filtrer par ville');
+
+        // Listings AR
+        $hotelsAr = $this->withSession(['locale' => 'ar'])->get(route('hotels.index'));
+        $hotelsAr->assertOk()->assertSee('استعرض فنادقنا المميزة')->assertSee('تصفية حسب المدينة');
+
+        // Hotel Show EN
+        $showEn = $this->withSession(['locale' => 'en'])->get(route('hotels.show', $this->hotel));
+        $showEn->assertOk()->assertSee('Available Rooms')->assertSee('Guest Reviews');
+
+        // Hotel Show FR
+        $showFr = $this->withSession(['locale' => 'fr'])->get(route('hotels.show', $this->hotel));
+        $showFr->assertOk()->assertSee('Chambres disponibles')->assertSee('Avis des clients');
+
+        // Hotel Show AR
+        $showAr = $this->withSession(['locale' => 'ar'])->get(route('hotels.show', $this->hotel));
+        $showAr->assertOk()->assertSee('الغرف المتاحة')->assertSee('تقييمات النزلاء');
+    }
 }

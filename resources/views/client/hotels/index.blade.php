@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'Browse Hotels')
+@section('title', __('hotel.browse_hotels_title'))
 
 @push('styles')
 <style>
@@ -221,6 +221,9 @@
     border-radius: 2rem;
     letter-spacing: 0.02em;
 }
+@if(app()->getLocale() === 'ar')
+.hotel-stars-badge { left: auto; right: 0.75rem; }
+@endif
 .hotel-body {
     padding: 1.25rem;
     flex: 1;
@@ -383,27 +386,27 @@
     <div class="container">
         <nav aria-label="breadcrumb" class="breadcrumb-custom reveal">
             <ol class="breadcrumb mb-2">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Hotels</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('hotel.home') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('hotel.hotels') }}</li>
             </ol>
         </nav>
-        <h1 class="reveal delay-1">Browse Our Hotels</h1>
-        <p class="reveal delay-2">Find the perfect stay from our curated collection across top destinations</p>
+        <h1 class="reveal delay-1">{{ __('hotel.browse_our_hotels') }}</h1>
+        <p class="reveal delay-2">{{ __('hotel.browse_subtitle') }}</p>
 
         <!-- Inline Search Bar -->
         <form method="GET" action="{{ route('hotels.index') }}" class="search-bar-wrap reveal delay-2" id="searchForm">
             <div class="row g-3 align-items-end">
                 <div class="col-lg-3 col-md-6">
-                    <span class="search-bar-label">Search by name or location</span>
+                    <span class="search-bar-label">{{ __('hotel.search_by_name_or_location') }}</span>
                     <input type="text" name="search" class="form-control"
-                           placeholder="Hotel name, city, address…"
+                           placeholder="{{ __('hotel.search_placeholder') }}"
                            value="{{ $validated['search'] ?? '' }}"
                            autocomplete="off">
                 </div>
                 <div class="col-lg-2 col-md-6">
-                    <span class="search-bar-label">Destination</span>
+                    <span class="search-bar-label">{{ __('hotel.destination') }}</span>
                     <select name="city_id" class="form-select">
-                        <option value="">All destinations</option>
+                        <option value="">{{ __('hotel.all_destinations') }}</option>
                         @foreach($cities as $city)
                             <option value="{{ $city->id }}" {{ ($validated['city_id'] ?? '') == $city->id ? 'selected' : '' }}>
                                 {{ $city->name }}
@@ -412,19 +415,19 @@
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-4">
-                    <span class="search-bar-label"><i class="bi bi-calendar-check me-1"></i> Check-in</span>
+                    <span class="search-bar-label"><i class="bi bi-calendar-check me-1"></i> {{ __('hotel.check_in') }}</span>
                     <input type="date" name="check_in" class="form-control"
                            value="{{ $validated['check_in'] ?? '' }}"
                            min="{{ date('Y-m-d') }}">
                 </div>
                 <div class="col-lg-2 col-md-4">
-                    <span class="search-bar-label"><i class="bi bi-calendar-x me-1"></i> Check-out</span>
+                    <span class="search-bar-label"><i class="bi bi-calendar-x me-1"></i> {{ __('hotel.check_out') }}</span>
                     <input type="date" name="check_out" class="form-control"
                            value="{{ $validated['check_out'] ?? '' }}"
                            min="{{ date('Y-m-d', strtotime('+1 day')) }}">
                 </div>
                 <div class="col-lg-1 col-md-4">
-                    <span class="search-bar-label">Guests</span>
+                    <span class="search-bar-label">{{ __('hotel.guests') }}</span>
                     <select name="guests" class="form-select">
                         @for($g = 1; $g <= 8; $g++)
                             <option value="{{ $g }}" {{ ($validated['guests'] ?? 1) == $g ? 'selected' : '' }}>{{ $g }}</option>
@@ -437,7 +440,7 @@
                 @endif
                 <div class="col-lg-2 col-md-4">
                     <button type="submit" class="btn btn-accent w-100 py-2">
-                        <i class="bi bi-search me-1"></i> Search
+                        <i class="bi bi-search me-1"></i> {{ __('hotel.search_button') }}
                     </button>
                 </div>
             </div>
@@ -480,16 +483,16 @@
         @endif
         @if(!empty($validated['guests']))
             <a href="{{ request()->fullUrlWithQuery(['guests' => null, 'page' => null]) }}" class="filter-pill">
-                <i class="bi bi-x"></i> {{ $validated['guests'] }} Guest{{ $validated['guests'] != 1 ? 's' : '' }}
+                <i class="bi bi-x"></i> {{ trans_choice('hotel.guest_count', (int)$validated['guests']) }}
             </a>
         @endif
         @if(!empty($validated['stars']))
             <a href="{{ request()->fullUrlWithQuery(['stars' => null, 'page' => null]) }}" class="filter-pill">
-                <i class="bi bi-x"></i> {{ $validated['stars'] }} Stars
+                <i class="bi bi-x"></i> {{ __('hotel.stars_count', ['count' => $validated['stars']]) }}
             </a>
         @endif
         <a href="{{ route('hotels.index') }}" class="filter-pill" style="color:#EF4444; border-color:rgba(239,68,68,0.3);">
-            <i class="bi bi-x-circle"></i> Clear all
+            <i class="bi bi-x-circle"></i> {{ __('hotel.clear_all_filters') }}
         </a>
     </div>
     @endif
@@ -514,15 +517,15 @@
                 @endif
 
                 <!-- Filter by City (Ville) -->
-                <p class="filter-section-title">Filter by City (Ville)</p>
+                <p class="filter-section-title">{{ __('hotel.filter_by_city') }}</p>
                 <div class="mb-4">
                     @foreach($cities as $city)
                     <div class="form-check mb-1">
                         <input class="form-check-input" type="radio" name="city_id"
-                               id="city_{{ $city->id }}"
-                               value="{{ $city->id }}"
-                               {{ ($validated['city_id'] ?? '') == $city->id ? 'checked' : '' }}
-                               onchange="document.getElementById('filterForm').submit()">
+                                id="city_{{ $city->id }}"
+                                value="{{ $city->id }}"
+                                {{ ($validated['city_id'] ?? '') == $city->id ? 'checked' : '' }}
+                                onchange="document.getElementById('filterForm').submit()">
                         <label class="form-check-label" for="city_{{ $city->id }}">
                             {{ $city->name }}
                             <span class="text-muted" style="font-size:0.8rem;">({{ $city->hotels_count }})</span>
@@ -532,20 +535,20 @@
                     @if(!empty($validated['city_id']))
                     <div class="mt-2">
                         <a href="{{ request()->fullUrlWithQuery(['city_id' => null, 'city' => null, 'ville' => null, 'page' => null]) }}"
-                           class="text-muted" style="font-size:0.82rem; text-decoration:underline;">Clear</a>
+                           class="text-muted" style="font-size:0.82rem; text-decoration:underline;">{{ __('hotel.clear') }}</a>
                     </div>
                     @endif
                 </div>
 
                 <!-- Filter by Star Rating (Nombre d'étoiles) -->
-                <p class="filter-section-title">Filter by Star Rating (Nombre d'étoiles)</p>
+                <p class="filter-section-title">{{ __('hotel.filter_by_stars') }}</p>
                 <div class="mb-4">
                     @for($s = 5; $s >= 1; $s--)
                     <div class="form-check star-radio mb-1">
                         <input class="form-check-input" type="radio" name="stars"
-                               id="stars_{{ $s }}" value="{{ $s }}"
-                               {{ ($validated['stars'] ?? '') == $s ? 'checked' : '' }}
-                               onchange="document.getElementById('filterForm').submit()">
+                                id="stars_{{ $s }}" value="{{ $s }}"
+                                {{ ($validated['stars'] ?? '') == $s ? 'checked' : '' }}
+                                onchange="document.getElementById('filterForm').submit()">
                         <label class="form-check-label" for="stars_{{ $s }}">
                             @for($i = 1; $i <= 5; $i++)
                                 <i class="bi bi-star{{ $i <= $s ? '-fill text-warning' : '' }}" style="font-size:0.8rem;"></i>
@@ -557,13 +560,13 @@
                     @if(!empty($validated['stars']))
                     <div class="mt-2">
                         <a href="{{ request()->fullUrlWithQuery(['stars' => null, 'page' => null]) }}"
-                           class="text-muted" style="font-size:0.82rem; text-decoration:underline;">Clear</a>
+                           class="text-muted" style="font-size:0.82rem; text-decoration:underline;">{{ __('hotel.clear') }}</a>
                     </div>
                     @endif
                 </div>
 
                 <a href="{{ route('hotels.index') }}" class="btn-clear-filters">
-                    <i class="bi bi-x-circle me-1"></i> Reset all filters
+                    <i class="bi bi-x-circle me-1"></i> {{ __('hotel.reset_all_filters') }}
                 </a>
             </form>
         </aside>
@@ -574,15 +577,15 @@
             <div class="results-toolbar">
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <button class="btn-mobile-filter" id="openFilterDrawer" type="button" aria-label="Open filters">
-                        <i class="bi bi-sliders"></i> Filters
+                        <i class="bi bi-sliders"></i> {{ __('hotel.filters') }}
                         @if($hasFilters)
                             <span class="badge bg-warning text-dark ms-1" style="font-size:0.7rem;">ON</span>
                         @endif
                     </button>
                     <span class="results-count">
-                        <strong>{{ $hotels->total() }}</strong> hotel{{ $hotels->total() !== 1 ? 's' : '' }} found
+                        <strong>{{ $hotels->total() }}</strong> {{ trans_choice('hotel.hotels_found', $hotels->total()) }}
                         @if(!empty($validated['search']))
-                            for "<em>{{ $validated['search'] }}</em>"
+                            {{ __('hotel.for_search', ['search' => $validated['search']]) }}
                         @endif
                     </span>
                 </div>
@@ -592,17 +595,17 @@
                 <!-- Empty State -->
                 <div class="empty-state reveal delay-1">
                     <div class="empty-state-icon"><i class="bi bi-building-x"></i></div>
-                    <h4>No hotels found</h4>
+                    <h4>{{ __('hotel.no_hotels_found') }}</h4>
                     <p>
                         @if($hasFilters)
-                            We couldn't find any hotels matching your current filters. Try adjusting your search or clearing some filters.
+                            {{ __('hotel.no_hotels_matching_filters') }}
                         @else
-                            No hotels are available at the moment. Please check back soon.
+                            {{ __('hotel.no_hotels_available') }}
                         @endif
                     </p>
                     @if($hasFilters)
                         <a href="{{ route('hotels.index') }}" class="btn btn-accent">
-                            <i class="bi bi-x-circle me-1"></i> Clear all filters
+                            <i class="bi bi-x-circle me-1"></i> {{ __('hotel.clear_all_filters') }}
                         </a>
                     @endif
                 </div>
@@ -624,7 +627,7 @@
                             <div class="hotel-img-wrap">
                                 @if($hotel->stars)
                                     <div class="hotel-stars-badge">
-                                        <i class="bi bi-star-fill me-1"></i>{{ $hotel->stars }} Stars
+                                        <i class="bi bi-star-fill me-1"></i>{{ __('hotel.stars_count', ['count' => $hotel->stars]) }}
                                     </div>
                                 @endif
                                 <img src="{{ $hotel->image_url }}"
@@ -668,14 +671,14 @@
                                     <div>
                                         <div class="hotel-price">
                                             {{ number_format($hotel->starting_price ?? $hotel->price_per_night, 2) }} MAD
-                                            <small>/ night</small>
+                                            <small>{{ __('hotel.per_night') }}</small>
                                         </div>
                                         @if(!$hotel->starting_price && $hotel->rooms()->count() === 0)
-                                            <div style="font-size:0.75rem; color:var(--text-muted);">No rooms listed</div>
+                                            <div style="font-size:0.75rem; color:var(--text-muted);">{{ __('hotel.no_rooms_listed') }}</div>
                                         @endif
                                     </div>
                                     <a href="{{ $hotelUrl }}" class="btn-view-hotel" aria-label="View {{ $hotel->name }}">
-                                        View Hotel
+                                        {{ __('hotel.view_hotel') }}
                                     </a>
                                 </div>
                             </div>
@@ -702,7 +705,7 @@
 <div class="filter-drawer" id="filterDrawer" role="dialog" aria-label="Filter options" aria-modal="true">
     <div class="filter-drawer-handle"></div>
     <div class="filter-drawer-header">
-        <h5>Filter Hotels</h5>
+        <h5>{{ __('hotel.filters') }}</h5>
         <button type="button" id="closeFilterDrawer" class="btn-close" aria-label="Close filters"></button>
     </div>
 
@@ -723,10 +726,10 @@
         @endif
 
         <!-- Destination / City -->
-        <p class="filter-section-title">Filter by City (Ville)</p>
+        <p class="filter-section-title">{{ __('hotel.filter_by_city') }}</p>
         <div class="mb-4">
             <select name="city_id" class="form-select mb-2">
-                <option value="">All destinations</option>
+                <option value="">{{ __('hotel.all_destinations') }}</option>
                 @foreach($cities as $city)
                     <option value="{{ $city->id }}" {{ ($validated['city_id'] ?? '') == $city->id ? 'selected' : '' }}>
                         {{ $city->name }} ({{ $city->hotels_count }})
@@ -736,7 +739,7 @@
         </div>
 
         <!-- Stars -->
-        <p class="filter-section-title">Filter by Star Rating (Nombre d'étoiles)</p>
+        <p class="filter-section-title">{{ __('hotel.filter_by_stars') }}</p>
         <div class="mb-4">
             <div class="row g-2">
                 @for($s = 5; $s >= 1; $s--)
@@ -753,10 +756,10 @@
 
         <div class="d-grid gap-2 mt-3">
             <button type="submit" class="btn btn-accent py-2" style="border-radius:0.75rem;">
-                <i class="bi bi-check2 me-1"></i> Apply Filters
+                <i class="bi bi-check2 me-1"></i> {{ __('hotel.apply_filters') }}
             </button>
             <a href="{{ route('hotels.index') }}" class="btn btn-outline-secondary py-2" style="border-radius:0.75rem;">
-                Reset
+                {{ __('hotel.reset') }}
             </a>
         </div>
     </form>
@@ -798,18 +801,5 @@ function closeDrawer() {
 
 if (openBtn) openBtn.addEventListener('click', openDrawer);
 if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-if (overlay) overlay.addEventListener('click', closeDrawer);
-
-/* Swipe down to close */
-let startY = 0;
-if (drawer) {
-    drawer.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
-    drawer.addEventListener('touchend', e => {
-        if (e.changedTouches[0].clientY - startY > 60) closeDrawer();
-    }, { passive: true });
-}
-
-/* Keyboard: Escape closes drawer */
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 </script>
 @endpush
