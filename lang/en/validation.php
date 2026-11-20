@@ -195,6 +195,27 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'name',
+        'email' => 'email address',
+        'password' => 'password',
+        'password_confirmation' => 'password confirmation',
+        'phone' => 'phone number',
+        'check_in' => 'check-in date',
+        'check_out' => 'check-out date',
+        'guests' => 'number of guests',
+        'guests_count' => 'number of guests',
+        'city_id' => 'city',
+        'hotel_id' => 'hotel',
+        'room_id' => 'room',
+        'subject' => 'subject',
+        'message' => 'message',
+        'rating' => 'rating',
+        'comment' => 'comment',
+        'image' => 'image',
+        'image_file' => 'image file',
+        'address' => 'address',
+        'price_per_night' => 'price per night',
+    ],
 
 ];

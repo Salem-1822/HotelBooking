@@ -589,4 +589,18 @@ class LocalizationTest extends TestCase
         $prfAr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'ar'])->get(route('super_admin.profile'));
         $prfAr->assertOk()->assertSee('ملفي الشخصي')->assertSee('تعديل بيانات الملف الشخصي');
     }
+
+    /** 17. Validation and password reset lines in all languages */
+    public function test_validation_and_passwords_in_all_languages(): void
+    {
+        // Validation
+        $this->assertEquals('The email field is required.', __('validation.required', ['attribute' => 'email'], 'en'));
+        $this->assertEquals('Le champ email est obligatoire.', __('validation.required', ['attribute' => 'email'], 'fr'));
+        $this->assertEquals('حقل email مطلوب.', __('validation.required', ['attribute' => 'email'], 'ar'));
+
+        // Passwords
+        $this->assertEquals('We have emailed your password reset link.', __('passwords.sent', [], 'en'));
+        $this->assertEquals('Nous vous avons envoyé par email le lien de réinitialisation du mot de passe.', __('passwords.sent', [], 'fr'));
+        $this->assertEquals('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.', __('passwords.sent', [], 'ar'));
+    }
 }
