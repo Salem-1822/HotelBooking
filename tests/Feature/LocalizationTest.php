@@ -5,7 +5,10 @@ namespace Tests\Feature;
 use App\Models\Admin;
 use App\Models\City;
 use App\Models\Hotel;
+use App\Models\Reservation;
+use App\Models\Room;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
@@ -20,6 +23,7 @@ class LocalizationTest extends TestCase
     protected Admin $admin;
     protected Admin $superAdmin;
     protected User $client;
+    protected Room $room;
 
     protected function setUp(): void
     {
@@ -63,6 +67,15 @@ class LocalizationTest extends TestCase
             'email'    => 'client@hotelbooking.com',
             'password' => Hash::make('ClientPassword123!'),
             'role'     => 'client',
+        ]);
+
+        $this->room = Room::create([
+            'hotel_id'        => $this->hotel->id,
+            'room_number'     => '101',
+            'type'            => 'deluxe',
+            'price_per_night' => 1200,
+            'capacity'        => 2,
+            'status'          => 'available',
         ]);
     }
 
@@ -286,5 +299,85 @@ class LocalizationTest extends TestCase
         // Hotel Show AR
         $showAr = $this->withSession(['locale' => 'ar'])->get(route('hotels.show', $this->hotel));
         $showAr->assertOk()->assertSee('الغرف المتاحة')->assertSee('تقييمات النزلاء');
+    }
+
+    /** 11. Client reservation pages render in all languages */
+    public function test_client_reservation_pages_render_in_all_languages(): void
+    {
+        $res = Reservation::create([
+            'hotel_id'     => $this->hotel->id,
+            'room_id'      => $this->room->id,
+            'user_id'      => $this->client->id,
+            'guest_name'   => 'Yassine Client',
+            'check_in'     => Carbon::tomorrow()->toDateString(),
+            'check_out'    => Carbon::tomorrow()->addDays(2)->toDateString(),
+            'guests_count' => 2,
+            'total_price'  => 2400,
+            'status'       => 'pending',
+        ]);
+
+        // Index
+        $indexEn = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'en'])
+            ->get(route('client.reservations.index'));
+        $indexEn->assertOk()->assertSee('My Reservations')->assertSee('Book New Room');
+
+        $indexFr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'fr'])
+            ->get(route('client.reservations.index'));
+        $indexFr->assertOk()->assertSee('Mes réservations')->assertSee('Réserver une chambre');
+
+        $indexAr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'ar'])
+            ->get(route('client.reservations.index'));
+        $indexAr->assertOk()->assertSee('حجوزاتي')->assertSee('حجز غرفة جديدة');
+
+        // Create / Booking
+        $createEn = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'en'])
+            ->get(route('client.reserve.create', [$this->hotel, $this->room]));
+        $createEn->assertOk()->assertSee('Complete Your Reservation')->assertSee('Booking Summary');
+
+        $createFr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'fr'])
+            ->get(route('client.reserve.create', [$this->hotel, $this->room]));
+        $createFr->assertOk()->assertSee('Finalisez votre réservation')->assertSee('Récapitulatif de la réservation');
+
+        $createAr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'ar'])
+            ->get(route('client.reserve.create', [$this->hotel, $this->room]));
+        $createAr->assertOk()->assertSee('إتمام تفاصيل الحجز')->assertSee('ملخص الحجز');
+
+        // Show
+        $showResEn = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'en'])
+            ->get(route('client.reservations.show', $res));
+        $showResEn->assertOk()->assertSee('Reservation Details')->assertSee('Stay Summary');
+
+        $showResFr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'fr'])
+            ->get(route('client.reservations.show', $res));
+        $showResFr->assertOk()->assertSee('Détails de la réservation')->assertSee('Résumé du séjour');
+
+        $showResAr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'ar'])
+            ->get(route('client.reservations.show', $res));
+        $showResAr->assertOk()->assertSee('تفاصيل الحجز')->assertSee('ملخص الإقامة');
+
+        // Confirmation
+        $confEn = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'en'])
+            ->get(route('client.reservations.confirmation', $res));
+        $confEn->assertOk()->assertSee('Reservation Submitted!')->assertSee('Go to Dashboard');
+
+        $confFr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'fr'])
+            ->get(route('client.reservations.confirmation', $res));
+        $confFr->assertOk()->assertSee('Demande de réservation envoyée !')->assertSee('Aller au tableau de bord');
+
+        $confAr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'ar'])
+            ->get(route('client.reservations.confirmation', $res));
+        $confAr->assertOk()->assertSee('تم إرسال طلب الحجز بنجاح!')->assertSee('الانتقال إلى لوحة التحكم');
     }
 }

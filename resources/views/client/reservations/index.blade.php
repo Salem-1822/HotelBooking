@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'My Reservations')
+@section('title', __('booking.my_reservations_title'))
 
 @push('styles')
 <style>
@@ -138,6 +138,11 @@
     padding: 1.25rem 1.5rem 1.25rem 0;
     flex-shrink: 0;
 }
+@if(app()->getLocale() === 'ar')
+.res-card-actions {
+    padding: 1.25rem 0 1.25rem 1.5rem;
+}
+@endif
 
 /* ── Empty State ─────────────────────────────── */
 .empty-state {
@@ -174,14 +179,14 @@
     <div class="container">
         <nav aria-label="breadcrumb" class="mb-2 reveal">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item active">My Reservations</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('navigation.home') }}</a></li>
+                <li class="breadcrumb-item active">{{ __('booking.my_reservations_title') }}</li>
             </ol>
         </nav>
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 reveal delay-1">
-            <h1><i class="bi bi-calendar-check me-2" style="color:var(--brand-accent); font-size:1.4rem;"></i>My Reservations</h1>
+            <h1><i class="bi bi-calendar-check me-2" style="color:var(--brand-accent); font-size:1.4rem;"></i>{{ __('booking.my_reservations_title') }}</h1>
             <a href="{{ route('hotels.index') }}" class="btn btn-accent" style="font-size:0.875rem; padding:0.55rem 1.4rem;">
-                <i class="bi bi-plus-lg me-1"></i> Book New Room
+                <i class="bi bi-plus-lg me-1"></i> {{ __('booking.book_new_room') }}
             </a>
         </div>
     </div>
@@ -203,18 +208,18 @@
     @if($reservations->isEmpty())
         <div class="empty-state reveal delay-2">
             <i class="bi bi-calendar-x"></i>
-            <h5>No reservations yet</h5>
-            <p>You haven't made any reservations. Explore our hotels and book your perfect stay.</p>
-            <a href="{{ route('hotels.index') }}" class="btn btn-accent mt-3">Browse Hotels</a>
+            <h5>{{ __('booking.no_reservations_yet') }}</h5>
+            <p>{{ __('booking.no_reservations_desc') }}</p>
+            <a href="{{ route('hotels.index') }}" class="btn btn-accent mt-3">{{ __('booking.browse_hotels') }}</a>
         </div>
     @else
 
         {{-- Summary bar --}}
         <div class="d-flex align-items-center justify-content-between mb-4 reveal delay-1">
             <p class="mb-0 text-muted" style="font-size:0.875rem;">
-                Showing <strong>{{ $reservations->count() }}</strong> reservation{{ $reservations->count() !== 1 ? 's' : '' }}
+                {!! trans_choice('booking.showing_reservations', $reservations->count(), ['count' => $reservations->count()]) !!}
                 @if($reservations->total() > $reservations->count())
-                    of <strong>{{ $reservations->total() }}</strong> total
+                    {!! __('booking.of_total', ['total' => $reservations->total()]) !!}
                 @endif
             </p>
         </div>
@@ -222,11 +227,11 @@
         @foreach($reservations as $index => $res)
         @php
             $statusMap = [
-                'pending'     => ['Pending',     'rgba(245,158,11,.1)', '#92400E', 'rgba(245,158,11,.3)'],
-                'confirmed'   => ['Confirmed',   'rgba(34,197,94,.1)',  '#166534', 'rgba(34,197,94,.3)'],
-                'cancelled'   => ['Cancelled',   'rgba(239,68,68,.1)', '#991B1B', 'rgba(239,68,68,.3)'],
-                'checked_in'  => ['Checked In',  'rgba(59,130,246,.1)','#1E3A8A', 'rgba(59,130,246,.3)'],
-                'checked_out' => ['Checked Out', 'rgba(100,116,139,.1)','#374151','rgba(100,116,139,.3)'],
+                'pending'     => [__('booking.status_pending'),     'rgba(245,158,11,.1)', '#92400E', 'rgba(245,158,11,.3)'],
+                'confirmed'   => [__('booking.status_confirmed'),   'rgba(34,197,94,.1)',  '#166534', 'rgba(34,197,94,.3)'],
+                'cancelled'   => [__('booking.status_cancelled'),   'rgba(239,68,68,.1)', '#991B1B', 'rgba(239,68,68,.3)'],
+                'checked_in'  => [__('booking.status_checked_in'),  'rgba(59,130,246,.1)','#1E3A8A', 'rgba(59,130,246,.3)'],
+                'checked_out' => [__('booking.status_checked_out'), 'rgba(100,116,139,.1)','#374151','rgba(100,116,139,.3)'],
             ];
             [$statusLabel, $statusBg, $statusColor, $statusBorder] = $statusMap[$res->status] ?? [ucfirst($res->status), 'rgba(156,163,175,.1)', '#6B7280', 'rgba(156,163,175,.3)'];
             $nights = \Carbon\Carbon::parse($res->check_in)->diffInDays(\Carbon\Carbon::parse($res->check_out));
@@ -242,7 +247,7 @@
                     <div class="res-hotel-name">{{ $res->hotel->name ?? '—' }}</div>
                     <div class="res-room">
                         @if($res->room)
-                            <i class="bi bi-door-open me-1" style="color:var(--brand-accent);"></i>Room {{ $res->room->room_number }}
+                            <i class="bi bi-door-open me-1" style="color:var(--brand-accent);"></i>{{ __('client.room', ['number' => $res->room->room_number]) }}
                             @if($res->room->type) · <span>{{ ucfirst($res->room->type) }}</span>@endif
                         @endif
                     </div>
@@ -251,19 +256,19 @@
                 {{-- Dates --}}
                 <div class="res-info-block res-dates" style="min-width: 130px;">
                     <div>
-                        <div class="date-label">Check-in</div>
+                        <div class="date-label">{{ __('booking.check_in') }}</div>
                         <div class="date-val">{{ \Carbon\Carbon::parse($res->check_in)->format('d M Y') }}</div>
                     </div>
                     <div style="margin-top:0.5rem;">
-                        <div class="date-label">Check-out</div>
+                        <div class="date-label">{{ __('booking.check_out') }}</div>
                         <div class="date-val">{{ \Carbon\Carbon::parse($res->check_out)->format('d M Y') }}</div>
                     </div>
-                    <span class="res-nights-badge">{{ $nights }} night{{ $nights !== 1 ? 's' : '' }}</span>
+                    <span class="res-nights-badge">{{ $nights }} {{ trans_choice('client.nights', $nights) }}</span>
                 </div>
 
                 {{-- Guests --}}
                 <div class="res-info-block d-none d-md-block" style="min-width: 80px;">
-                    <div class="res-ref">Guests</div>
+                    <div class="res-ref">{{ __('booking.guests') }}</div>
                     <div style="font-weight:600; font-size:0.9rem; color:var(--text-primary); margin-top:0.2rem;">
                         <i class="bi bi-people me-1" style="color:var(--brand-accent);"></i>{{ $res->guests_count }}
                     </div>
@@ -271,7 +276,7 @@
 
                 {{-- Price --}}
                 <div class="res-info-block" style="min-width: 100px;">
-                    <div class="res-ref">Total</div>
+                    <div class="res-ref">{{ __('booking.total') }}</div>
                     <div class="res-price">{{ number_format($res->total_price, 0) }} MAD</div>
                 </div>
 
@@ -283,13 +288,13 @@
                     @if($res->status === 'checked_out' && !$res->review)
                         <div style="margin-top:0.4rem;">
                             <span style="font-size:0.68rem; color:var(--brand-accent); font-weight:600;">
-                                <i class="bi bi-star me-1"></i>Awaiting review
+                                <i class="bi bi-star me-1"></i>{{ __('booking.awaiting_review') }}
                             </span>
                         </div>
                     @elseif($res->status === 'checked_out' && $res->review)
                         <div style="margin-top:0.4rem;">
                             <span style="font-size:0.68rem; color:#166534; font-weight:600;">
-                                <i class="bi bi-check-circle me-1"></i>Reviewed
+                                <i class="bi bi-check-circle me-1"></i>{{ __('booking.reviewed') }}
                             </span>
                         </div>
                     @endif
@@ -303,7 +308,7 @@
                    style="border:1.5px solid var(--border-color); color:var(--brand-primary); border-radius:0.625rem; font-weight:600; font-size:0.8rem; padding:0.45rem 1.1rem; white-space:nowrap; transition:all 0.2s ease;"
                    onmouseover="this.style.borderColor='var(--brand-primary)'; this.style.background='var(--brand-primary)'; this.style.color='#fff';"
                    onmouseout="this.style.borderColor='var(--border-color)'; this.style.background='transparent'; this.style.color='var(--brand-primary)';">
-                    View Details
+                    {{ __('booking.view_details') }}
                 </a>
             </div>
         </div>

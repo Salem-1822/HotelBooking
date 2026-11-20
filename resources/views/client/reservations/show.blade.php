@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'Reservation #MOR-RSV-' . $reservation->id)
+@section('title', __('booking.reservation_ref_title', ['id' => $reservation->id]))
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
@@ -84,6 +84,12 @@
     position: absolute; bottom: 1rem; left: 1.25rem;
     color: #fff;
 }
+@if(app()->getLocale() === 'ar')
+.hotel-banner-label {
+    left: auto;
+    right: 1.25rem;
+}
+@endif
 .hotel-banner-label .hotel-name { font-weight: 700; font-size: 1.05rem; }
 .hotel-banner-label .hotel-city { font-size: 0.78rem; color: rgba(255,255,255,0.75); }
 
@@ -189,11 +195,11 @@
 {{-- PHP vars --}}
 @php
     $statusMap = [
-        'pending'     => ['Pending',     'rgba(245,158,11,.1)', '#92400E', 'rgba(245,158,11,.3)', 'bi-hourglass-split'],
-        'confirmed'   => ['Confirmed',   'rgba(34,197,94,.1)', '#166534', 'rgba(34,197,94,.3)',   'bi-check-circle'],
-        'cancelled'   => ['Cancelled',   'rgba(239,68,68,.1)', '#991B1B', 'rgba(239,68,68,.3)',   'bi-x-circle'],
-        'checked_in'  => ['Checked In',  'rgba(59,130,246,.1)','#1E3A8A', 'rgba(59,130,246,.3)', 'bi-door-open'],
-        'checked_out' => ['Checked Out', 'rgba(100,116,139,.1)','#374151','rgba(100,116,139,.3)','bi-house-check'],
+        'pending'     => [__('booking.status_pending'),     'rgba(245,158,11,.1)', '#92400E', 'rgba(245,158,11,.3)', 'bi-hourglass-split'],
+        'confirmed'   => [__('booking.status_confirmed'),   'rgba(34,197,94,.1)', '#166534', 'rgba(34,197,94,.3)',   'bi-check-circle'],
+        'cancelled'   => [__('booking.status_cancelled'),   'rgba(239,68,68,.1)', '#991B1B', 'rgba(239,68,68,.3)',   'bi-x-circle'],
+        'checked_in'  => [__('booking.status_checked_in'),  'rgba(59,130,246,.1)','#1E3A8A', 'rgba(59,130,246,.3)', 'bi-door-open'],
+        'checked_out' => [__('booking.status_checked_out'), 'rgba(100,116,139,.1)','#374151','rgba(100,116,139,.3)','bi-house-check'],
     ];
     [$statusLabel, $statusBg, $statusColor, $statusBorder, $statusIcon] = $statusMap[$reservation->status] ?? [ucfirst($reservation->status), 'rgba(156,163,175,.1)', '#6B7280', 'rgba(156,163,175,.3)', 'bi-circle'];
     $nights = \Carbon\Carbon::parse($reservation->check_in)->diffInDays(\Carbon\Carbon::parse($reservation->check_out));
@@ -204,15 +210,15 @@
     <div class="container">
         <nav aria-label="breadcrumb" class="mb-2">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('client.reservations.index') }}">My Reservations</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('navigation.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('client.reservations.index') }}">{{ __('booking.my_reservations_title') }}</a></li>
                 <li class="breadcrumb-item active">#MOR-RSV-{{ $reservation->id }}</li>
             </ol>
         </nav>
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <h1><i class="bi bi-receipt me-2" style="color:var(--brand-accent); font-size:1.3rem;"></i>Reservation Details</h1>
+            <h1><i class="bi bi-receipt me-2" style="color:var(--brand-accent); font-size:1.3rem;"></i>{{ __('booking.reservation_details_heading') }}</h1>
             <a href="{{ route('client.reservations.index') }}" class="btn btn-outline-light-custom" style="font-size:0.82rem; padding:0.45rem 1.2rem;">
-                <i class="bi bi-arrow-left me-1"></i> Back
+                <i class="bi bi-arrow-left me-1"></i> {{ __('booking.back') }}
             </a>
         </div>
     </div>
@@ -265,56 +271,56 @@
                             <i class="bi bi-door-open" style="color:var(--brand-accent); font-size:1.1rem;"></i>
                         </div>
                         <div>
-                            <div style="font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); font-weight:700;">Room</div>
+                            <div style="font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); font-weight:700;">{{ __('booking.room_label') }}</div>
                             <div style="font-weight:700; color:var(--brand-primary);">
-                                {{ $reservation->room->room_number }}
+                                {{ __('booking.room_number', ['number' => $reservation->room->room_number]) }}
                                 @if($reservation->room->type) · <span style="font-weight:500; color:var(--text-muted);">{{ ucfirst($reservation->room->type) }}</span>@endif
                             </div>
                         </div>
                         @if($reservation->room->capacity)
                         <div class="ms-auto" style="font-size:0.78rem; color:var(--text-muted);">
-                            <i class="bi bi-people me-1"></i>Up to {{ $reservation->room->capacity }} guest{{ $reservation->room->capacity !== 1 ? 's' : '' }}
+                            <i class="bi bi-people me-1"></i>{{ trans_choice('hotel.up_to_guests', $reservation->room->capacity, ['count' => $reservation->room->capacity]) }}
                         </div>
                         @endif
                     </div>
                     @endif
 
                     {{-- Booking details --}}
-                    <div class="sec-heading">Booking Details</div>
+                    <div class="sec-heading">{{ __('booking.booking_details') }}</div>
 
                     <div class="data-row">
-                        <span class="data-label">Reference</span>
+                        <span class="data-label">{{ __('booking.reference') }}</span>
                         <span class="data-value" style="font-family:'Poppins',sans-serif; color:var(--brand-primary);">#MOR-RSV-{{ $reservation->id }}</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Booked on</span>
+                        <span class="data-label">{{ __('booking.booked_on') }}</span>
                         <span class="data-value" style="font-weight:500; color:var(--text-muted);">{{ $reservation->created_at->format('d M Y \a\t H:i') }}</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Check-in</span>
+                        <span class="data-label">{{ __('booking.check_in') }}</span>
                         <span class="data-value">{{ \Carbon\Carbon::parse($reservation->check_in)->format('l, d M Y') }}</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Check-out</span>
+                        <span class="data-label">{{ __('booking.check_out') }}</span>
                         <span class="data-value">{{ \Carbon\Carbon::parse($reservation->check_out)->format('l, d M Y') }}</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Duration</span>
+                        <span class="data-label">{{ __('booking.duration') }}</span>
                         <span class="data-value">
-                            {{ $nights }} night{{ $nights !== 1 ? 's' : '' }}
+                            {{ $nights }} {{ trans_choice('client.nights', $nights) }}
                         </span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Guests</span>
-                        <span class="data-value"><i class="bi bi-people me-1 text-muted"></i>{{ $reservation->guests_count }} guest{{ $reservation->guests_count !== 1 ? 's' : '' }}</span>
+                        <span class="data-label">{{ __('booking.guests') }}</span>
+                        <span class="data-value"><i class="bi bi-people me-1 text-muted"></i>{{ $reservation->guests_count }} {{ trans_choice('hotel.guest_count', $reservation->guests_count) }}</span>
                     </div>
                     @if($reservation->hotel?->check_in_time || $reservation->hotel?->check_out_time)
                     <div class="data-row">
-                        <span class="data-label">Hotel times</span>
+                        <span class="data-label">{{ __('booking.hotel_times') }}</span>
                         <span class="data-value" style="color:var(--text-muted); font-weight:500; font-size:0.82rem;">
-                            @if($reservation->hotel->check_in_time)Check-in from {{ $reservation->hotel->check_in_time }}@endif
+                            @if($reservation->hotel->check_in_time){{ __('booking.check_in_from', ['time' => $reservation->hotel->check_in_time]) }}@endif
                             @if($reservation->hotel->check_in_time && $reservation->hotel->check_out_time) &nbsp;·&nbsp; @endif
-                            @if($reservation->hotel->check_out_time)Check-out by {{ $reservation->hotel->check_out_time }}@endif
+                            @if($reservation->hotel->check_out_time){{ __('booking.check_out_by', ['time' => $reservation->hotel->check_out_time]) }}@endif
                         </span>
                     </div>
                     @endif
@@ -325,7 +331,7 @@
             @if($reservation->hotel)
             <div class="main-card">
                 <div class="main-card-body">
-                    <div class="sec-heading">Hotel Location</div>
+                    <div class="sec-heading">{{ __('booking.hotel_location') }}</div>
 
                     @if($reservation->hotel->latitude && $reservation->hotel->longitude)
                         @if($reservation->hotel->address)
@@ -340,7 +346,7 @@
                                target="_blank" rel="noopener noreferrer"
                                class="btn btn-sm btn-outline-secondary"
                                style="border-radius:0.5rem; font-size:0.8rem; font-weight:600;">
-                                <i class="bi bi-map me-1"></i> Open in Google Maps
+                                <i class="bi bi-map me-1"></i> {{ __('booking.open_in_google_maps') }}
                             </a>
                         </div>
                     @elseif($reservation->hotel->address)
@@ -350,7 +356,7 @@
                         </div>
                     @else
                         <div style="padding:1.5rem; background:#F8FAFC; border-radius:0.625rem; border:1px solid var(--border-color); font-size:0.875rem; color:var(--text-muted);">
-                            <i class="bi bi-info-circle me-2"></i> Location information is not available.
+                            <i class="bi bi-info-circle me-2"></i> {{ __('booking.location_not_available') }}
                         </div>
                     @endif
                 </div>
@@ -365,14 +371,14 @@
             {{-- Summary card --}}
             <div class="summary-card mb-4">
                 <div class="summary-card-header">
-                    <div class="ref">Reservation Reference</div>
+                    <div class="ref">{{ __('booking.reference') }}</div>
                     <div class="ref-val">#MOR-RSV-{{ $reservation->id }}</div>
                 </div>
                 <div class="summary-card-body">
 
                     {{-- Status --}}
                     <div class="mb-4">
-                        <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.625rem;">Current Status</div>
+                        <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.625rem;">{{ __('booking.current_status') }}</div>
                         <span class="status-pill" style="background:{{ $statusBg }}; color:{{ $statusColor }}; border:1px solid {{ $statusBorder }};">
                             <i class="bi {{ $statusIcon }}"></i> {{ $statusLabel }}
                         </span>
@@ -380,22 +386,22 @@
 
                     {{-- Quick facts --}}
                     <div class="mb-4">
-                        <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.75rem;">Stay Summary</div>
+                        <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.75rem;">{{ __('booking.stay_summary') }}</div>
                         <div style="display:flex; flex-direction:column; gap:0.5rem;">
                             <div style="display:flex; justify-content:space-between; font-size:0.82rem;">
-                                <span style="color:var(--text-muted);">Check-in</span>
+                                <span style="color:var(--text-muted);">{{ __('booking.check_in') }}</span>
                                 <span style="font-weight:600;">{{ \Carbon\Carbon::parse($reservation->check_in)->format('d M Y') }}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; font-size:0.82rem;">
-                                <span style="color:var(--text-muted);">Check-out</span>
+                                <span style="color:var(--text-muted);">{{ __('booking.check_out') }}</span>
                                 <span style="font-weight:600;">{{ \Carbon\Carbon::parse($reservation->check_out)->format('d M Y') }}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; font-size:0.82rem;">
-                                <span style="color:var(--text-muted);">Duration</span>
-                                <span style="font-weight:600;">{{ $nights }} night{{ $nights !== 1 ? 's' : '' }}</span>
+                                <span style="color:var(--text-muted);">{{ __('booking.duration') }}</span>
+                                <span style="font-weight:600;">{{ $nights }} {{ trans_choice('client.nights', $nights) }}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; font-size:0.82rem;">
-                                <span style="color:var(--text-muted);">Guests</span>
+                                <span style="color:var(--text-muted);">{{ __('booking.guests') }}</span>
                                 <span style="font-weight:600;">{{ $reservation->guests_count }}</span>
                             </div>
                         </div>
@@ -404,8 +410,8 @@
                     {{-- Total price --}}
                     <div class="price-total mb-4">
                         <div>
-                            <div class="label">Total Paid</div>
-                            <div style="font-size:0.72rem; color:var(--text-muted);">{{ $nights }} night{{ $nights !== 1 ? 's' : '' }} · {{ $reservation->guests_count }} guest{{ $reservation->guests_count !== 1 ? 's' : '' }}</div>
+                            <div class="label">{{ __('booking.total_paid') }}</div>
+                            <div style="font-size:0.72rem; color:var(--text-muted);">{{ $nights }} {{ trans_choice('client.nights', $nights) }} · {{ $reservation->guests_count }} {{ trans_choice('hotel.guest_count', $reservation->guests_count) }}</div>
                         </div>
                         <div class="amount">{{ number_format($reservation->total_price, 0) }}<small style="font-size:0.7rem; font-weight:500; color:var(--text-muted);"> MAD</small></div>
                     </div>
@@ -414,14 +420,14 @@
                     @if(in_array($reservation->status, ['pending', 'confirmed']))
                         <div style="border-top:1px solid var(--border-color); padding-top:1.25rem;">
                             <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.75rem;">
-                                <i class="bi bi-info-circle me-1"></i>You can cancel before check-in. This action cannot be undone.
+                                <i class="bi bi-info-circle me-1"></i>{{ __('booking.cancel_notice') }}
                             </div>
                             <form action="{{ route('client.reservations.cancel', $reservation) }}" method="POST"
-                                  onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
+                                  onsubmit="return confirm('{{ __('booking.cancel_confirm') }}');">
                                 @csrf
                                 @method('PATCH')
                                 <button type="submit" class="btn btn-outline-danger w-100" style="border-radius:0.625rem; font-size:0.875rem; font-weight:600;">
-                                    <i class="bi bi-x-circle me-1"></i> Cancel Booking
+                                    <i class="bi bi-x-circle me-1"></i> {{ __('booking.cancel_booking') }}
                                 </button>
                             </form>
                         </div>
@@ -429,23 +435,23 @@
 
                     {{-- Review action --}}
                     @if($reservation->status === 'checked_out')
-                        <div id="review-section" style="border-top:1px solid var(--border-color); padding-top:1.25rem; margin-top:{{ in_array($reservation->status, ['pending','confirmed']) ? '0' : '0' }};">
+                        <div id="review-section" style="border-top:1px solid var(--border-color); padding-top:1.25rem; margin-top:0;">
                             @if(!$reservation->review)
                                 <div class="review-cta">
-                                    <div class="title"><i class="bi bi-star-fill me-1" style="color:var(--brand-accent);"></i> Rate Your Stay</div>
-                                    <div class="sub">Your feedback helps other travellers make better choices.</div>
+                                    <div class="title"><i class="bi bi-star-fill me-1" style="color:var(--brand-accent);"></i> {{ __('booking.rate_your_stay') }}</div>
+                                    <div class="sub">{{ __('booking.feedback_sub') }}</div>
                                     <button type="button" class="btn btn-accent w-100"
                                             data-bs-toggle="modal" data-bs-target="#reviewModal"
                                             style="font-size:0.875rem; font-weight:600; border-radius:0.625rem;">
-                                        Leave a Review
+                                        {{ __('booking.leave_a_review') }}
                                     </button>
                                 </div>
                             @else
                                 <div class="reviewed-badge">
                                     <i class="bi bi-check-circle-fill"></i>
                                     <div>
-                                        <div class="txt">Review Submitted</div>
-                                        <div class="sub">Thank you for your feedback!</div>
+                                        <div class="txt">{{ __('booking.review_submitted') }}</div>
+                                        <div class="sub">{{ __('booking.thank_you_feedback') }}</div>
                                     </div>
                                 </div>
                             @endif
@@ -459,7 +465,7 @@
             @if($reservation->hotel?->phone || $reservation->hotel?->email)
             <div class="summary-card">
                 <div class="summary-card-body">
-                    <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.75rem;">Hotel Contact</div>
+                    <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.75rem;">{{ __('booking.hotel_contact') }}</div>
                     @if($reservation->hotel->phone)
                     <a href="tel:{{ $reservation->hotel->phone }}"
                        style="display:flex; align-items:center; gap:0.625rem; font-size:0.82rem; color:var(--brand-primary); text-decoration:none; margin-bottom:0.5rem; font-weight:600;">
@@ -492,7 +498,7 @@
         <div>
           <h5 class="modal-title mb-0" id="reviewModalLabel"
               style="font-family:'Poppins',sans-serif; font-weight:700; color:var(--brand-primary);">
-            Leave a Review
+            {{ __('booking.leave_a_review') }}
           </h5>
           <p class="text-muted mb-0 mt-1" style="font-size:0.8rem;">
             {{ $reservation->hotel->name ?? 'Your stay' }}
@@ -508,20 +514,20 @@
             {{-- Star rating --}}
             <div class="mb-4">
                 <label class="form-label" style="font-size:0.82rem; font-weight:700; color:var(--text-primary); margin-bottom:0.75rem;">
-                    Overall Rating <span class="text-danger">*</span>
+                    {{ __('booking.overall_rating') }} <span class="text-danger">*</span>
                 </label>
                 <div class="star-rating d-flex flex-row-reverse justify-content-end gap-1"
                      style="font-size:2rem; color:#E2E8F0;">
                     <input type="radio" id="star5" name="rating" value="5" class="d-none" required />
-                    <label for="star5" class="bi bi-star-fill mb-0" title="5 stars — Excellent" style="cursor:pointer;"></label>
+                    <label for="star5" class="bi bi-star-fill mb-0" title="5 stars" style="cursor:pointer;"></label>
                     <input type="radio" id="star4" name="rating" value="4" class="d-none" />
-                    <label for="star4" class="bi bi-star-fill mb-0" title="4 stars — Very Good" style="cursor:pointer;"></label>
+                    <label for="star4" class="bi bi-star-fill mb-0" title="4 stars" style="cursor:pointer;"></label>
                     <input type="radio" id="star3" name="rating" value="3" class="d-none" />
-                    <label for="star3" class="bi bi-star-fill mb-0" title="3 stars — Good" style="cursor:pointer;"></label>
+                    <label for="star3" class="bi bi-star-fill mb-0" title="3 stars" style="cursor:pointer;"></label>
                     <input type="radio" id="star2" name="rating" value="2" class="d-none" />
-                    <label for="star2" class="bi bi-star-fill mb-0" title="2 stars — Fair" style="cursor:pointer;"></label>
+                    <label for="star2" class="bi bi-star-fill mb-0" title="2 stars" style="cursor:pointer;"></label>
                     <input type="radio" id="star1" name="rating" value="1" class="d-none" />
-                    <label for="star1" class="bi bi-star-fill mb-0" title="1 star — Poor" style="cursor:pointer;"></label>
+                    <label for="star1" class="bi bi-star-fill mb-0" title="1 star" style="cursor:pointer;"></label>
                 </div>
                 @error('rating')
                     <div class="text-danger mt-1" style="font-size:0.78rem;">{{ $message }}</div>
@@ -531,24 +537,24 @@
             {{-- Comment --}}
             <div class="mb-2">
                 <label for="comment" class="form-label" style="font-size:0.82rem; font-weight:700; color:var(--text-primary);">
-                    Your Review <span class="text-danger">*</span>
+                    {{ __('booking.your_review') }} <span class="text-danger">*</span>
                 </label>
                 <textarea class="form-control" id="comment" name="comment" rows="4"
-                          placeholder="Tell us what you loved, what could be improved, and any tips for future guests..."
+                          placeholder="{{ __('booking.review_placeholder') }}"
                           required maxlength="1000">{{ old('comment') }}</textarea>
                 @error('comment')
                     <div class="text-danger mt-1" style="font-size:0.78rem;">{{ $message }}</div>
                 @enderror
-                <div class="text-end mt-1" style="font-size:0.72rem; color:var(--text-muted);">Max 1000 characters</div>
+                <div class="text-end mt-1" style="font-size:0.72rem; color:var(--text-muted);">{{ __('booking.max_chars') }}</div>
             </div>
 
         </div>
         <div class="modal-footer border-0 px-4 pb-4 pt-2 gap-2">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                  style="border-radius:0.625rem; font-size:0.875rem; font-weight:600;">Cancel</button>
+                  style="border-radius:0.625rem; font-size:0.875rem; font-weight:600;">{{ __('booking.cancel') }}</button>
           <button type="submit" class="btn btn-accent"
                   style="border-radius:0.625rem; font-size:0.875rem; font-weight:600; padding:0.55rem 1.5rem;">
-              <i class="bi bi-send me-1"></i> Submit Review
+              <i class="bi bi-send me-1"></i> {{ __('booking.submit_review') }}
           </button>
         </div>
       </form>
