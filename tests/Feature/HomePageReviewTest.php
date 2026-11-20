@@ -145,4 +145,41 @@ class HomePageReviewTest extends TestCase
         $response2 = $this->get(route('home'));
         $response2->assertSee('Newly submitted review.');
     }
+
+    public function test_reviews_render_with_review_comment_class_and_safe_wrapping()
+    {
+        // 1. Short review
+        Review::create([
+            'hotel_id' => $this->activeHotel->id,
+            'user_id'  => $this->client->id,
+            'rating'   => 5,
+            'comment'  => 'Great!',
+        ]);
+
+        // 2. Normal review
+        Review::create([
+            'hotel_id' => $this->activeHotel->id,
+            'user_id'  => $this->client->id,
+            'rating'   => 4,
+            'comment'  => 'The staff was courteous, the rooms were clean, and our stay was pleasant overall.',
+        ]);
+
+        // 3. Very long review containing many words and an uninterrupted long string / URL
+        $longComment = 'This was an absolutely incredible experience with exceptional service throughout our entire vacation. ' .
+            'https://hotelbooking.wasmer.app/hotels/atlas-luxury-resort/extra-long-unbroken-parameter-slug-testing-overflow-handling ' .
+            'We will definitely be coming back next season!';
+        Review::create([
+            'hotel_id' => $this->activeHotel->id,
+            'user_id'  => $this->client->id,
+            'rating'   => 5,
+            'comment'  => $longComment,
+        ]);
+
+        $response = $this->get(route('home'));
+        $response->assertStatus(200);
+        $response->assertSee('review-comment');
+        $response->assertSee('overflow-wrap: anywhere', false);
+        $response->assertSee('word-break: normal', false);
+        $response->assertSee('white-space: normal', false);
+    }
 }

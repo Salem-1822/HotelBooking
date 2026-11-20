@@ -300,6 +300,8 @@
         padding: 2rem;
         height: 100%;
         box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        min-width: 0;
+        max-width: 100%;
     }
     
     .review-quote {
@@ -307,6 +309,16 @@
         font-size: 2rem;
         opacity: 0.3;
         margin-bottom: 1rem;
+    }
+
+    .review-comment {
+        font-style: italic;
+        color: #475569;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: anywhere;
+        min-width: 0;
+        max-width: 100%;
     }
 
     /* CTA Section */
@@ -549,7 +561,7 @@
                                     @endif
                                 @endfor
                             </div>
-                            <p class="mb-4" style="font-style: italic; color: #475569;">"{{ \Illuminate\Support\Str::limit($review->comment, 150, '...') }}"</p>
+                            <p class="review-comment mb-4">"{{ \Illuminate\Support\Str::limit($review->comment, 150, '...') }}"</p>
                             <div class="d-flex align-items-center">
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($review->user->name ?? 'Guest') }}&background=0F172A&color=fff" class="rounded-circle me-3" width="48" height="48" alt="">
                                 <div>
