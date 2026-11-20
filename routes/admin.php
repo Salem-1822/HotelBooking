@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\HotelProfileController;
 use App\Http\Controllers\Admin\PasswordResetController;
+use App\Http\Controllers\Admin\ReviewController;
 
 // --- Admin Authentication Routes (public/guest) ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -45,6 +46,10 @@ Route::middleware(['auth:admin', 'role:admin'])->group(function () {
     // Hotel Profile
     Route::get('hotel-profile', [HotelProfileController::class, 'show'])->name('hotel-profile');
     Route::put('hotel-profile', [HotelProfileController::class, 'update'])->name('hotel-profile.update');
+
+    // Reviews
+    Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
+    Route::delete('reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 
     // Admin Profile
     Route::get('profile', [App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile');

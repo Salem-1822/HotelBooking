@@ -445,6 +445,10 @@
                 <i class="bi bi-people-fill"></i>
                 <span>Customers</span>
             </a>
+            <a href="{{ route('admin.reviews.index') }}" class="sidebar-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                <i class="bi bi-star-fill"></i>
+                <span>Hotel Reviews</span>
+            </a>
             
             <div class="nav-section-label">Management</div>
             
