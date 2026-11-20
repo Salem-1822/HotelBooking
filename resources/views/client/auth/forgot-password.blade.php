@@ -1,5 +1,7 @@
 @extends('client.layouts.app')
 
+@section('title', __('auth.forgot_password_title'))
+
 @push('styles')
 <style>
     /* ── Page Layout ── */
@@ -189,8 +191,8 @@
         {{-- Card Header --}}
         <div class="auth-card-header">
             <div class="auth-brand reveal delay-1">HotelBooking</div>
-            <h5 class="reveal delay-1">Forgot Password?</h5>
-            <p class="reveal delay-2">Enter your email and we'll send reset instructions.</p>
+            <h5 class="reveal delay-1">{{ __('auth.forgot_password_title') }}</h5>
+            <p class="reveal delay-2">{{ __('auth.forgot_password_subtitle') }}</p>
         </div>
 
         {{-- Card Body --}}
@@ -205,8 +207,8 @@
 
             @unless(session('status'))
                 <p class="auth-info-note">
-                    We'll send a password reset link to your email address.<br>
-                    The link expires in {{ config('auth.passwords.users.expire', 60) }} minutes.
+                    {{ __('auth.reset_link_info') }}<br>
+                    {{ __('auth.link_expires_in', ['minutes' => config('auth.passwords.users.expire', 60)]) }}
                 </p>
 
                 <form method="POST" action="{{ route('client.password.email') }}" novalidate>
@@ -214,7 +216,7 @@
 
                     {{-- Email Address --}}
                     <div class="mb-4">
-                        <label for="email" class="auth-label">Email Address</label>
+                        <label for="email" class="auth-label">{{ __('auth.email') }}</label>
                         <div class="input-icon-wrap">
                             <i class="bi bi-envelope input-icon"></i>
                             <input
@@ -222,7 +224,7 @@
                                 name="email"
                                 id="email"
                                 class="form-control @error('email') is-invalid @enderror"
-                                placeholder="you@example.com"
+                                placeholder="{{ __('auth.email_placeholder') }}"
                                 value="{{ old('email') }}"
                                 autocomplete="email"
                                 required
@@ -236,7 +238,7 @@
 
                     {{-- Submit --}}
                     <button type="submit" class="btn-auth">
-                        <i class="bi bi-send me-2"></i>Send Reset Link
+                        <i class="bi bi-send me-2"></i>{{ __('auth.send_reset_link') }}
                     </button>
                 </form>
             @endunless
@@ -244,13 +246,13 @@
             <hr class="auth-divider">
 
             <p class="auth-footer-text reveal delay-4 mb-2">
-                Remember your password?
-                <a href="{{ route('login') }}">Back to Sign In</a>
+                {{ __('auth.remember_password') }}
+                <a href="{{ route('login') }}">{{ __('auth.back_to_sign_in') }}</a>
             </p>
 
             <p class="auth-footer-text reveal delay-4 mt-0" style="font-size: 0.78rem;">
-                Hotel administrator?
-                <a href="{{ route('admin.password.request') }}">Admin Reset Portal</a>
+                {{ __('auth.hotel_administrator') }}
+                <a href="{{ route('admin.password.request') }}">{{ __('auth.admin_reset_portal') }}</a>
             </p>
 
         </div>{{-- /.auth-card-body --}}

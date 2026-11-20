@@ -1,5 +1,7 @@
 @extends('client.layouts.app')
 
+@section('title', __('auth.reset_password_title'))
+
 @push('styles')
 <style>
     /* ── Page Layout ── */
@@ -187,8 +189,8 @@
         {{-- Card Header --}}
         <div class="auth-card-header">
             <div class="auth-brand reveal delay-1">HotelBooking</div>
-            <h5 class="reveal delay-1">Reset Your Password</h5>
-            <p class="reveal delay-2">Choose a new password for your account.</p>
+            <h5 class="reveal delay-1">{{ __('auth.reset_password_title') }}</h5>
+            <p class="reveal delay-2">{{ __('auth.reset_password_subtitle') }}</p>
         </div>
 
         {{-- Card Body --}}
@@ -213,7 +215,7 @@
 
                 {{-- Email Address (pre-filled, read-only to the user) --}}
                 <div class="mb-3">
-                    <label for="email" class="auth-label">Email Address</label>
+                    <label for="email" class="auth-label">{{ __('auth.email') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-envelope input-icon"></i>
                         <input
@@ -221,7 +223,7 @@
                             name="email"
                             id="email"
                             class="form-control @error('email') is-invalid @enderror"
-                            placeholder="you@example.com"
+                            placeholder="{{ __('auth.email_placeholder') }}"
                             value="{{ old('email', $email) }}"
                             autocomplete="email"
                             required
@@ -234,7 +236,7 @@
 
                 {{-- New Password --}}
                 <div class="mb-3">
-                    <label for="password" class="auth-label">New Password</label>
+                    <label for="password" class="auth-label">{{ __('auth.new_password') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-lock input-icon"></i>
                         <input
@@ -242,7 +244,7 @@
                             name="password"
                             id="password"
                             class="form-control @error('password') is-invalid @enderror"
-                            placeholder="At least 8 characters"
+                            placeholder="{{ __('auth.password_placeholder') }}"
                             autocomplete="new-password"
                             required
                         >
@@ -250,12 +252,12 @@
                     @error('password')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
-                    <p class="pw-hint">Minimum 8 characters.</p>
+                    <p class="pw-hint">{{ __('auth.min_characters') }}</p>
                 </div>
 
                 {{-- Confirm New Password --}}
                 <div class="mb-4">
-                    <label for="password_confirmation" class="auth-label">Confirm New Password</label>
+                    <label for="password_confirmation" class="auth-label">{{ __('auth.confirm_new_password') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-lock-fill input-icon"></i>
                         <input
@@ -263,7 +265,7 @@
                             name="password_confirmation"
                             id="password_confirmation"
                             class="form-control @error('password_confirmation') is-invalid @enderror"
-                            placeholder="Repeat your new password"
+                            placeholder="{{ __('auth.repeat_new_password') }}"
                             autocomplete="new-password"
                             required
                         >
@@ -275,15 +277,15 @@
 
                 {{-- Submit --}}
                 <button type="submit" class="btn-auth">
-                    <i class="bi bi-shield-check me-2"></i>Reset Password
+                    <i class="bi bi-shield-check me-2"></i>{{ __('auth.reset_password_button') }}
                 </button>
             </form>
 
             <hr class="auth-divider">
 
             <p class="auth-footer-text reveal delay-4">
-                Remember your password?
-                <a href="{{ route('login') }}">Back to Sign In</a>
+                {{ __('auth.remember_password') }}
+                <a href="{{ route('login') }}">{{ __('auth.back_to_sign_in') }}</a>
             </p>
 
         </div>{{-- /.auth-card-body --}}

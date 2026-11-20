@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'Create Account')
+@section('title', __('auth.register_title'))
 
 @push('styles')
 <style>
@@ -199,8 +199,8 @@
         {{-- Card Header --}}
         <div class="auth-card-header">
             <div class="auth-brand reveal delay-1">HotelBooking</div>
-            <h5 class="reveal delay-1">Create your account</h5>
-            <p class="reveal delay-2">Join HotelBooking and start discovering comfortable hotel stays.</p>
+            <h5 class="reveal delay-1">{{ __('auth.register_title') }}</h5>
+            <p class="reveal delay-2">{{ __('auth.register_subtitle') }}</p>
         </div>
 
         {{-- Card Body --}}
@@ -218,7 +218,7 @@
 
                 {{-- Full Name --}}
                 <div class="mb-3">
-                    <label for="name" class="auth-label">Full Name</label>
+                    <label for="name" class="auth-label">{{ __('auth.full_name') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-person input-icon"></i>
                         <input
@@ -226,7 +226,7 @@
                             name="name"
                             id="name"
                             class="form-control @error('name') is-invalid @enderror"
-                            placeholder="Your full name"
+                            placeholder="{{ __('auth.full_name_placeholder') }}"
                             value="{{ old('name') }}"
                             autocomplete="name"
                             required
@@ -240,7 +240,7 @@
 
                 {{-- Email Address --}}
                 <div class="mb-3">
-                    <label for="email" class="auth-label">Email Address</label>
+                    <label for="email" class="auth-label">{{ __('auth.email') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-envelope input-icon"></i>
                         <input
@@ -248,7 +248,7 @@
                             name="email"
                             id="email"
                             class="form-control @error('email') is-invalid @enderror"
-                            placeholder="you@example.com"
+                            placeholder="{{ __('auth.email_placeholder') }}"
                             value="{{ old('email') }}"
                             autocomplete="email"
                             required
@@ -261,7 +261,7 @@
 
                 {{-- Password --}}
                 <div class="mb-3">
-                    <label for="password" class="auth-label">Password</label>
+                    <label for="password" class="auth-label">{{ __('auth.password_label') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-lock input-icon"></i>
                         <input
@@ -269,7 +269,7 @@
                             name="password"
                             id="password"
                             class="form-control @error('password') is-invalid @enderror"
-                            placeholder="At least 8 characters"
+                            placeholder="{{ __('auth.password_placeholder') }}"
                             autocomplete="new-password"
                             required
                         >
@@ -281,7 +281,7 @@
 
                 {{-- Confirm Password --}}
                 <div class="mb-4">
-                    <label for="password_confirmation" class="auth-label">Confirm Password</label>
+                    <label for="password_confirmation" class="auth-label">{{ __('auth.confirm_password') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-lock-fill input-icon"></i>
                         <input
@@ -289,7 +289,7 @@
                             name="password_confirmation"
                             id="password_confirmation"
                             class="form-control @error('password_confirmation') is-invalid @enderror"
-                            placeholder="Repeat your password"
+                            placeholder="{{ __('auth.confirm_password_placeholder') }}"
                             autocomplete="new-password"
                             required
                         >
@@ -301,15 +301,15 @@
 
                 {{-- Submit --}}
                 <button type="submit" class="btn-auth">
-                    <i class="bi bi-person-plus me-2"></i>Create Account
+                    <i class="bi bi-person-plus me-2"></i>{{ __('auth.create_account') }}
                 </button>
             </form>
 
             <hr class="auth-divider">
 
             <p class="auth-footer-text reveal delay-4">
-                Already have an account?
-                <a href="{{ route('login') }}">Sign in</a>
+                {{ __('auth.already_have_account') }}
+                <a href="{{ route('login') }}">{{ __('auth.sign_in') }}</a>
             </p>
 
         </div>{{-- /.auth-card-body --}}

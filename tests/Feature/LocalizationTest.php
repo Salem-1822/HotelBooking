@@ -189,4 +189,38 @@ class LocalizationTest extends TestCase
         $aboutAr->assertSee('من نحن');
         $aboutAr->assertSee('رسالتنا');
     }
+
+    /** 8. Client auth pages render in all languages */
+    public function test_client_auth_pages_render_in_all_languages(): void
+    {
+        // Login
+        $loginEn = $this->withSession(['locale' => 'en'])->get('/login');
+        $loginEn->assertOk()->assertSee('Welcome back')->assertSee('Keep me signed in');
+
+        $loginFr = $this->withSession(['locale' => 'fr'])->get('/login');
+        $loginFr->assertOk()->assertSee('Bon retour')->assertSee('Rester connecté');
+
+        $loginAr = $this->withSession(['locale' => 'ar'])->get('/login');
+        $loginAr->assertOk()->assertSee('مرحبًا بعودتك')->assertSee('تذكرني على هذا الجهاز');
+
+        // Register
+        $regEn = $this->withSession(['locale' => 'en'])->get(route('client.register'));
+        $regEn->assertOk()->assertSee('Create Account')->assertSee('Join HotelBooking');
+
+        $regFr = $this->withSession(['locale' => 'fr'])->get(route('client.register'));
+        $regFr->assertOk()->assertSee('Créer un compte')->assertSee('Rejoignez HotelBooking');
+
+        $regAr = $this->withSession(['locale' => 'ar'])->get(route('client.register'));
+        $regAr->assertOk()->assertSee('إنشاء حساب')->assertSee('انضم إلى HotelBooking');
+
+        // Forgot password
+        $forgotEn = $this->withSession(['locale' => 'en'])->get(route('client.password.request'));
+        $forgotEn->assertOk()->assertSee('Forgot Password?')->assertSee('Send Reset Link');
+
+        $forgotFr = $this->withSession(['locale' => 'fr'])->get(route('client.password.request'));
+        $forgotFr->assertOk()->assertSee('Mot de passe oublié ?')->assertSee('Envoyer le lien de réinitialisation');
+
+        $forgotAr = $this->withSession(['locale' => 'ar'])->get(route('client.password.request'));
+        $forgotAr->assertOk()->assertSee('نسيت كلمة المرور؟')->assertSee('إرسال رابط إعادة التعيين');
+    }
 }

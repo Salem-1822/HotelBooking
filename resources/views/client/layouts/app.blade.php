@@ -233,6 +233,24 @@
                 transition: none !important;
             }
         }
+
+        @if(app()->getLocale() === 'ar')
+        /* RTL overrides for client layout */
+        .input-icon-wrap .input-icon {
+            right: 1rem;
+            left: auto;
+        }
+        .input-icon-wrap .form-control {
+            padding-right: 2.75rem;
+            padding-left: 1rem;
+        }
+        .alert-success-custom,
+        .alert-error-custom,
+        .alert-status-custom {
+            border-left: none !important;
+            border-right: 4px solid !important;
+        }
+        @endif
     </style>
     @stack('styles')
 </head>

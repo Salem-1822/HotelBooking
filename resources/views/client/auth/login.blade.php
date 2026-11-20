@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'Login')
+@section('title', __('auth.login_title'))
 
 @push('styles')
     <style>
@@ -248,8 +248,8 @@
             {{-- Card Header --}}
             <div class="auth-card-header">
                 <div class="auth-brand">HotelBooking</div>
-                <h5>Welcome back</h5>
-                <p>Sign in to your account to continue.</p>
+                <h5>{{ __('auth.welcome_back') }}</h5>
+                <p>{{ __('auth.login_subtitle') }}</p>
             </div>
 
             {{-- Card Body --}}
@@ -276,11 +276,11 @@
 
                     {{-- Email Address --}}
                     <div class="mb-3">
-                        <label for="email" class="auth-label">Email Address</label>
+                        <label for="email" class="auth-label">{{ __('auth.email') }}</label>
                         <div class="input-icon-wrap">
                             <i class="bi bi-envelope input-icon"></i>
                             <input type="email" name="email" id="email"
-                                class="form-control @error('email') is-invalid @enderror" placeholder="you@example.com"
+                                class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('auth.email_placeholder') }}"
                                 value="{{ old('email') }}" autocomplete="email" required autofocus>
                         </div>
                     </div>
@@ -288,8 +288,8 @@
                     {{-- Password --}}
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <label for="password" class="auth-label mb-0">Password</label>
-                            <a href="{{ route('client.password.request') }}" class="forgot-link">Forgot password?</a>
+                            <label for="password" class="auth-label mb-0">{{ __('auth.password_label') }}</label>
+                            <a href="{{ route('client.password.request') }}" class="forgot-link">{{ __('auth.forgot_password') }}</a>
                         </div>
                         <div class="input-icon-wrap">
                             <i class="bi bi-lock input-icon"></i>
@@ -303,36 +303,35 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="remember" id="remember">
                             <label class="form-check-label small text-muted" for="remember" style="font-size:0.82rem;">
-                                Keep me signed in
+                                {{ __('auth.remember_me') }}
                             </label>
                         </div>
                     </div>
 
                     {{-- Submit --}}
                     <button type="submit" class="btn-auth">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                        <i class="bi bi-box-arrow-in-right me-2"></i>{{ __('auth.sign_in') }}
                     </button>
 
                     <div class="security-note">
                         <i class="bi bi-shield-check text-success"></i>
-                        Secured by HotelBooking IDP &mdash; All sessions are encrypted
+                        {{ __('auth.secured_by') }}
                     </div>
 
                     <div class="portal-notice">
-                        Hotel Staff? <a href="{{ route('admin.login') }}" class="text-decoration-none fw-semibold">Admin Login</a>
-                        &bull; Super Admin? <a href="{{ route('super_admin.login') }}" class="text-decoration-none fw-semibold">Super Admin</a>
+                        {{ __('auth.hotel_staff') }} <a href="{{ route('admin.login') }}" class="text-decoration-none fw-semibold">{{ __('auth.admin_login') }}</a>
+                        &bull; {{ __('auth.super_admin_question') }} <a href="{{ route('super_admin.login') }}" class="text-decoration-none fw-semibold">{{ __('auth.super_admin') }}</a>
                     </div>
                 </form>
 
                 <hr class="auth-divider">
 
                 <p class="auth-footer-text">
-                    Don't have an account?
-                    <a href="{{ route('client.register') }}">Create Account</a>
+                    {{ __('auth.no_account') }}
+                    <a href="{{ route('client.register') }}">{{ __('auth.create_account') }}</a>
                 </p>
 
             </div>{{-- /.auth-card-body --}}
         </div>{{-- /.auth-card --}}
     </section>
 @endsection
-
