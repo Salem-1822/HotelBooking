@@ -56,4 +56,5 @@ return [
     'repeat_new_password' => 'Répétez votre nouveau mot de passe',
     'min_characters' => 'Minimum 8 caractères.',
     'reset_password_button' => 'Réinitialiser le mot de passe',
+    'toggle_password' => 'Afficher ou masquer le mot de passe',
 ];

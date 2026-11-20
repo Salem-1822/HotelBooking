@@ -234,23 +234,66 @@
             }
         }
 
-        @if(app()->getLocale() === 'ar')
-        /* RTL overrides for client layout */
-        .input-icon-wrap .input-icon {
-            right: 1rem;
-            left: auto;
+        /* Password toggle button & input wrapping rules */
+        .password-toggle-btn {
+            position: absolute;
+            right: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #9CA3AF;
+            padding: 0.25rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 4;
+            font-size: 1.05rem;
+            line-height: 1;
+            transition: color 0.15s ease;
         }
-        .input-icon-wrap .form-control {
+        .password-toggle-btn:hover {
+            color: #374151;
+        }
+        .password-toggle-btn:focus {
+            outline: none;
+            color: var(--brand-primary, #0F172A);
+        }
+        .input-icon-wrap .form-control.has-toggle {
+            padding-left: 2.75rem;
             padding-right: 2.75rem;
-            padding-left: 1rem;
         }
-        .alert-success-custom,
-        .alert-error-custom,
-        .alert-status-custom {
+
+        [dir="rtl"] .password-toggle-btn,
+        html[dir="rtl"] .password-toggle-btn {
+            right: auto !important;
+            left: 0.85rem !important;
+        }
+        [dir="rtl"] .input-icon-wrap .input-icon,
+        html[dir="rtl"] .input-icon-wrap .input-icon {
+            right: 1rem !important;
+            left: auto !important;
+        }
+        [dir="rtl"] .input-icon-wrap .form-control,
+        html[dir="rtl"] .input-icon-wrap .form-control {
+            padding-right: 2.75rem !important;
+            padding-left: 1rem !important;
+        }
+        [dir="rtl"] .input-icon-wrap .form-control.has-toggle,
+        html[dir="rtl"] .input-icon-wrap .form-control.has-toggle {
+            padding-right: 2.75rem !important;
+            padding-left: 2.75rem !important;
+        }
+        [dir="rtl"] .alert-success-custom,
+        [dir="rtl"] .alert-error-custom,
+        [dir="rtl"] .alert-status-custom,
+        html[dir="rtl"] .alert-success-custom,
+        html[dir="rtl"] .alert-error-custom,
+        html[dir="rtl"] .alert-status-custom {
             border-left: none !important;
             border-right: 4px solid !important;
         }
-        @endif
     </style>
     @stack('styles')
 </head>
@@ -457,6 +500,32 @@
                     });
                 }, 50);
             }
+
+            // Reusable password visibility toggle
+            document.querySelectorAll('.password-toggle-btn').forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    const input = document.getElementById(targetId);
+                    if (!input) return;
+                    const icon = this.querySelector('i');
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        if (icon) {
+                            icon.classList.remove('bi-eye');
+                            icon.classList.add('bi-eye-slash');
+                        }
+                        this.setAttribute('aria-pressed', 'true');
+                    } else {
+                        input.type = 'password';
+                        if (icon) {
+                            icon.classList.remove('bi-eye-slash');
+                            icon.classList.add('bi-eye');
+                        }
+                        this.setAttribute('aria-pressed', 'false');
+                    }
+                });
+            });
         });
     </script>
     @stack('scripts')

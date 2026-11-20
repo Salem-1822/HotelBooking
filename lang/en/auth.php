@@ -56,4 +56,5 @@ return [
     'repeat_new_password' => 'Repeat your new password',
     'min_characters' => 'Minimum 8 characters.',
     'reset_password_button' => 'Reset Password',
+    'toggle_password' => 'Toggle password visibility',
 ];

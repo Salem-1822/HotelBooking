@@ -56,4 +56,5 @@ return [
     'repeat_new_password' => 'أعد إدخال كلمة المرور الجديدة',
     'min_characters' => '8 أحرف على الأقل.',
     'reset_password_button' => 'إعادة تعيين كلمة المرور',
+    'toggle_password' => 'إظهار أو إخفاء كلمة المرور',
 ];

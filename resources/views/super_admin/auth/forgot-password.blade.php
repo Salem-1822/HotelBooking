@@ -87,11 +87,22 @@
 
     .input-icon-wrap .form-control {
         padding-left: 2.75rem;
+        padding-right: 1rem;
         border-radius: 0.75rem;
         border: 1.5px solid var(--border-color);
         background: #F9FAFB;
         font-size: 0.875rem;
         transition: all 0.2s ease;
+    }
+
+    [dir="rtl"] .input-icon-wrap .input-icon {
+        left: auto;
+        right: 1rem;
+    }
+
+    [dir="rtl"] .input-icon-wrap .form-control {
+        padding-right: 2.75rem;
+        padding-left: 1rem;
     }
 
     .input-icon-wrap .form-control:focus {

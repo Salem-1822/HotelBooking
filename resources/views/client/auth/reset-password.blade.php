@@ -89,11 +89,65 @@
 
     .input-icon-wrap .form-control {
         padding-left: 2.75rem;
+        padding-right: 1rem;
         border-radius: 0.75rem;
         border: 1.5px solid var(--border-color);
         background: #F9FAFB;
         font-size: 0.875rem;
         transition: all 0.2s ease;
+    }
+
+    .input-icon-wrap .form-control.has-toggle {
+        padding-right: 2.75rem;
+        padding-left: 2.75rem;
+    }
+
+    .password-toggle-btn {
+        position: absolute;
+        right: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: #9CA3AF;
+        padding: 0.25rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 4;
+        font-size: 1.05rem;
+        line-height: 1;
+        transition: color 0.15s ease;
+    }
+
+    .password-toggle-btn:hover {
+        color: #374151;
+    }
+
+    .password-toggle-btn:focus {
+        outline: none;
+        color: var(--brand-primary);
+    }
+
+    [dir="rtl"] .password-toggle-btn {
+        right: auto;
+        left: 0.85rem;
+    }
+
+    [dir="rtl"] .input-icon-wrap .input-icon {
+        left: auto;
+        right: 1rem;
+    }
+
+    [dir="rtl"] .input-icon-wrap .form-control {
+        padding-right: 2.75rem;
+        padding-left: 1rem;
+    }
+
+    [dir="rtl"] .input-icon-wrap .form-control.has-toggle {
+        padding-right: 2.75rem;
+        padding-left: 2.75rem;
     }
 
     .input-icon-wrap .form-control:focus {
@@ -243,11 +297,14 @@
                             type="password"
                             name="password"
                             id="password"
-                            class="form-control @error('password') is-invalid @enderror"
+                            class="form-control has-toggle @error('password') is-invalid @enderror"
                             placeholder="{{ __('auth.password_placeholder') }}"
                             autocomplete="new-password"
                             required
                         >
+                        <button type="button" class="password-toggle-btn" data-target="password" aria-label="{{ __('auth.toggle_password') }}">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
                     @error('password')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -264,11 +321,14 @@
                             type="password"
                             name="password_confirmation"
                             id="password_confirmation"
-                            class="form-control @error('password_confirmation') is-invalid @enderror"
+                            class="form-control has-toggle @error('password_confirmation') is-invalid @enderror"
                             placeholder="{{ __('auth.repeat_new_password') }}"
                             autocomplete="new-password"
                             required
                         >
+                        <button type="button" class="password-toggle-btn" data-target="password_confirmation" aria-label="{{ __('auth.toggle_password') }}">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
                     @error('password_confirmation')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
