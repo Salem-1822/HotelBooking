@@ -223,4 +223,40 @@ class LocalizationTest extends TestCase
         $forgotAr = $this->withSession(['locale' => 'ar'])->get(route('client.password.request'));
         $forgotAr->assertOk()->assertSee('نسيت كلمة المرور؟')->assertSee('إرسال رابط إعادة التعيين');
     }
+
+    /** 9. Client dashboard and profile pages render in all languages */
+    public function test_client_dashboard_and_profile_render_in_all_languages(): void
+    {
+        // Dashboard
+        $dashEn = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'en'])
+            ->get(route('client.dashboard'));
+        $dashEn->assertOk()->assertSee('Client Portal')->assertSee('My Reservations');
+
+        $dashFr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'fr'])
+            ->get(route('client.dashboard'));
+        $dashFr->assertOk()->assertSee('Portail Client')->assertSee('Mes réservations');
+
+        $dashAr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'ar'])
+            ->get(route('client.dashboard'));
+        $dashAr->assertOk()->assertSee('بوابة العميل')->assertSee('حجوزاتي');
+
+        // Profile
+        $profEn = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'en'])
+            ->get(route('client.profile.edit'));
+        $profEn->assertOk()->assertSee('My Profile')->assertSee('Profile Information');
+
+        $profFr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'fr'])
+            ->get(route('client.profile.edit'));
+        $profFr->assertOk()->assertSee('Mon profil')->assertSee('Informations du profil');
+
+        $profAr = $this->actingAs($this->client, 'web')
+            ->withSession(['locale' => 'ar'])
+            ->get(route('client.profile.edit'));
+        $profAr->assertOk()->assertSee('ملفي الشخصي')->assertSee('المعلومات الشخصية');
+    }
 }

@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'My Dashboard')
+@section('title', __('client.dashboard_title'))
 
 @push('styles')
 <style>
@@ -117,29 +117,6 @@
         font-weight: 700;
         color: var(--text-primary);
     }
-
-    /* ── Coming soon panel ── */
-    .coming-soon-card {
-        background: #fff;
-        border-radius: 1rem;
-        border: 1px solid var(--border-color);
-        box-shadow: var(--card-shadow);
-        padding: 2.5rem;
-        text-align: center;
-    }
-
-    .coming-soon-icon {
-        width: 72px;
-        height: 72px;
-        border-radius: 1rem;
-        background: linear-gradient(135deg, var(--brand-primary) 0%, #1E3A8A 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: #fff;
-        margin: 0 auto 1.25rem;
-    }
 </style>
 @endpush
 
@@ -149,12 +126,12 @@
 <section class="dashboard-hero">
     <div class="container position-relative" style="z-index: 1;">
         <div class="welcome-badge reveal">
-            <i class="bi bi-patch-check-fill"></i> Client Portal
+            <i class="bi bi-patch-check-fill"></i> {{ __('client.client_portal') }}
         </div>
         <h1 class="welcome-heading reveal delay-1">
-            Welcome back, <span class="client-name">{{ Auth::guard('web')->user()->name }}</span>
+            {{ __('client.welcome_back_prefix') }} <span class="client-name">{{ Auth::guard('web')->user()->name }}</span>
         </h1>
-        <p class="welcome-sub reveal delay-2">You're successfully signed in to your HotelBooking account.</p>
+        <p class="welcome-sub reveal delay-2">{{ __('client.signed_in_subtitle') }}</p>
     </div>
 </section>
 
@@ -169,7 +146,7 @@
                     <div class="info-card-icon" style="background: rgba(212, 175, 55, 0.12); color: var(--brand-accent);">
                         <i class="bi bi-person-fill"></i>
                     </div>
-                    <div class="info-card-title">Account</div>
+                    <div class="info-card-title">{{ __('client.account') }}</div>
                     <div class="info-card-value" style="font-size: 1rem; word-break: break-all;">
                         {{ Auth::guard('web')->user()->email }}
                     </div>
@@ -180,9 +157,9 @@
                     <div class="info-card-icon" style="background: rgba(34, 197, 94, 0.12); color: #16A34A;">
                         <i class="bi bi-shield-check-fill"></i>
                     </div>
-                    <div class="info-card-title">Status</div>
+                    <div class="info-card-title">{{ __('client.status') }}</div>
                     <div class="info-card-value" style="font-size: 1rem; color: #16A34A;">
-                        Active
+                        {{ __('client.active') }}
                     </div>
                 </div>
             </div>
@@ -191,7 +168,7 @@
                     <div class="info-card-icon" style="background: rgba(99, 102, 241, 0.12); color: #6366F1;">
                         <i class="bi bi-calendar3"></i>
                     </div>
-                    <div class="info-card-title">Member Since</div>
+                    <div class="info-card-title">{{ __('client.member_since') }}</div>
                     <div class="info-card-value" style="font-size: 1rem;">
                         {{ Auth::guard('web')->user()->created_at->format('M Y') }}
                     </div>
@@ -203,14 +180,14 @@
         <div class="mb-4 reveal delay-2">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
                 <h5 style="font-family:'Poppins',sans-serif; font-weight:700; margin:0;">
-                    <i class="bi bi-calendar-check me-2" style="color:var(--brand-accent);"></i>My Reservations
+                    <i class="bi bi-calendar-check me-2" style="color:var(--brand-accent);"></i>{{ __('client.my_reservations') }}
                 </h5>
                 <div>
                     <a href="{{ route('client.reservations.index') }}" class="btn btn-outline-secondary btn-sm px-3 me-2" style="font-weight:600; border-radius:.625rem;">
-                        View All
+                        {{ __('client.view_all') }}
                     </a>
                     <a href="{{ route('hotels.index') }}" class="btn btn-accent btn-sm px-3" style="font-weight:600; border-radius:.625rem;">
-                        <i class="bi bi-plus-lg me-1"></i>New Booking
+                        <i class="bi bi-plus-lg me-1"></i>{{ __('client.new_booking') }}
                     </a>
                 </div>
             </div>
@@ -218,12 +195,12 @@
             @if($reservations->isEmpty())
                 <div style="background:#fff; border:1px solid var(--border-color); border-radius:1rem; box-shadow:var(--card-shadow); padding:3rem; text-align:center;">
                     <i class="bi bi-calendar2-x" style="font-size:3rem; color:var(--text-muted); opacity:.4; display:block; margin-bottom:1rem;"></i>
-                    <div style="font-weight:600; color:var(--text-primary); margin-bottom:.5rem;">No reservations yet</div>
+                    <div style="font-weight:600; color:var(--text-primary); margin-bottom:.5rem;">{{ __('client.no_reservations_yet') }}</div>
                     <p style="color:var(--text-muted); font-size:.875rem; max-width:320px; margin:0 auto 1.5rem;">
-                        Browse our hotels and book a room to see your reservations here.
+                        {{ __('client.no_reservations_desc') }}
                     </p>
                     <a href="{{ route('hotels.index') }}" class="btn btn-accent px-4">
-                        <i class="bi bi-building me-2"></i>Browse Hotels
+                        <i class="bi bi-building me-2"></i>{{ __('client.browse_hotels') }}
                     </a>
                 </div>
             @else
@@ -232,23 +209,23 @@
                         <table style="width:100%; border-collapse:collapse; font-size:.875rem;">
                             <thead>
                                 <tr style="background:#F8FAFC; border-bottom:2px solid var(--border-color);">
-                                    <th style="padding:.875rem 1.25rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; white-space:nowrap;">Reference</th>
-                                    <th style="padding:.875rem 1rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em;">Hotel / Room</th>
-                                    <th style="padding:.875rem 1rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; white-space:nowrap;">Dates</th>
-                                    <th style="padding:.875rem 1rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em;">Guests</th>
-                                    <th style="padding:.875rem 1rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em;">Total</th>
-                                    <th style="padding:.875rem 1rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em;">Status</th>
+                                    <th style="padding:.875rem 1.25rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; white-space:nowrap;">{{ __('client.reference') }}</th>
+                                    <th style="padding:.875rem 1rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em;">{{ __('client.hotel_room') }}</th>
+                                    <th style="padding:.875rem 1rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; white-space:nowrap;">{{ __('client.dates') }}</th>
+                                    <th style="padding:.875rem 1rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em;">{{ __('client.guests') }}</th>
+                                    <th style="padding:.875rem 1rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em;">{{ __('client.total') }}</th>
+                                    <th style="padding:.875rem 1rem; font-weight:700; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em;">{{ __('client.status') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($reservations as $res)
                                 @php
                                     [$statusBg, $statusColor, $statusBorder, $statusLabel] = match($res->status) {
-                                        'pending'     => ['rgba(245,158,11,.1)',  '#92400E', 'rgba(245,158,11,.3)', 'Pending'],
-                                        'confirmed'   => ['rgba(34,197,94,.1)',   '#166534', 'rgba(34,197,94,.3)',  'Confirmed'],
-                                        'cancelled'   => ['rgba(239,68,68,.1)',   '#991B1B', 'rgba(239,68,68,.3)',  'Cancelled'],
-                                        'checked_in'  => ['rgba(59,130,246,.1)', '#1E3A8A', 'rgba(59,130,246,.3)', 'Checked In'],
-                                        'checked_out' => ['rgba(100,116,139,.1)','#374151', 'rgba(100,116,139,.3)','Checked Out'],
+                                        'pending'     => ['rgba(245,158,11,.1)',  '#92400E', 'rgba(245,158,11,.3)', __('client.status_pending')],
+                                        'confirmed'   => ['rgba(34,197,94,.1)',   '#166534', 'rgba(34,197,94,.3)',  __('client.status_confirmed')],
+                                        'cancelled'   => ['rgba(239,68,68,.1)',   '#991B1B', 'rgba(239,68,68,.3)',  __('client.status_cancelled')],
+                                        'checked_in'  => ['rgba(59,130,246,.1)', '#1E3A8A', 'rgba(59,130,246,.3)', __('client.status_checked_in')],
+                                        'checked_out' => ['rgba(100,116,139,.1)','#374151', 'rgba(100,116,139,.3)',__('client.status_checked_out')],
                                         default       => ['rgba(156,163,175,.1)', '#6B7280', 'rgba(156,163,175,.3)', ucfirst($res->status)],
                                     };
                                     $nights = \Carbon\Carbon::parse($res->check_in)->diffInDays(\Carbon\Carbon::parse($res->check_out));
@@ -266,7 +243,7 @@
                                         </div>
                                         <div style="font-size:.78rem; color:var(--text-muted);">
                                             @if($res->room)
-                                                Room {{ $res->room->room_number }}
+                                                {{ __('client.room', ['number' => $res->room->room_number]) }}
                                                 @if($res->room->type) · {{ $res->room->type }} @endif
                                             @else
                                                 —
@@ -306,7 +283,7 @@
                 </div>
                 <p style="font-size:.75rem; color:var(--text-muted); margin-top:.75rem; text-align:right;">
                     <i class="bi bi-info-circle me-1"></i>
-                    Showing your {{ $reservations->count() }} most recent reservation{{ $reservations->count() !== 1 ? 's' : '' }}. Status updates in real time as the hotel confirms your request.
+                    {{ __('client.recent_reservations_note', ['count' => $reservations->count()]) }}
                 </p>
             @endif
         </div>
