@@ -204,10 +204,10 @@
         <div class="auth-card-header">
             <div class="auth-brand reveal delay-1">HotelBooking</div>
             <div class="super-admin-badge reveal delay-1">
-                <i class="bi bi-shield-lock-fill"></i> Super Admin Portal
+                <i class="bi bi-shield-lock-fill"></i> {{ __('super_admin.super_admin_portal') }}
             </div>
-            <h5 class="reveal delay-1">Reset Your Password</h5>
-            <p class="reveal delay-2">Choose a new password for your super admin account.</p>
+            <h5 class="reveal delay-1">{{ __('super_admin.reset_password_title') }}</h5>
+            <p class="reveal delay-2">{{ __('super_admin.reset_password_subtitle') }}</p>
         </div>
 
         {{-- Card Body --}}
@@ -232,7 +232,7 @@
 
                 {{-- Email Address (pre-filled from the reset link) --}}
                 <div class="mb-3">
-                    <label for="email" class="auth-label">Email Address</label>
+                    <label for="email" class="auth-label">{{ __('super_admin.email_address') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-envelope input-icon"></i>
                         <input
@@ -253,7 +253,7 @@
 
                 {{-- New Password --}}
                 <div class="mb-3">
-                    <label for="password" class="auth-label">New Password</label>
+                    <label for="password" class="auth-label">{{ __('super_admin.new_password') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-lock input-icon"></i>
                         <input
@@ -269,12 +269,12 @@
                     @error('password')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
-                    <p class="pw-hint">Minimum 8 characters.</p>
+                    <p class="pw-hint">{{ __('super_admin.min_8_chars') }}</p>
                 </div>
 
                 {{-- Confirm New Password --}}
                 <div class="mb-4">
-                    <label for="password_confirmation" class="auth-label">Confirm New Password</label>
+                    <label for="password_confirmation" class="auth-label">{{ __('super_admin.confirm_new_password') }}</label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-lock-fill input-icon"></i>
                         <input
@@ -294,15 +294,15 @@
 
                 {{-- Submit --}}
                 <button type="submit" class="btn-auth">
-                    <i class="bi bi-shield-check me-2"></i>Reset Password
+                    <i class="bi bi-shield-check me-2"></i>{{ __('super_admin.reset_password_btn') }}
                 </button>
             </form>
 
             <hr class="auth-divider">
 
             <p class="auth-footer-text reveal delay-4">
-                Remember your password?
-                <a href="{{ route('login') }}">Back to Sign In</a>
+                {{ __('super_admin.remember_password') }}
+                <a href="{{ route('login') }}">{{ __('super_admin.back_to_sign_in') }}</a>
             </p>
 
         </div>{{-- /.auth-card-body --}}

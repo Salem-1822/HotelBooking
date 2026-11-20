@@ -481,4 +481,112 @@ class LocalizationTest extends TestCase
         $profAr = $this->actingAs($this->admin, 'admin')->withSession(['locale' => 'ar'])->get(route('admin.hotel-profile'));
         $profAr->assertOk()->assertSee('المعلومات الأساسية')->assertSee('اسم الفندق');
     }
+
+    /** 15. Super admin auth pages render in all languages */
+    public function test_super_admin_auth_pages_render_in_all_languages(): void
+    {
+        // Super Admin Login
+        $loginEn = $this->withSession(['locale' => 'en'])->get(route('super_admin.login'));
+        $loginEn->assertOk()->assertSee('Super Admin Portal')->assertSee('Super Admin Email');
+
+        $loginFr = $this->withSession(['locale' => 'fr'])->get(route('super_admin.login'));
+        $loginFr->assertOk()->assertSee('Portail Super Admin')->assertSee('Email Super Admin');
+
+        $loginAr = $this->withSession(['locale' => 'ar'])->get(route('super_admin.login'));
+        $loginAr->assertOk()->assertSee('بوابة المدير العام')->assertSee('البريد الإلكتروني للمدير العام');
+
+        // Super Admin Forgot Password
+        $forgotEn = $this->withSession(['locale' => 'en'])->get(route('super_admin.password.request'));
+        $forgotEn->assertOk()->assertSee('Forgot Password?')->assertSee('Send Reset Link');
+
+        $forgotFr = $this->withSession(['locale' => 'fr'])->get(route('super_admin.password.request'));
+        $forgotFr->assertOk()->assertSee('Mot de passe oublié ?')->assertSee('Envoyer le lien de réinitialisation');
+
+        $forgotAr = $this->withSession(['locale' => 'ar'])->get(route('super_admin.password.request'));
+        $forgotAr->assertOk()->assertSee('نسيت كلمة المرور؟')->assertSee('إرسال رابط إعادة التعيين');
+    }
+
+    /** 16. Super admin management pages render in all languages */
+    public function test_super_admin_portal_pages_render_in_all_languages(): void
+    {
+        // Dashboard
+        $dashEn = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'en'])->get(route('super_admin.dashboard'));
+        $dashEn->assertOk()->assertSee('Total Hotels')->assertSee('Reservations Overview');
+
+        $dashFr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'fr'])->get(route('super_admin.dashboard'));
+        $dashFr->assertOk()->assertSee('Total Hôtels')->assertSee('Aperçu des réservations');
+
+        $dashAr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'ar'])->get(route('super_admin.dashboard'));
+        $dashAr->assertOk()->assertSee('إجمالي الفنادق')->assertSee('نظرة عامة على الحجوزات');
+
+        // Admins
+        $admEn = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'en'])->get(route('super_admin.admins.index'));
+        $admEn->assertOk()->assertSee('Admin Management')->assertSee('Total Administrators');
+
+        $admFr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'fr'])->get(route('super_admin.admins.index'));
+        $admFr->assertOk()->assertSee('Gestion des administrateurs')->assertSee('Total administrateurs');
+
+        $admAr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'ar'])->get(route('super_admin.admins.index'));
+        $admAr->assertOk()->assertSee('إدارة المدراء')->assertSee('إجمالي المدراء');
+
+        // Cities
+        $citEn = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'en'])->get(route('super_admin.cities.index'));
+        $citEn->assertOk()->assertSee('Cities Management')->assertSee('Total Cities');
+
+        $citFr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'fr'])->get(route('super_admin.cities.index'));
+        $citFr->assertOk()->assertSee('Gestion des villes')->assertSee('Total Villes');
+
+        $citAr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'ar'])->get(route('super_admin.cities.index'));
+        $citAr->assertOk()->assertSee('إدارة المدن')->assertSee('إجمالي المدن');
+
+        // Hotels
+        $htlEn = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'en'])->get(route('super_admin.hotels.index'));
+        $htlEn->assertOk()->assertSee('Hotel Management')->assertSee('Add Hotel');
+
+        $htlFr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'fr'])->get(route('super_admin.hotels.index'));
+        $htlFr->assertOk()->assertSee('Gestion des hôtels')->assertSee('Ajouter un hôtel');
+
+        $htlAr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'ar'])->get(route('super_admin.hotels.index'));
+        $htlAr->assertOk()->assertSee('إدارة الفنادق')->assertSee('إضافة فندق');
+
+        // Reservations
+        $rsvEn = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'en'])->get(route('super_admin.reservations.index'));
+        $rsvEn->assertOk()->assertSee('Global Reservations')->assertSee('Hotel Establishment');
+
+        $rsvFr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'fr'])->get(route('super_admin.reservations.index'));
+        $rsvFr->assertOk()->assertSee('Réservations globales')->assertSee('Établissement hôtelier');
+
+        $rsvAr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'ar'])->get(route('super_admin.reservations.index'));
+        $rsvAr->assertOk()->assertSee('الحجوزات العامة')->assertSee('المنشأة الفندقية');
+
+        // Messages
+        $msgEn = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'en'])->get(route('super_admin.messages.index'));
+        $msgEn->assertOk()->assertSee('Platform Messages');
+
+        $msgFr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'fr'])->get(route('super_admin.messages.index'));
+        $msgFr->assertOk()->assertSee('Messages de la plateforme');
+
+        $msgAr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'ar'])->get(route('super_admin.messages.index'));
+        $msgAr->assertOk()->assertSee('رسائل المنصة');
+
+        // Settings
+        $setEn = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'en'])->get(route('super_admin.settings'));
+        $setEn->assertOk()->assertSee('System Configuration')->assertSee('General Settings');
+
+        $setFr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'fr'])->get(route('super_admin.settings'));
+        $setFr->assertOk()->assertSee('Configuration du système')->assertSee('Paramètres généraux');
+
+        $setAr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'ar'])->get(route('super_admin.settings'));
+        $setAr->assertOk()->assertSee('إعدادات النظام')->assertSee('الإعدادات العامة');
+
+        // Profile
+        $prfEn = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'en'])->get(route('super_admin.profile'));
+        $prfEn->assertOk()->assertSee('My Profile')->assertSee('Edit Profile Information');
+
+        $prfFr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'fr'])->get(route('super_admin.profile'));
+        $prfFr->assertOk()->assertSee('Mon profil')->assertSee('Modifier les informations du profil');
+
+        $prfAr = $this->actingAs($this->superAdmin, 'admin')->withSession(['locale' => 'ar'])->get(route('super_admin.profile'));
+        $prfAr->assertOk()->assertSee('ملفي الشخصي')->assertSee('تعديل بيانات الملف الشخصي');
+    }
 }

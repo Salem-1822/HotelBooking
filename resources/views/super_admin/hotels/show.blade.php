@@ -1,20 +1,20 @@
 @extends('super_admin.layouts.app')
 
-@section('title', 'Hotel Details')
+@section('title', __('super_admin.hotel_details'))
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h5 class="fw-bold mb-0">Hotel Details</h5>
+        <h5 class="fw-bold mb-0">{{ __('super_admin.hotel_details') }}</h5>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 small">
-                <li class="breadcrumb-item"><a href="{{ route('super_admin.hotels.index') }}" class="text-decoration-none">Hotels</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('super_admin.hotels.index') }}" class="text-decoration-none">{{ __('super_admin.hotel_management') }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $hotel->name }}</li>
             </ol>
         </nav>
     </div>
     <a href="{{ route('super_admin.hotels.index') }}" class="btn btn-light border shadow-sm rounded-pill px-4 fw-bold">
-        <i class="bi bi-arrow-left me-2"></i> Back
+        <i class="bi bi-arrow-left me-2"></i> {{ __('super_admin.back') }}
     </a>
 </div>
 
@@ -33,7 +33,7 @@
                     </div>
                     <div class="ms-md-auto text-md-end mt-3 mt-md-0">
                         <span class="badge {{ $hotel->status == 'active' ? 'bg-success' : 'bg-warning text-dark' }} px-3 py-2 rounded-pill text-capitalize mb-2 shadow-sm" style="font-size: 0.8rem;">
-                            {{ $hotel->status }}
+                            {{ $hotel->status == 'active' ? __('super_admin.active') : __('super_admin.inactive') }}
                         </span>
                         <p class="text-muted small fw-bold mb-0">HOTEL ID: #HTL-{{ $hotel->id }}</p>
                     </div>
@@ -41,17 +41,17 @@
 
                 <hr class="my-4 border-light">
 
-                <h6 class="fw-bold mb-3"><i class="bi bi-info-circle me-2 text-primary"></i> Pricing Information</h6>
+                <h6 class="fw-bold mb-3"><i class="bi bi-info-circle me-2 text-primary"></i> {{ __('super_admin.pricing_information') }}</h6>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded border">
-                            <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Price per Night</span>
-                            <span class="fs-4 fw-bold text-dark">{{ number_format($hotel->price_per_night, 2) }} <small class="text-muted fs-6">MAD</small></span>
+                            <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">{{ __('super_admin.price_per_night') }}</span>
+                            <span class="fs-4 fw-bold text-dark">{{ number_format($hotel->price_per_night, 2) }} <small class="text-muted fs-6">{{ __('super_admin.mad') }}</small></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded border">
-                            <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">Location Base</span>
+                            <span class="d-block small text-muted text-uppercase fw-bold mb-1" style="letter-spacing: 0.05em;">{{ __('super_admin.location_base') }}</span>
                             <span class="fs-5 fw-bold text-dark">{{ $hotel->city->name }}</span>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $title }} - HotelBooking Report</title>
+    <title>{{ $title }} - {{ __('super_admin.hotel_booking_report') }}</title>
     <style>
         body { 
             font-family: 'Helvetica', 'Arial', sans-serif; 
@@ -95,11 +95,11 @@
     <div class="header">
         <div>
             <div class="logo-text">Hotel<span class="brand-accent">Booking</span></div>
-            <div class="subtitle">Premium Hotel Management System</div>
-            <div class="report-title">{{ $title }} Report</div>
+            <div class="subtitle">{{ __('super_admin.premium_management_system') }}</div>
+            <div class="report-title">{{ $title }}</div>
         </div>
         <div class="timestamp">
-            Generated:<br>{{ now()->format('D, M j, Y') }}<br>{{ now()->format('H:i') }}
+            {{ __('super_admin.generated') }}<br>{{ now()->format('D, M j, Y') }}<br>{{ now()->format('H:i') }}
         </div>
     </div>
 
@@ -123,7 +123,7 @@
     </table>
 
     <div class="footer">
-        &copy; {{ date('Y') }} HotelBooking Management System. This is an automatically generated system report. Confidential.
+        &copy; {{ date('Y') }} {{ __('super_admin.confidential_notice') }}
     </div>
 </body>
 </html>

@@ -1,16 +1,16 @@
 @extends('super_admin.layouts.app')
 
-@section('title', 'My Profile')
+@section('title', __('super_admin.my_profile'))
 
 @section('content')
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-5">
     <div>
-        <h5 class="fw-bold mb-1" style="color:#0F172A;font-size:1.25rem;">My Profile</h5>
+        <h5 class="fw-bold mb-1" style="color:#0F172A;font-size:1.25rem;">{{ __('super_admin.my_profile') }}</h5>
         <div class="d-flex align-items-center gap-2 mt-1">
             <span class="badge fw-semibold px-3 py-2" style="background:#FEF2F2;color:#991B1B;border:1px solid #FECACA;border-radius:0.625rem;font-size:0.72rem;">
-                <i class="bi bi-shield-lock-fill me-1"></i>Super Admin Only
+                <i class="bi bi-shield-lock-fill me-1"></i>{{ __('super_admin.super_admin_only') }}
             </span>
-            <p class="text-muted small mb-0 d-none d-sm-block" style="font-size:0.8rem;">Manage your personal account details.</p>
+            <p class="text-muted small mb-0 d-none d-sm-block" style="font-size:0.8rem;">{{ __('super_admin.manage_personal_account') }}</p>
         </div>
     </div>
 </div>
@@ -48,8 +48,8 @@
                         <button type="submit" name="remove_image" value="1"
                             class="btn btn-sm fw-semibold px-3"
                             style="border-radius:0.625rem;background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;"
-                            onclick="return confirm('Remove your profile photo?');">
-                            <i class="bi bi-trash me-1"></i> Remove Photo
+                            onclick="return confirm('{{ __('super_admin.remove_photo_confirm') }}');">
+                            <i class="bi bi-trash me-1"></i> {{ __('super_admin.remove_photo') }}
                         </button>
                     </form>
                 </div>
@@ -67,7 +67,7 @@
                         <div style="width:34px;height:34px;background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border-radius:0.625rem;display:flex;align-items:center;justify-content:center;">
                             <i class="bi bi-person-lines-fill" style="color:#1E3A8A;font-size:0.9rem;"></i>
                         </div>
-                        <h6 class="fw-bold mb-0" style="font-size:0.95rem;color:#0F172A;">Edit Profile Information</h6>
+                        <h6 class="fw-bold mb-0" style="font-size:0.95rem;color:#0F172A;">{{ __('super_admin.edit_profile_info') }}</h6>
                     </div>
                 </div>
                 <div class="p-4">
@@ -78,7 +78,7 @@
 
                         <div class="row g-3">
                             <div class="col-12 col-md-6">
-                                <label class="form-label">Full Name</label>
+                                <label class="form-label">{{ __('super_admin.full_name') }}</label>
                                 <input type="text" name="name"
                                     value="{{ old('name', $admin->name) }}"
                                     class="form-control" required>
@@ -86,7 +86,7 @@
                             </div>
 
                             <div class="col-12 col-md-6">
-                                <label class="form-label">Email Address</label>
+                                <label class="form-label">{{ __('super_admin.email_address') }}</label>
                                 <input type="email" name="email"
                                     value="{{ old('email', $admin->email) }}"
                                     class="form-control" required>
@@ -95,8 +95,8 @@
 
                             <div class="col-12">
                                 <label class="form-label">
-                                    New Password
-                                    <span class="fw-normal text-muted ms-1" style="font-size:0.72rem;">(Leave blank to keep current)</span>
+                                    {{ __('super_admin.new_password') }}
+                                    <span class="fw-normal text-muted ms-1" style="font-size:0.72rem;">{{ __('super_admin.leave_blank_password') }}</span>
                                 </label>
                                 <input type="password" name="password" class="form-control" placeholder="••••••••">
                                 @error('password') <small class="text-danger mt-1 d-block">{{ $message }}</small> @enderror
@@ -105,7 +105,7 @@
                             <div class="col-12 mt-2">
                                 <div class="d-flex justify-content-end gap-2">
                                     <button type="submit" class="btn btn-primary px-4 py-2 fw-bold" style="font-size:0.875rem;">
-                                        <i class="bi bi-save me-2"></i> Save Changes
+                                        <i class="bi bi-save me-2"></i> {{ __('super_admin.save_changes') }}
                                     </button>
                                 </div>
                             </div>

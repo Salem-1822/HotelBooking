@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'Super Admin Login')
+@section('title', __('super_admin.super_admin_login'))
 
 @push('styles')
     <style>
@@ -242,10 +242,10 @@
 
             {{-- Card Header --}}
             <div class="auth-card-header">
-                <div class="auth-badge"><i class="bi bi-shield-lock me-1"></i>Platform Administration</div>
+                <div class="auth-badge"><i class="bi bi-shield-lock me-1"></i>{{ __('super_admin.platform_administration') }}</div>
                 <div class="auth-brand">HotelBooking</div>
-                <h5>Super Admin Portal</h5>
-                <p>Sign in to access platform management and system configuration.</p>
+                <h5>{{ __('super_admin.super_admin_portal') }}</h5>
+                <p>{{ __('super_admin.sign_in_description') }}</p>
             </div>
 
             {{-- Card Body --}}
@@ -272,7 +272,7 @@
 
                     {{-- Email Address --}}
                     <div class="mb-3">
-                        <label for="email" class="auth-label">Super Admin Email</label>
+                        <label for="email" class="auth-label">{{ __('super_admin.super_admin_email') }}</label>
                         <div class="input-icon-wrap">
                             <i class="bi bi-envelope input-icon"></i>
                             <input type="email" name="email" id="email"
@@ -284,8 +284,8 @@
                     {{-- Password --}}
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <label for="password" class="auth-label mb-0">Password</label>
-                            <a href="{{ route('super_admin.password.request') }}" class="forgot-link">Forgot password?</a>
+                            <label for="password" class="auth-label mb-0">{{ __('super_admin.password') }}</label>
+                            <a href="{{ route('super_admin.password.request') }}" class="forgot-link">{{ __('super_admin.forgot_password') }}</a>
                         </div>
                         <div class="input-icon-wrap">
                             <i class="bi bi-lock input-icon"></i>
@@ -299,24 +299,24 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="remember" id="remember">
                             <label class="form-check-label small text-muted" for="remember" style="font-size:0.82rem;">
-                                Keep me signed in
+                                {{ __('super_admin.keep_me_signed_in') }}
                             </label>
                         </div>
                     </div>
 
                     {{-- Submit --}}
                     <button type="submit" class="btn-auth">
-                        <i class="bi bi-shield-check me-2"></i>Sign In as Super Admin
+                        <i class="bi bi-shield-check me-2"></i>{{ __('super_admin.sign_in_button') }}
                     </button>
 
                     <div class="security-note">
                         <i class="bi bi-shield-shaded text-primary"></i>
-                        Authorized platform personnel only &mdash; All attempts are logged
+                        {{ __('super_admin.authorized_personnel_only') }}
                     </div>
 
                     <div class="portal-notice">
-                        Are you a hotel manager? <a href="{{ route('admin.login') }}" class="text-decoration-none fw-semibold">Admin Login</a>
-                        &bull; Client? <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Client Login</a>
+                        {{ __('super_admin.are_you_hotel_manager') }} <a href="{{ route('admin.login') }}" class="text-decoration-none fw-semibold">{{ __('super_admin.admin_login') }}</a>
+                        &bull; {{ __('super_admin.client') }} <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">{{ __('super_admin.client_login') }}</a>
                     </div>
                 </form>
 

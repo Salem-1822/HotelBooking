@@ -1,14 +1,14 @@
 @extends('super_admin.layouts.app')
 
-@section('title', 'Platform Messages')
+@section('title', __('super_admin.platform_messages'))
 
 @section('content')
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
     <div>
-        <h5 class="fw-bold mb-0">Platform Messages</h5>
+        <h5 class="fw-bold mb-0">{{ __('super_admin.platform_messages') }}</h5>
         <div class="d-flex align-items-center gap-2 mt-1">
-            <span class="badge bg-primary rounded-pill shadow-sm">{{ $messages->total() }} Messages</span>
-            <p class="text-muted small mb-0 d-none d-sm-block">Manage incoming contact inquiries.</p>
+            <span class="badge bg-primary rounded-pill shadow-sm">{{ __('super_admin.messages_count', ['count' => $messages->total()]) }}</span>
+            <p class="text-muted small mb-0 d-none d-sm-block">{{ __('super_admin.manage_incoming_inquiries') }}</p>
         </div>
     </div>
 </div>
@@ -19,16 +19,16 @@
         <form action="{{ route('super_admin.messages.index') }}" method="GET" id="filterForm">
             <div class="row g-3 align-items-end">
                 <div class="col-12 col-md-4">
-                    <label class="form-label small fw-bold text-muted">Status</label>
+                    <label class="form-label small fw-bold text-muted">{{ __('super_admin.status') }}</label>
                     <select name="status" class="form-select bg-light border-0" onchange="this.form.submit()">
-                        <option value="">All Messages</option>
-                        <option value="unread" {{ request('status') == 'unread' ? 'selected' : '' }}>Unread</option>
-                        <option value="read" {{ request('status') == 'read' ? 'selected' : '' }}>Read</option>
+                        <option value="">{{ __('super_admin.all_messages') }}</option>
+                        <option value="unread" {{ request('status') == 'unread' ? 'selected' : '' }}>{{ __('super_admin.unread') }}</option>
+                        <option value="read" {{ request('status') == 'read' ? 'selected' : '' }}>{{ __('super_admin.read') }}</option>
                     </select>
                 </div>
                 <div class="col-12 col-md-8 d-flex justify-content-md-end">
-                    <a href="{{ route('super_admin.messages.index') }}" class="btn btn-light border-0 text-muted" title="Reset Filters">
-                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                    <a href="{{ route('super_admin.messages.index') }}" class="btn btn-light border-0 text-muted" title="{{ __('super_admin.reset') }}">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> {{ __('super_admin.reset') }}
                     </a>
                 </div>
             </div>
@@ -74,11 +74,11 @@
                             <div class="text-end me-3 d-none d-md-block">
                                 <small class="text-muted d-block">{{ $message->created_at->format('M d, Y') }}</small>
                                 <span id="status-card-badge-{{ $message->id }}" class="badge {{ $message->status == 'unread' ? 'bg-warning bg-opacity-10 text-warning' : 'bg-success bg-opacity-10 text-success' }} mt-1">
-                                    {{ ucfirst($message->status) }}
+                                    {{ $message->status == 'unread' ? __('super_admin.unread') : __('super_admin.read') }}
                                 </span>
                             </div>
                             
-                            <button type="button" class="btn btn-light rounded-circle p-2 text-primary border" title="View Message">
+                            <button type="button" class="btn btn-light rounded-circle p-2 text-primary border" title="{{ __('super_admin.view') }}">
                                 <i class="bi bi-eye-fill"></i>
                             </button>
                         </div>
@@ -93,7 +93,7 @@
                 <div class="modal-content border-0 shadow">
                     <div class="modal-header bg-light border-0 py-3">
                         <h5 class="modal-title fw-bold">
-                            <i class="bi bi-envelope-open me-2 text-primary"></i>Message Details
+                            <i class="bi bi-envelope-open me-2 text-primary"></i>{{ __('super_admin.message_details') }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -102,11 +102,11 @@
                             <div>
                                 <h4 class="fw-bold text-dark mb-1">{{ $message->subject }}</h4>
                                 <div class="text-muted small">
-                                    <i class="bi bi-clock me-1"></i> Received on {{ $message->created_at->format('M d, Y \a\t h:i A') }}
+                                    <i class="bi bi-clock me-1"></i> {{ __('super_admin.received_on', ['date' => $message->created_at->format('M d, Y \a\t h:i A')]) }}
                                 </div>
                             </div>
                             <div id="status-badge-{{ $message->id }}" class="badge {{ $message->status == 'unread' ? 'bg-warning bg-opacity-10 text-warning border-warning' : 'bg-success bg-opacity-10 text-success border-success' }} px-3 py-2 rounded-pill fw-semibold border border-opacity-25">
-                                {{ ucfirst($message->status) }}
+                                {{ $message->status == 'unread' ? __('super_admin.unread') : __('super_admin.read') }}
                             </div>
                         </div>
 
@@ -125,19 +125,19 @@
                         </div>
 
                         <div class="px-2">
-                            <h6 class="fw-bold text-uppercase small text-muted mb-3" style="letter-spacing: 1px;">Message Content</h6>
+                            <h6 class="fw-bold text-uppercase small text-muted mb-3" style="letter-spacing: 1px;">{{ __('super_admin.message_content') }}</h6>
                             <p class="text-dark" style="white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; line-height: 1.7;">{{ $message->message }}</p>
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0 py-3 d-flex justify-content-between">
-                        <form action="{{ route('super_admin.messages.destroy', $message) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this message?');">
+                        <form action="{{ route('super_admin.messages.destroy', $message) }}" method="POST" onsubmit="return confirm('{{ __('client.confirm_delete') }}');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-outline-danger shadow-sm rounded-pill px-4">
-                                <i class="bi bi-trash3 me-2"></i>Delete
+                                <i class="bi bi-trash3 me-2"></i>{{ __('super_admin.delete') }}
                             </button>
                         </form>
-                        <button type="button" class="btn btn-secondary shadow-sm rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary shadow-sm rounded-pill px-4" data-bs-dismiss="modal">{{ __('super_admin.close') }}</button>
                     </div>
                 </div>
             </div>
@@ -149,8 +149,8 @@
                     <div class="text-muted mb-3">
                         <i class="bi bi-envelope-paper fs-1 opacity-50"></i>
                     </div>
-                    <h5 class="fw-bold text-dark">No messages found</h5>
-                    <p class="text-muted mb-0">There are currently no contact messages to display.</p>
+                    <h5 class="fw-bold text-dark">{{ __('super_admin.no_messages_found') }}</h5>
+                    <p class="text-muted mb-0">{{ __('super_admin.no_messages_desc') }}</p>
                 </div>
             </div>
         </div>

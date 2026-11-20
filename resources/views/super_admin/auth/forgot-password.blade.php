@@ -206,10 +206,10 @@
         <div class="auth-card-header">
             <div class="auth-brand reveal delay-1">HotelBooking</div>
             <div class="super-admin-badge reveal delay-1">
-                <i class="bi bi-shield-lock-fill"></i> Super Admin Portal
+                <i class="bi bi-shield-lock-fill"></i> {{ __('super_admin.super_admin_portal') }}
             </div>
-            <h5 class="reveal delay-1">Forgot Password?</h5>
-            <p class="reveal delay-2">Enter your super admin email and we'll send reset instructions.</p>
+            <h5 class="reveal delay-1">{{ __('super_admin.forgot_password_title') }}</h5>
+            <p class="reveal delay-2">{{ __('super_admin.forgot_password_subtitle') }}</p>
         </div>
 
         {{-- Card Body --}}
@@ -224,8 +224,7 @@
 
             @unless(session('status'))
                 <p class="auth-info-note">
-                    We'll send a password reset link to your super admin email address.<br>
-                    The link expires in {{ config('auth.passwords.super_admins.expire', 60) }} minutes.
+                    {!! __('super_admin.reset_link_note', ['expire' => config('auth.passwords.super_admins.expire', 60)]) !!}
                 </p>
 
                 <form method="POST" action="{{ route('super_admin.password.email') }}" novalidate>
@@ -233,7 +232,7 @@
 
                     {{-- Email Address --}}
                     <div class="mb-4">
-                        <label for="email" class="auth-label">Super Admin Email Address</label>
+                        <label for="email" class="auth-label">{{ __('super_admin.super_admin_email') }}</label>
                         <div class="input-icon-wrap">
                             <i class="bi bi-envelope input-icon"></i>
                             <input
@@ -255,7 +254,7 @@
 
                     {{-- Submit --}}
                     <button type="submit" class="btn-auth">
-                        <i class="bi bi-send me-2"></i>Send Reset Link
+                        <i class="bi bi-send me-2"></i>{{ __('super_admin.send_reset_link') }}
                     </button>
                 </form>
             @endunless
@@ -263,8 +262,8 @@
             <hr class="auth-divider">
 
             <p class="auth-footer-text reveal delay-4">
-                Remember your password?
-                <a href="{{ route('login') }}">Back to Sign In</a>
+                {{ __('super_admin.remember_password') }}
+                <a href="{{ route('login') }}">{{ __('super_admin.back_to_sign_in') }}</a>
             </p>
 
         </div>{{-- /.auth-card-body --}}

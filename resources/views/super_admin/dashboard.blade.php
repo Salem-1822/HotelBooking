@@ -1,22 +1,22 @@
 @extends('super_admin.layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', __('admin_nav.dashboard'))
 
 @section('content')
 {{-- Welcome Banner --}}
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-5">
     <div>
         <h4 class="fw-bold mb-1" style="color:#0F172A;font-size:1.5rem;">
-            Welcome back, {{ Auth::guard('admin')->user()->name }}! 👋
+            {{ __('super_admin.welcome_back', ['name' => Auth::guard('admin')->user()->name]) }}
         </h4>
         <p class="text-muted mb-0" style="font-size:0.875rem;">
-            Here's what's happening at HotelBooking today.
+            {{ __('super_admin.dashboard_subtitle') }}
         </p>
     </div>
     <div class="d-flex align-items-center gap-2">
         <span class="badge fw-semibold px-3 py-2" style="background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:0.625rem;font-size:0.78rem;">
             <i class="bi bi-circle-fill me-1" style="font-size:0.5rem;color:#10B981;"></i>
-            System Online
+            {{ __('super_admin.system_online') }}
         </span>
     </div>
 </div>
@@ -30,13 +30,13 @@
                     <i class="bi bi-building-fill" style="color:#1E3A8A;"></i>
                 </div>
                 <div>
-                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">Total Hotels</p>
+                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">{{ __('super_admin.total_hotels') }}</p>
                     <h3 class="fw-bold mb-0" style="font-size:1.75rem;color:#0F172A;line-height:1;">{{ $stats['hotels'] }}</h3>
                 </div>
             </div>
             <div class="mt-3 pt-3" style="border-top:1px solid #F3F4F6;">
                 <a href="{{ route('super_admin.hotels.index') }}" class="text-decoration-none fw-semibold" style="font-size:0.78rem;color:#1E3A8A;">
-                    Manage Hotels <i class="bi bi-arrow-right ms-1"></i>
+                    {{ __('super_admin.manage_hotels') }} <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
         </div>
@@ -48,13 +48,13 @@
                     <i class="bi bi-calendar-check-fill" style="color:#059669;"></i>
                 </div>
                 <div>
-                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">Reservations</p>
+                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">{{ __('super_admin.reservations') }}</p>
                     <h3 class="fw-bold mb-0" style="font-size:1.75rem;color:#0F172A;line-height:1;">{{ $stats['reservations'] }}</h3>
                 </div>
             </div>
             <div class="mt-3 pt-3" style="border-top:1px solid #F3F4F6;">
                 <a href="{{ route('super_admin.reservations.index') }}" class="text-decoration-none fw-semibold" style="font-size:0.78rem;color:#059669;">
-                    View All <i class="bi bi-arrow-right ms-1"></i>
+                    {{ __('super_admin.view_all') }} <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
         </div>
@@ -66,13 +66,13 @@
                     <i class="bi bi-geo-alt-fill" style="color:#EA580C;"></i>
                 </div>
                 <div>
-                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">Cities</p>
+                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">{{ __('super_admin.cities') }}</p>
                     <h3 class="fw-bold mb-0" style="font-size:1.75rem;color:#0F172A;line-height:1;">{{ $stats['cities'] }}</h3>
                 </div>
             </div>
             <div class="mt-3 pt-3" style="border-top:1px solid #F3F4F6;">
                 <a href="{{ route('super_admin.cities.index') }}" class="text-decoration-none fw-semibold" style="font-size:0.78rem;color:#EA580C;">
-                    Manage Cities <i class="bi bi-arrow-right ms-1"></i>
+                    {{ __('super_admin.manage_cities') }} <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
         </div>
@@ -84,16 +84,16 @@
                     <i class="bi bi-cash-stack" style="color:#D97706;"></i>
                 </div>
                 <div>
-                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">Revenue</p>
+                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">{{ __('super_admin.revenue') }}</p>
                     <h3 class="fw-bold mb-0" style="font-size:1.5rem;color:#0F172A;line-height:1;">
                         {{ number_format($stats['revenue'], 0) }}
-                        <small class="fw-normal text-muted" style="font-size:0.65rem;">MAD</small>
+                        <small class="fw-normal text-muted" style="font-size:0.65rem;">{{ __('super_admin.mad') }}</small>
                     </h3>
                 </div>
             </div>
             <div class="mt-3 pt-3" style="border-top:1px solid #F3F4F6;">
                 <span class="fw-semibold" style="font-size:0.78rem;color:#D97706;">
-                    <i class="bi bi-graph-up me-1"></i>Confirmed &amp; Checked In/Out
+                    <i class="bi bi-graph-up me-1"></i>{{ __('super_admin.confirmed_checked') }}
                 </span>
             </div>
         </div>
@@ -109,13 +109,13 @@
                     <i class="bi bi-shield-lock-fill" style="color:#7C3AED;"></i>
                 </div>
                 <div>
-                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">Administrators</p>
+                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">{{ __('super_admin.administrators') }}</p>
                     <h3 class="fw-bold mb-0" style="font-size:1.75rem;color:#0F172A;line-height:1;">{{ $stats['admins'] }}</h3>
                 </div>
             </div>
             <div class="mt-3 pt-3" style="border-top:1px solid #F3F4F6;">
                 <a href="{{ route('super_admin.admins.index') }}" class="text-decoration-none fw-semibold" style="font-size:0.78rem;color:#7C3AED;">
-                    Manage Admins <i class="bi bi-arrow-right ms-1"></i>
+                    {{ __('super_admin.manage_admins') }} <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
         </div>
@@ -127,13 +127,13 @@
                     <i class="bi bi-people-fill" style="color:#BE123C;"></i>
                 </div>
                 <div>
-                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">Customers</p>
+                    <p class="text-muted mb-1 fw-semibold" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;">{{ __('super_admin.customers') }}</p>
                     <h3 class="fw-bold mb-0" style="font-size:1.75rem;color:#0F172A;line-height:1;">{{ $stats['customers'] }}</h3>
                 </div>
             </div>
             <div class="mt-3 pt-3" style="border-top:1px solid #F3F4F6;">
                 <span class="fw-semibold" style="font-size:0.78rem;color:#BE123C;">
-                    <i class="bi bi-person-check me-1"></i>Registered Guests
+                    <i class="bi bi-person-check me-1"></i>{{ __('super_admin.registered_guests') }}
                 </span>
             </div>
         </div>
@@ -148,11 +148,11 @@
             <div class="card-body p-4 p-md-5">
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <div>
-                        <h6 class="fw-bold mb-1" style="font-size:1rem;color:#0F172A;">Reservations Overview</h6>
-                        <p class="text-muted mb-0" style="font-size:0.8rem;">Booking trends across all properties — last 6 months</p>
+                        <h6 class="fw-bold mb-1" style="font-size:1rem;color:#0F172A;">{{ __('super_admin.reservations_overview') }}</h6>
+                        <p class="text-muted mb-0" style="font-size:0.8rem;">{{ __('super_admin.booking_trends') }}</p>
                     </div>
                     <span class="badge fw-semibold px-3 py-2" style="background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:0.5rem;font-size:0.72rem;">
-                        Live Data
+                        {{ __('super_admin.live_data') }}
                     </span>
                 </div>
 
@@ -160,7 +160,7 @@
                 <div class="d-flex flex-wrap gap-2 mb-4">
                     @foreach(['pending' => ['#FEF9C3','#A16207'], 'confirmed' => ['#DCFCE7','#15803D'], 'cancelled' => ['#FEE2E2','#B91C1C'], 'checked_in' => ['#DBEAFE','#1E40AF'], 'checked_out' => ['#E0E7FF','#4338CA']] as $status => $colors)
                     <span class="badge fw-semibold px-2 py-1" style="background:{{ $colors[0] }};color:{{ $colors[1] }};font-size:0.7rem;border-radius:0.4rem;">
-                        {{ ucwords(str_replace('_', ' ', $status)) }}: {{ $reservationsByStatus[$status] ?? 0 }}
+                        {{ __('super_admin.status_' . $status) }}: {{ $reservationsByStatus[$status] ?? 0 }}
                     </span>
                     @endforeach
                 </div>
@@ -172,7 +172,7 @@
                     <div class="d-flex align-items-center justify-content-center" style="height:180px;background:#F8FAFC;border-radius:0.875rem;border:1px dashed #E2E8F0;">
                         <div class="text-center">
                             <i class="bi bi-calendar-x" style="font-size:2rem;color:#CBD5E1;"></i>
-                            <p class="text-muted mt-2 mb-0 fw-medium" style="font-size:0.85rem;">No reservation data for the last 6 months</p>
+                            <p class="text-muted mt-2 mb-0 fw-medium" style="font-size:0.85rem;">{{ __('super_admin.no_reservation_data') }}</p>
                         </div>
                     </div>
                 @endif
@@ -185,9 +185,9 @@
         <div class="card h-100" style="border-radius:1rem;">
             <div class="card-body p-4 d-flex flex-column">
                 <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h6 class="fw-bold mb-0" style="font-size:1rem;color:#0F172A;">Recently Added Hotels</h6>
+                    <h6 class="fw-bold mb-0" style="font-size:1rem;color:#0F172A;">{{ __('super_admin.recently_added_hotels') }}</h6>
                     <span class="badge" style="background:#EFF6FF;color:#1E3A8A;border-radius:0.5rem;font-size:0.72rem;padding:0.35rem 0.65rem;">
-                        Latest
+                        {{ __('super_admin.latest') }}
                     </span>
                 </div>
                 <div class="flex-grow-1">
@@ -208,19 +208,19 @@
                             background:{{ $hotel->status == 'active' ? '#ECFDF5' : '#FEF9C3' }};
                             color:{{ $hotel->status == 'active' ? '#059669' : '#A16207' }};
                             border-radius:0.375rem;">
-                            {{ ucfirst($hotel->status) }}
+                            {{ $hotel->status == 'active' ? __('super_admin.active') : __('super_admin.inactive') }}
                         </span>
                     </div>
                     @empty
                     <div class="text-center py-4">
                         <i class="bi bi-building" style="font-size:2rem;color:#E5E7EB;"></i>
-                        <p class="text-muted mt-2 mb-0" style="font-size:0.82rem;">No hotels found</p>
+                        <p class="text-muted mt-2 mb-0" style="font-size:0.82rem;">{{ __('super_admin.no_hotels_found') }}</p>
                     </div>
                     @endforelse
                 </div>
                 <a href="{{ route('super_admin.hotels.index') }}" class="btn btn-light border fw-semibold w-100 mt-3"
                     style="border-radius:0.625rem;font-size:0.875rem;color:#1E3A8A;border-color:#DBEAFE!important;background:#F0F7FF;">
-                    <i class="bi bi-grid me-2"></i>View All Hotels
+                    <i class="bi bi-grid me-2"></i>{{ __('super_admin.view_all_hotels') }}
                 </a>
             </div>
         </div>
