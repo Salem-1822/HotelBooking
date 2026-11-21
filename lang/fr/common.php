@@ -59,4 +59,12 @@ return [
     'are_you_sure' => 'Êtes-vous sûr ?',
     'action_undone' => 'Cette action est irréversible.',
     'no_records_found' => 'Aucun enregistrement trouvé.',
+    'confirm_delete' => 'Êtes-vous sûr de vouloir supprimer cet élément ?',
+    'forbidden_title' => '403 - Accès refusé',
+    'access_denied' => 'Accès refusé',
+    'forbidden_desc' => 'Désolé, vous n\'avez pas la permission d\'accéder à cette page. Cet espace est réservé exclusivement aux Super Administrateurs.',
+    'go_back' => 'Retour',
+    'return_to_dashboard' => 'Retour au tableau de bord',
+    'check_in_short' => 'Arrivée :',
+    'check_out_short' => 'Départ :',
 ];

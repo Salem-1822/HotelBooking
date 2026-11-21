@@ -130,7 +130,7 @@
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0 py-3 d-flex justify-content-between">
-                        <form action="{{ route('super_admin.messages.destroy', $message) }}" method="POST" onsubmit="return confirm('{{ __('client.confirm_delete') }}');">
+                        <form action="{{ route('super_admin.messages.destroy', $message) }}" method="POST" onsubmit="return confirm('{{ __('super_admin.confirm_delete') }}');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-outline-danger shadow-sm rounded-pill px-4">

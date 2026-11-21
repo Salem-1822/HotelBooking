@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>403 - Forbidden | HotelBooking</title>
+    <title>{{ __('common.forbidden_title') }} | HotelBooking</title>
+    @if(app()->getLocale() === 'ar')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    @else
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    @endif
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         body {
@@ -46,13 +50,13 @@
             <i class="bi bi-shield-lock-fill"></i>
         </div>
         <h1 class="fw-bold mb-3">403</h1>
-        <h4 class="text-dark mb-3">Access Denied</h4>
+        <h4 class="text-dark mb-3">{{ __('common.access_denied') }}</h4>
         <p class="text-muted mb-4">
-            Sorry, you do not have permission to access this page. This area is reserved for <strong>Super Administrators</strong> only.
+            {{ __('common.forbidden_desc') }}
         </p>
         <div class="d-grid gap-2">
-            <a href="{{ url()->previous() }}" class="btn btn-outline-secondary rounded-3">Go Back</a>
-            <a href="{{ route('admin.dashboard') }}" class="btn btn-primary rounded-3 text-white">Return to Dashboard</a>
+            <a href="{{ url()->previous() }}" class="btn btn-outline-secondary rounded-3">{{ __('common.go_back') }}</a>
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-primary rounded-3 text-white">{{ __('common.return_to_dashboard') }}</a>
         </div>
     </div>
 </body>

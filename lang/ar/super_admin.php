@@ -2,7 +2,7 @@
 
 return [
     // Dashboard
-    'welcome_back' => 'مرحباً بعودتك، :name! 👋',
+    'welcome_back' => "مرحباً بعودتك، \u{2068}:name\u{2069}\u{200F}! 👋",
     'dashboard_subtitle' => 'إليك ملخص النشاط العام في منصة HotelBooking اليوم.',
     'system_online' => 'النظام متصل',
     'total_hotels' => 'إجمالي الفنادق',
@@ -220,4 +220,7 @@ return [
     'premium_management_system' => 'نظام إدارة الفنادق المتميز',
     'generated' => 'تاريخ الإصدار:',
     'confidential_notice' => 'نظام إدارة HotelBooking. تقرير تم إنشاؤه تلقائياً. سري وخاص.',
+    'confirm_delete' => 'هل أنت متأكد من رغبتك في حذف هذه الرسالة؟',
+    'status_' => '',
+    'full_street_address' => 'العنوان البريدي الكامل',
 ];

@@ -95,7 +95,7 @@
                         <div class="mb-3">
                             <label class="form-label">{{ __('super_admin.headquarters_address') }}</label>
                             <textarea name="settings[address]" class="form-control" rows="3"
-                                placeholder="Full street address">{{ $settings['address'] ?? '' }}</textarea>
+                                placeholder="{{ __('super_admin.full_street_address') }}">{{ $settings['address'] ?? '' }}</textarea>
                         </div>
                     </div>
                 </div>

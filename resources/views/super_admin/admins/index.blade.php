@@ -204,7 +204,7 @@
                 <div class="modal-body p-4">
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">{{ __('super_admin.full_name') }} <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control bg-white border" placeholder="John Doe" required value="{{ old('name') }}">
+                        <input type="text" name="name" class="form-control bg-white border" placeholder="{{ __('auth.full_name_placeholder') }}" required value="{{ old('name') }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">{{ __('super_admin.email_address') }} <span class="text-danger">*</span></label>
@@ -212,7 +212,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">{{ __('super_admin.password') }} <span class="text-danger">*</span></label>
-                        <input type="password" name="password" class="form-control bg-white border" placeholder="Min 8 characters" required minlength="8">
+                        <input type="password" name="password" class="form-control bg-white border" placeholder="{{ __('auth.password_placeholder') }}" required minlength="8">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark small mb-2">{{ __('super_admin.assign_city') }} <span class="text-danger">*</span></label>

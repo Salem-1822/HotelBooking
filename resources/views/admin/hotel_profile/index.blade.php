@@ -831,7 +831,7 @@
     <div class="hp-cover-upload-hint">
         <div class="text-center text-white">
             <i class="bi bi-camera-fill fs-3 d-block mb-1"></i>
-            <span style="font-size:0.82rem;font-weight:600;">Change Cover Photo</span>
+            <span style="font-size:0.82rem;font-weight:600;">{{ __('admin.change_cover_photo') }}</span>
         </div>
     </div>
 
@@ -843,7 +843,7 @@
             {{ ucfirst($hotel->status) }}
         </span>
         <label for="coverFileInput" class="btn-glass btn-glass-accent mb-0" style="cursor:pointer;">
-            <i class="bi bi-camera-fill"></i> Change Cover
+            <i class="bi bi-camera-fill"></i> {{ __('admin.change_cover') }}
         </label>
     </div>
 
@@ -929,7 +929,7 @@
                     </div>
                     <div>
                         <div class="hp-card-title">{{ __('admin.basic_information') }}</div>
-                        <div class="hp-card-subtitle">Public-facing hotel details</div>
+                        <div class="hp-card-subtitle">{{ __('admin.public_hotel_details') }}</div>
                     </div>
                 </div>
                 <div class="hp-card-body">
@@ -1002,7 +1002,7 @@
                                   class="hp-input @error('description') is-invalid @enderror"
                                   rows="4"
                                   maxlength="3000"
-                                  placeholder="Describe what makes your hotel unique — location, atmosphere, services, and special offerings…">{{ old('description', $hotel->description) }}</textarea>
+                                  placeholder="{{ __('admin.hotel_desc_placeholder') }}">{{ old('description', $hotel->description) }}</textarea>
                         <div class="hp-char-counter" id="hpDescCounter">
                             <span id="hpDescCount">{{ strlen(old('description', $hotel->description ?? '')) }}</span> / 3000
                         </div>
@@ -1021,8 +1021,8 @@
                         <i class="bi bi-geo-alt-fill"></i>
                     </div>
                     <div>
-                        <div class="hp-card-title">Location & Contact</div>
-                        <div class="hp-card-subtitle">Address and contact information</div>
+                        <div class="hp-card-title">{{ __('admin.location_and_contact') }}</div>
+                        <div class="hp-card-subtitle">{{ __('admin.address_contact_info') }}</div>
                     </div>
                 </div>
                 <div class="hp-card-body">
@@ -1162,8 +1162,8 @@
                         <i class="bi bi-image-fill"></i>
                     </div>
                     <div>
-                        <div class="hp-card-title">Hotel Photo</div>
-                        <div class="hp-card-subtitle">JPG, PNG or WebP — max 5 MB</div>
+                        <div class="hp-card-title">{{ __('admin.hotel_photo_title') }}</div>
+                        <div class="hp-card-subtitle">{{ __('admin.hotel_photo_hint') }}</div>
                     </div>
                 </div>
                 <div class="hp-card-body">
@@ -1172,7 +1172,7 @@
                     <div class="hp-field mb-0">
                         <label class="hp-label">
                             <i class="bi bi-image-fill"></i>
-                            Main Hotel Photo
+                            {{ __('admin.main_hotel_photo') }}
                         </label>
                         <div class="hp-upload-zone" id="coverDropZone"
                              onclick="document.getElementById('coverFileInput2').click()">
@@ -1182,13 +1182,13 @@
                                    onchange="hpPreviewCover(this)">
                             <i class="bi bi-cloud-arrow-up hp-upload-zone-icon"></i>
                             <div class="hp-upload-zone-text">
-                                <strong>Click to upload</strong> or drag &amp; drop<br>
-                                <span style="font-size:0.75rem;">JPG, PNG or WebP &mdash; max 5 MB</span>
+                                <strong>{{ __('admin.click_to_upload') }}</strong> {{ __('admin.or_drag_drop') }}<br>
+                                <span style="font-size:0.75rem;">{{ __('admin.hotel_photo_hint') }}</span>
                             </div>
                         </div>
                         @if($hotel->image)
                             <div class="hp-img-current">
-                                <i class="bi bi-check-circle-fill"></i> Current photo saved
+                                <i class="bi bi-check-circle-fill"></i> {{ __('admin.current_photo_saved') }}
                             </div>
                         @endif
                         <img id="hpCoverPreview" class="hp-cover-preview
@@ -1211,7 +1211,7 @@
                     </div>
                     <div>
                         <div class="hp-card-title">{{ __('admin.amenities_label') }}</div>
-                        <div class="hp-card-subtitle">Select everything your hotel offers</div>
+                        <div class="hp-card-subtitle">{{ __('admin.select_amenities_hint') }}</div>
                     </div>
                 </div>
                 <div class="hp-card-body">
@@ -1246,7 +1246,7 @@
                     </div>
                     <div>
                         <div class="hp-card-title">{{ __('admin.policies_and_times') }}</div>
-                        <div class="hp-card-subtitle">Shown to guests before booking</div>
+                        <div class="hp-card-subtitle">{{ __('admin.shown_to_guests') }}</div>
                     </div>
                 </div>
                 <div class="hp-card-body">
@@ -1255,7 +1255,7 @@
                     <div class="hp-field">
                         <label class="hp-label">
                             <i class="bi bi-shield-check"></i>
-                            Guest Policies
+                            {{ __('admin.guest_policies') }}
                         </label>
                         <div class="hp-policy-row">
                             {{-- Children --}}
@@ -1265,12 +1265,12 @@
                                          style="background:linear-gradient(135deg,#3B82F6,#1D4ED8);">
                                         <i class="bi bi-people-fill" style="font-size:0.8rem;"></i>
                                     </div>
-                                    <div class="hp-policy-label">Children</div>
+                                    <div class="hp-policy-label">{{ __('admin.policy_children') }}</div>
                                 </div>
                                 <select name="children_policy"
                                         class="hp-input @error('children_policy') is-invalid @enderror"
                                         style="padding:0.5rem 0.75rem;font-size:0.8rem;">
-                                    <option value="">— Select —</option>
+                                    <option value="">{{ __('admin.select_option') }}</option>
                                     @foreach($policies['children'] as $opt)
                                         <option value="{{ $opt }}"
                                             {{ old('children_policy', $hotel->children_policy) === $opt ? 'selected' : '' }}>
@@ -1290,12 +1290,12 @@
                                          style="background:linear-gradient(135deg,#EC4899,#BE185D);">
                                         <i class="bi bi-heart-fill" style="font-size:0.8rem;"></i>
                                     </div>
-                                    <div class="hp-policy-label">Pets</div>
+                                    <div class="hp-policy-label">{{ __('admin.policy_pets') }}</div>
                                 </div>
                                 <select name="pets_policy"
                                         class="hp-input @error('pets_policy') is-invalid @enderror"
                                         style="padding:0.5rem 0.75rem;font-size:0.8rem;">
-                                    <option value="">— Select —</option>
+                                    <option value="">{{ __('admin.select_option') }}</option>
                                     @foreach($policies['pets'] as $opt)
                                         <option value="{{ $opt }}"
                                             {{ old('pets_policy', $hotel->pets_policy) === $opt ? 'selected' : '' }}>
@@ -1315,12 +1315,12 @@
                                          style="background:linear-gradient(135deg,#64748B,#334155);">
                                         <i class="bi bi-slash-circle" style="font-size:0.8rem;"></i>
                                     </div>
-                                    <div class="hp-policy-label">Smoking</div>
+                                    <div class="hp-policy-label">{{ __('admin.policy_smoking') }}</div>
                                 </div>
                                 <select name="smoking_policy"
                                         class="hp-input @error('smoking_policy') is-invalid @enderror"
                                         style="padding:0.5rem 0.75rem;font-size:0.8rem;">
-                                    <option value="">— Select —</option>
+                                    <option value="">{{ __('admin.select_option') }}</option>
                                     @foreach($policies['smoking'] as $opt)
                                         <option value="{{ $opt }}"
                                             {{ old('smoking_policy', $hotel->smoking_policy) === $opt ? 'selected' : '' }}>
@@ -1346,7 +1346,7 @@
                                   class="hp-input @error('cancellation_policy') is-invalid @enderror"
                                   rows="3"
                                   maxlength="1000"
-                                  placeholder="e.g. Free cancellation up to 48 hours before check-in. After that, the first night is charged.">{{ old('cancellation_policy', $hotel->cancellation_policy) }}</textarea>
+                                  placeholder="{{ __('admin.cancellation_policy_placeholder') }}">{{ old('cancellation_policy', $hotel->cancellation_policy) }}</textarea>
                         @error('cancellation_policy')
                             <div class="hp-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
                         @enderror
@@ -1388,8 +1388,8 @@
                     <i class="bi bi-bar-chart-line-fill"></i>
                 </div>
                 <div>
-                    <div class="hp-card-title">Hotel Statistics</div>
-                    <div class="hp-card-subtitle">Admin only · Not visible to guests</div>
+                    <div class="hp-card-title">{{ __('admin.hotel_statistics') }}</div>
+                    <div class="hp-card-subtitle">{{ __('admin.admin_only_hint') }}</div>
                 </div>
             </div>
             <div class="hp-card-body" style="padding-top:1.125rem;">
@@ -1406,16 +1406,16 @@
                     <div class="text-end" style="font-size:0.75rem;">
                         <div style="color:#16A34A;font-weight:600;">
                             <i class="bi bi-circle-fill" style="font-size:0.45rem;vertical-align:middle;"></i>
-                            {{ $availableRooms }} avail.
+                            {{ $availableRooms }} {{ __('admin.available_short') }}
                         </div>
                         <div style="color:#F59E0B;font-weight:600;">
                             <i class="bi bi-circle-fill" style="font-size:0.45rem;vertical-align:middle;"></i>
-                            {{ $occupiedRooms }} occ.
+                            {{ $occupiedRooms }} {{ __('admin.occupied_short') }}
                         </div>
                         @if($maintenanceRooms > 0)
                             <div style="color:#EF4444;font-weight:600;">
                                 <i class="bi bi-circle-fill" style="font-size:0.45rem;vertical-align:middle;"></i>
-                                {{ $maintenanceRooms }} maint.
+                                {{ $maintenanceRooms }} {{ __('admin.maintenance_short') }}
                             </div>
                         @endif
                     </div>
@@ -1442,7 +1442,7 @@
                     </div>
                     <div>
                         <div class="hp-stat-value">{{ number_format($totalReservations) }}</div>
-                        <div class="hp-stat-label">Total Reservations</div>
+                        <div class="hp-stat-label">{{ __('admin.total_reservations') }}</div>
                     </div>
                 </div>
 
@@ -1453,7 +1453,7 @@
                     </div>
                     <div>
                         <div class="hp-stat-value">{{ number_format($totalCustomers) }}</div>
-                        <div class="hp-stat-label">Unique Guests</div>
+                        <div class="hp-stat-label">{{ __('admin.unique_guests') }}</div>
                     </div>
                 </div>
 
@@ -1471,7 +1471,7 @@
                                 </span>
                             @endif
                         </div>
-                        <div class="hp-stat-label">Reviews{{ $avgRating ? ' · Avg Rating' : '' }}</div>
+                        <div class="hp-stat-label">{{ __('admin.reviews') }}{{ $avgRating ? ' · ' . __('admin.avg_rating') : '' }}</div>
                     </div>
                 </div>
 
@@ -1481,11 +1481,11 @@
                         <i class="bi bi-cash-coin"></i>
                     </div>
                     <div>
-                        <div class="hp-revenue-label">This Month's Revenue</div>
+                        <div class="hp-revenue-label">{{ __('admin.month_revenue') }}</div>
                         <div class="hp-revenue-value">{{ number_format($monthlyRevenue, 0) }} MAD</div>
                         @if($totalRevenue > 0)
                             <div style="font-size:0.7rem;color:rgba(255,255,255,0.4);margin-top:2px;">
-                                All-time: {{ number_format($totalRevenue, 0) }} MAD
+                                {{ __('admin.all_time') }}: {{ number_format($totalRevenue, 0) }} MAD
                             </div>
                         @endif
                     </div>
@@ -1501,14 +1501,14 @@
                     <i class="bi bi-info-circle-fill"></i>
                 </div>
                 <div>
-                    <div class="hp-card-title">Hotel Details</div>
-                    <div class="hp-card-subtitle">System information</div>
+                    <div class="hp-card-title">{{ __('admin.hotel_details') }}</div>
+                    <div class="hp-card-subtitle">{{ __('admin.system_information') }}</div>
                 </div>
             </div>
             <div class="hp-card-body" style="padding-top:1rem;">
                 <ul class="hp-details-list">
                     <li>
-                        <span class="dt">Hotel ID</span>
+                        <span class="dt">{{ __('admin.hotel_id_label') }}</span>
                         <span class="dd">
                             <code style="background:#F1F5F9;padding:1px 7px;border-radius:4px;font-size:0.78rem;">
                                 #{{ $hotel->id }}
@@ -1516,7 +1516,7 @@
                         </span>
                     </li>
                     <li>
-                        <span class="dt">Status</span>
+                        <span class="dt">{{ __('admin.hotel_status') }}</span>
                         <span class="dd">
                             <span class="status-pill {{ $hotel->status === 'active' ? 'badge-active' : 'badge-inactive' }}">
                                 <span class="status-dot"
@@ -1526,12 +1526,12 @@
                         </span>
                     </li>
                     <li>
-                        <span class="dt">City</span>
+                        <span class="dt">{{ __('admin.city_name') }}</span>
                         <span class="dd">{{ $cityName }}</span>
                     </li>
                     @if($currentStars > 0)
                     <li>
-                        <span class="dt">Star Rating</span>
+                        <span class="dt">{{ __('admin.star_rating_display') }}</span>
                         <span class="dd" style="color:var(--brand-accent);">
                             @for($s = 1; $s <= $currentStars; $s++)★@endfor
                             <span style="color:var(--text-muted);font-size:0.78rem;">({{ $currentStars }}★)</span>
@@ -1540,17 +1540,17 @@
                     @endif
                     @if(!empty($selectedAmens))
                     <li>
-                        <span class="dt">Amenities</span>
-                        <span class="dd">{{ count($selectedAmens) }} selected</span>
+                        <span class="dt">{{ __('admin.amenities_label') }}</span>
+                        <span class="dd">{{ __('admin.selected_count', ['count' => count($selectedAmens)]) }}</span>
                     </li>
                     @endif
 
                     <li>
-                        <span class="dt">Created</span>
+                        <span class="dt">{{ __('admin.created_label') }}</span>
                         <span class="dd">{{ $hotel->created_at->format('M d, Y') }}</span>
                     </li>
                     <li>
-                        <span class="dt">Last Updated</span>
+                        <span class="dt">{{ __('admin.last_updated_label') }}</span>
                         <span class="dd">{{ $hotel->updated_at->format('M d, Y · H:i') }}</span>
                     </li>
                 </ul>
@@ -1564,8 +1564,8 @@
                     <i class="bi bi-person-badge-fill"></i>
                 </div>
                 <div>
-                    <div class="hp-card-title">Account</div>
-                    <div class="hp-card-subtitle">Signed in as</div>
+                    <div class="hp-card-title">{{ __('admin.account_title') }}</div>
+                    <div class="hp-card-subtitle">{{ __('admin.signed_in_as') }}</div>
                 </div>
             </div>
             <div class="hp-card-body" style="padding-top:1rem;">
@@ -1597,34 +1597,34 @@
                     <i class="bi bi-lightning-charge-fill"></i>
                 </div>
                 <div>
-                    <div class="hp-card-title">Quick Actions</div>
+                    <div class="hp-card-title">{{ __('admin.quick_actions') }}</div>
                 </div>
             </div>
             <div class="hp-card-body" style="padding-top:1rem;">
                 <a href="{{ route('admin.rooms.index') }}" class="hp-quick-link">
                     <i class="bi bi-door-open-fill" style="color:#3B82F6;"></i>
-                    Manage Rooms
-                    <i class="bi bi-chevron-right hp-link-arrow"></i>
+                    {{ __('admin.rooms_title') }}
+                    <i class="bi bi-chevron-right hp-link-arrow rtl-flip"></i>
                 </a>
                 <a href="{{ route('admin.reservations.index') }}" class="hp-quick-link">
                     <i class="bi bi-calendar-check-fill" style="color:#8B5CF6;"></i>
-                    Reservations
-                    <i class="bi bi-chevron-right hp-link-arrow"></i>
+                    {{ __('navigation.reservations') }}
+                    <i class="bi bi-chevron-right hp-link-arrow rtl-flip"></i>
                 </a>
                 <a href="{{ route('admin.customers.index') }}" class="hp-quick-link">
                     <i class="bi bi-people-fill" style="color:#22C55E;"></i>
-                    Customers
-                    <i class="bi bi-chevron-right hp-link-arrow"></i>
+                    {{ __('navigation.customers') }}
+                    <i class="bi bi-chevron-right hp-link-arrow rtl-flip"></i>
                 </a>
                 <a href="{{ route('admin.reports.index') }}" class="hp-quick-link">
                     <i class="bi bi-graph-up-arrow" style="color:#D4AF37;"></i>
-                    Reports
-                    <i class="bi bi-chevron-right hp-link-arrow"></i>
+                    {{ __('navigation.reports') }}
+                    <i class="bi bi-chevron-right hp-link-arrow rtl-flip"></i>
                 </a>
                 <a href="{{ route('admin.dashboard') }}" class="hp-quick-link">
                     <i class="bi bi-grid-1x2-fill" style="color:#0F172A;"></i>
-                    Dashboard
-                    <i class="bi bi-chevron-right hp-link-arrow"></i>
+                    {{ __('navigation.dashboard') }}
+                    <i class="bi bi-chevron-right hp-link-arrow rtl-flip"></i>
                 </a>
             </div>
         </div>

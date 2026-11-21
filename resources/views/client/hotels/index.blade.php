@@ -478,7 +478,7 @@
             <a href="{{ request()->fullUrlWithQuery(['check_in' => null, 'check_out' => null, 'page' => null]) }}" class="filter-pill">
                 <i class="bi bi-x"></i>
                 {{ \Carbon\Carbon::parse($validated['check_in'])->format('d M') }}
-                → {{ \Carbon\Carbon::parse($validated['check_out'])->format('d M Y') }}
+                <i class="bi bi-arrow-right mx-1 rtl-flip text-muted"></i>{{ \Carbon\Carbon::parse($validated['check_out'])->format('d M Y') }}
             </a>
         @endif
         @if(!empty($validated['guests']))

@@ -76,4 +76,6 @@ return [
     'questions_call_us' => 'Des questions ? Appelez-nous :',
     'selected_room' => 'Chambre sélectionnée',
     'book_now' => 'Réserver maintenant',
+    'no_rooms_available' => 'Aucune chambre disponible',
+    'from' => 'À partir de',
 ];

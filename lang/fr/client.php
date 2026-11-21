@@ -44,4 +44,5 @@ return [
     'new_password' => 'Nouveau mot de passe',
     'confirm_new_password' => 'Confirmer le nouveau mot de passe',
     'update_password_btn' => 'Mettre à jour le mot de passe',
+    'confirm_delete' => 'Êtes-vous sûr de vouloir supprimer cet élément ?',
 ];

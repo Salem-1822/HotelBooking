@@ -107,6 +107,15 @@
             .sidebar.show { right: 0; left: auto; }
             .main-content { margin-right: 0; margin-left: 0; width: 100%; }
         }
+
+        /* RTL Overrides for Alerts & Directional Icons */
+        .alert-success { border-left: none !important; border-right: 4px solid var(--brand-success) !important; }
+        .alert-danger { border-left: none !important; border-right: 4px solid var(--brand-danger) !important; }
+        .bi-arrow-right, .bi-chevron-right, .bi-arrow-left, .bi-chevron-left, .rtl-flip {
+            transform: scaleX(-1);
+            display: inline-block;
+        }
+        .no-rtl-flip { transform: none !important; }
         @endif
 
         /* ── Topbar ────────────────────────────────── */
@@ -657,7 +666,7 @@
     <div id="page-loader">
         <div class="loader-content">
             <div class="loader-brand">HotelBooking</div>
-            <span class="loader-subtitle">Premium Management Portal</span>
+            <span class="loader-subtitle">{{ __('navigation.super_admin_portal') }}</span>
             <div class="loader-bar">
                 <div class="loader-bar-inner"></div>
             </div>

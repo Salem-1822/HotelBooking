@@ -340,6 +340,26 @@
             border-left: none !important;
             border-right: 4px solid !important;
         }
+
+        /* Directional icon mirroring in RTL */
+        [dir="rtl"] .bi-arrow-right,
+        [dir="rtl"] .bi-chevron-right,
+        [dir="rtl"] .bi-arrow-left,
+        [dir="rtl"] .bi-chevron-left,
+        [dir="rtl"] .rtl-flip,
+        html[dir="rtl"] .bi-arrow-right,
+        html[dir="rtl"] .bi-chevron-right,
+        html[dir="rtl"] .bi-arrow-left,
+        html[dir="rtl"] .bi-chevron-left,
+        html[dir="rtl"] .rtl-flip {
+            transform: scaleX(-1);
+            display: inline-block;
+        }
+
+        [dir="rtl"] .no-rtl-flip,
+        html[dir="rtl"] .no-rtl-flip {
+            transform: none !important;
+        }
     </style>
     @stack('styles')
 </head>

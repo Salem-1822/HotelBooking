@@ -1,13 +1,13 @@
 @extends('super_admin.layouts.app')
 
-@section('title', __('admin_nav.dashboard'))
+@section('title', __('navigation.dashboard'))
 
 @section('content')
 {{-- Welcome Banner --}}
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-5">
     <div>
         <h4 class="fw-bold mb-1" style="color:#0F172A;font-size:1.5rem;">
-            {{ __('super_admin.welcome_back', ['name' => Auth::guard('admin')->user()->name]) }}
+            <bdi>{{ __('super_admin.welcome_back', ['name' => Auth::guard('admin')->user()->name]) }}</bdi>
         </h4>
         <p class="text-muted mb-0" style="font-size:0.875rem;">
             {{ __('super_admin.dashboard_subtitle') }}

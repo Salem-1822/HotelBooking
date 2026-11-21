@@ -44,4 +44,5 @@ return [
     'new_password' => 'New Password',
     'confirm_new_password' => 'Confirm New Password',
     'update_password_btn' => 'Update Password',
+    'confirm_delete' => 'Are you sure you want to delete this?',
 ];

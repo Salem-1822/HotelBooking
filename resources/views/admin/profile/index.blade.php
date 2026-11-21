@@ -28,7 +28,7 @@
                             <form action="{{ route('admin.profile.photo.destroy') }}" method="POST" class="position-absolute" style="bottom: 0; right: 0;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm rounded-circle shadow" title="Remove Photo" onclick="return confirm('{{ __('admin.remove_photo_confirm') }}')" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                                <button type="submit" class="btn btn-danger btn-sm rounded-circle shadow" title="{{ __('admin.remove_photo_title') }}" onclick="return confirm('{{ __('admin.remove_photo_confirm') }}')" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
                                     <i class="bi bi-trash-fill"></i>
                                 </button>
                             </form>
@@ -39,7 +39,7 @@
                     
                     <div class="d-flex justify-content-center gap-2 mb-2">
                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill">
-                            <i class="bi bi-check-circle-fill me-1"></i> Active
+                            <i class="bi bi-check-circle-fill me-1"></i> {{ __('admin.status_active') }}
                         </span>
                     </div>
                 </div>

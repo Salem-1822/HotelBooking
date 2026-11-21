@@ -59,4 +59,12 @@ return [
     'are_you_sure' => 'Are you sure?',
     'action_undone' => 'This action cannot be undone.',
     'no_records_found' => 'No records found.',
+    'confirm_delete' => 'Are you sure you want to delete this?',
+    'forbidden_title' => '403 - Access Denied',
+    'access_denied' => 'Access Denied',
+    'forbidden_desc' => 'Sorry, you do not have permission to access this page. This area is reserved for Super Administrators only.',
+    'go_back' => 'Go Back',
+    'return_to_dashboard' => 'Return to Dashboard',
+    'check_in_short' => 'In:',
+    'check_out_short' => 'Out:',
 ];

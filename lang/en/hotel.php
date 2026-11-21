@@ -76,4 +76,6 @@ return [
     'questions_call_us' => 'Questions? Call us:',
     'selected_room' => 'Selected Room',
     'book_now' => 'Book Now',
+    'no_rooms_available' => 'No rooms available',
+    'from' => 'From',
 ];

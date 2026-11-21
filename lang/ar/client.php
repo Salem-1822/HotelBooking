@@ -44,4 +44,5 @@ return [
     'new_password' => 'كلمة المرور الجديدة',
     'confirm_new_password' => 'تأكيد كلمة المرور الجديدة',
     'update_password_btn' => 'تحديث كلمة المرور',
+    'confirm_delete' => 'هل أنت متأكد من رغبتك في الحذف؟',
 ];

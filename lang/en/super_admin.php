@@ -220,4 +220,7 @@ return [
     'premium_management_system' => 'Premium Hotel Management System',
     'generated' => 'Generated:',
     'confidential_notice' => 'HotelBooking Management System. This is an automatically generated system report. Confidential.',
+    'confirm_delete' => 'Are you sure you want to delete this message?',
+    'status_' => '',
+    'full_street_address' => 'Full street address',
 ];

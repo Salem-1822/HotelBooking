@@ -255,7 +255,7 @@
                                             {{ \Carbon\Carbon::parse($res->check_in)->format('d M Y') }}
                                         </div>
                                         <div style="font-size:.78rem; color:var(--text-muted);">
-                                            → {{ \Carbon\Carbon::parse($res->check_out)->format('d M Y') }}
+                                            <i class="bi bi-arrow-right mx-1 rtl-flip text-muted"></i>{{ \Carbon\Carbon::parse($res->check_out)->format('d M Y') }}
                                             <span style="margin-left:.35rem; font-weight:600;">{{ $nights }}n</span>
                                         </div>
                                     </td>

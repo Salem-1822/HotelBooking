@@ -580,8 +580,8 @@
                     <td colspan="${cols}" class="text-center py-5">
                         <div class="text-muted">
                             <i class="bi bi-door-open fs-1 mb-3"></i>
-                            <h5 class="fw-bold">No rooms match your filters</h5>
-                            <p class="mb-0">Try clearing filters or add a new room to see it here.</p>
+                            <h5 class="fw-bold">{{ __('admin.no_rooms_matching') }}</h5>
+                            <p class="mb-0">{{ __('admin.no_rooms_matching_desc') }}</p>
                         </div>
                     </td>
                 </tr>

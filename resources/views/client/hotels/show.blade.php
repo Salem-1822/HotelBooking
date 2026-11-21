@@ -538,7 +538,7 @@
                          style="background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.25); border-radius:0.75rem; font-size:0.875rem;">
                         <i class="bi bi-calendar-range-fill" style="color:#3B82F6;"></i>
                         <span>
-                            {{ __('hotel.showing_availability_for') }} <strong>{{ $ci->format('d M Y') }}</strong> → <strong>{{ $co->format('d M Y') }}</strong>
+                            {{ __('hotel.showing_availability_for') }} <strong>{{ $ci->format('d M Y') }}</strong> <i class="bi bi-arrow-right mx-1 rtl-flip text-muted"></i> <strong>{{ $co->format('d M Y') }}</strong>
                             ({{ $nights }} {{ trans_choice('client.nights', $nights) }})
                             @if(!empty($validated['guests']))
                                 · <strong>{{ $validated['guests'] }}</strong> {{ trans_choice('hotel.guest_count', (int)$validated['guests']) }}
@@ -877,7 +877,7 @@
                     @endif
                     <a href="{{ route('hotels.index') }}" class="btn btn-outline-secondary py-2"
                        style="border-radius:0.75rem;">
-                        ← {{ __('hotel.back_to_hotels') }}
+                        <i class="bi bi-arrow-left me-1 rtl-flip"></i>{{ __('hotel.back_to_hotels') }}
                     </a>
                 </div>
 
@@ -899,7 +899,7 @@
 <div class="sticky-cta-mobile" aria-label="Book room">
     <div>
         @if($minRoomPrice ?? null)
-        <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">From</div>
+        <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">{{ __('hotel.from') }}</div>
         <div style="font-size:1.25rem; font-weight:800; color:var(--brand-primary);">
             {{ number_format($minRoomPrice, 2) }} MAD<small style="font-size:0.72rem; font-weight:400; color:var(--text-muted);">{{ __('hotel.per_night') }}</small>
         </div>

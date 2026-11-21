@@ -220,4 +220,7 @@ return [
     'premium_management_system' => 'Système de gestion hôtelière haut de gamme',
     'generated' => 'Généré le :',
     'confidential_notice' => 'Système de gestion HotelBooking. Rapport généré automatiquement. Confidentiel.',
+    'confirm_delete' => 'Êtes-vous sûr de vouloir supprimer ce message ?',
+    'status_' => '',
+    'full_street_address' => 'Adresse complète',
 ];

@@ -369,8 +369,8 @@
                                     <span class="badge bg-light text-dark border"><i class="bi bi-door-closed me-1"></i>{{ $res->room ? $res->room->room_number : 'N/A' }}</span>
                                 </td>
                                 <td>
-                                    <div style="font-size: 0.85rem;"><span class="text-success fw-medium">In:</span> {{ \Carbon\Carbon::parse($res->check_in)->format('M d') }}</div>
-                                    <div style="font-size: 0.85rem;"><span class="text-danger fw-medium">Out:</span> {{ \Carbon\Carbon::parse($res->check_out)->format('M d') }}</div>
+                                    <div style="font-size: 0.85rem;"><span class="text-success fw-medium">{{ __('admin.check_in_short') }}</span> {{ \Carbon\Carbon::parse($res->check_in)->format('M d') }}</div>
+                                    <div style="font-size: 0.85rem;"><span class="text-danger fw-medium">{{ __('admin.check_out_short') }}</span> {{ \Carbon\Carbon::parse($res->check_out)->format('M d') }}</div>
                                 </td>
                                 <td class="fw-bold" style="color: #0F172A;">{{ number_format($res->total_price, 2) }} MAD</td>
                                 <td>

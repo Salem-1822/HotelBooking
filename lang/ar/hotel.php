@@ -76,4 +76,6 @@ return [
     'questions_call_us' => 'لديك استفسار؟ اتصل بنا:',
     'selected_room' => 'الغرفة المحددة',
     'book_now' => 'احجز الآن',
+    'no_rooms_available' => 'لا توجد غرف متاحة',
+    'from' => 'ابتداءً من',
 ];
