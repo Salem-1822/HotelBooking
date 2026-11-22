@@ -380,6 +380,4 @@ return [
     'night_short' => 'ليلة',
     'no_description' => 'لم يتم تقديم أي وصف.',
     'room' => 'الغرفة',
-    'active_reservation' => 'الحجز النشط',
-    'no_active_reservation' => 'لا يوجد حجز نشط لهذه الغرفة.',
 ];

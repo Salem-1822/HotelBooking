@@ -26,7 +26,6 @@ class AdminRoomViewDetailsTest extends TestCase
     protected Room $roomMultipleRes;
     protected User $client;
     protected Customer $customer;
-    protected Reservation $activeReservation;
 
     protected function setUp(): void
     {
@@ -80,9 +79,10 @@ class AdminRoomViewDetailsTest extends TestCase
             'price_per_night' => 1200,
             'capacity'        => 2,
             'status'          => 'occupied',
+            'description'     => 'Deluxe room with panoramic sea view.',
         ]);
 
-        $this->activeReservation = Reservation::create([
+        Reservation::create([
             'hotel_id'     => $this->hotel->id,
             'room_id'      => $this->roomWithRes->id,
             'user_id'      => $this->client->id,
@@ -104,9 +104,10 @@ class AdminRoomViewDetailsTest extends TestCase
             'price_per_night' => 800,
             'capacity'        => 1,
             'status'          => 'available',
+            'description'     => 'Cozy single room.',
         ]);
 
-        // Room 3: Room with multiple reservations (past + active)
+        // Room 3: Room with multiple past and current reservations
         $this->roomMultipleRes = Room::create([
             'hotel_id'        => $this->hotel->id,
             'room_number'     => '103',
@@ -114,9 +115,9 @@ class AdminRoomViewDetailsTest extends TestCase
             'price_per_night' => 2500,
             'capacity'        => 4,
             'status'          => 'occupied',
+            'description'     => 'Executive suite with private lounge.',
         ]);
 
-        // Past reservation for room 3
         Reservation::create([
             'hotel_id'     => $this->hotel->id,
             'room_id'      => $this->roomMultipleRes->id,
@@ -131,7 +132,6 @@ class AdminRoomViewDetailsTest extends TestCase
             'status'       => 'checked_out',
         ]);
 
-        // Current reservation for room 3
         $customer2 = Customer::create([
             'hotel_id' => $this->hotel->id,
             'name'     => 'Fatima Zahra',
@@ -153,57 +153,78 @@ class AdminRoomViewDetailsTest extends TestCase
         ]);
     }
 
-    /** 1. Test Room with Active Reservation & Client Details via AJAX endpoint */
-    public function test_room_with_active_reservation_returns_client_details_via_ajax(): void
+    /** 1. Test Room Details endpoint returns ONLY room information and NO reservation/client data */
+    public function test_room_details_endpoint_returns_only_room_information(): void
     {
         $response = $this->actingAs($this->admin, 'admin')
             ->getJson(route('admin.rooms.show', $this->roomWithRes));
 
         $response->assertOk();
         $response->assertJson([
-            'id'          => $this->roomWithRes->id,
-            'room_number' => '101',
-            'type'        => 'Deluxe',
-            'status'      => 'occupied',
+            'id'              => $this->roomWithRes->id,
+            'room_number'     => '101',
+            'type'            => 'Deluxe',
+            'capacity'        => 2,
+            'price_per_night' => '1,200.00',
+            'status'          => 'occupied',
+            'description'     => 'Deluxe room with panoramic sea view.',
         ]);
 
         $data = $response->json();
-        $this->assertNotNull($data['active_reservation']);
-        $this->assertEquals('Yassine Alami', $data['active_reservation']['client_name']);
-        $this->assertEquals('+212 6 99 88 77 66', $data['active_reservation']['client_phone']);
-        $this->assertEquals('yassine.alami@example.com', $data['active_reservation']['client_email']);
-        $this->assertEquals(2, $data['active_reservation']['guests_count']);
-        $this->assertEquals('checked_in', $data['active_reservation']['status']);
-        $this->assertNotEmpty($data['active_reservation']['ref']);
+
+        // Must NOT contain any client or reservation data
+        $this->assertArrayNotHasKey('active_reservation', $data);
+        $this->assertArrayNotHasKey('reservations', $data);
+        $this->assertArrayNotHasKey('client_name', $data);
+        $this->assertArrayNotHasKey('client_email', $data);
+        $this->assertArrayNotHasKey('client_phone', $data);
+        $this->assertArrayNotHasKey('guest_name', $data);
+        $this->assertArrayNotHasKey('guest_phone', $data);
     }
 
-    /** 2. Test Room without reservation returns null active_reservation */
-    public function test_room_without_reservation_returns_null_active_reservation(): void
+    /** 2. Test Room without reservations returns room-only data */
+    public function test_room_without_reservations_returns_only_room_data(): void
     {
         $response = $this->actingAs($this->admin, 'admin')
             ->getJson(route('admin.rooms.show', $this->roomEmpty));
 
         $response->assertOk();
+        $response->assertJson([
+            'id'              => $this->roomEmpty->id,
+            'room_number'     => '102',
+            'type'            => 'Single',
+            'capacity'        => 1,
+            'status'          => 'available',
+            'description'     => 'Cozy single room.',
+        ]);
+
         $data = $response->json();
-        $this->assertNull($data['active_reservation']);
-        $this->assertEmpty($data['reservations']);
+        $this->assertArrayNotHasKey('active_reservation', $data);
+        $this->assertArrayNotHasKey('reservations', $data);
     }
 
-    /** 3. Test Room with multiple reservations returns all reservations and prioritizes active */
-    public function test_room_with_multiple_reservations_returns_history_and_prioritizes_active(): void
+    /** 3. Test Room with multiple reservations returns room-only data and NO client records */
+    public function test_room_with_multiple_reservations_returns_only_room_data(): void
     {
         $response = $this->actingAs($this->admin, 'admin')
             ->getJson(route('admin.rooms.show', $this->roomMultipleRes));
 
         $response->assertOk();
+        $response->assertJson([
+            'id'              => $this->roomMultipleRes->id,
+            'room_number'     => '103',
+            'type'            => 'Suite',
+            'capacity'        => 4,
+            'status'          => 'occupied',
+        ]);
+
         $data = $response->json();
-        $this->assertCount(2, $data['reservations']);
-        $this->assertNotNull($data['active_reservation']);
-        $this->assertEquals('Fatima Zahra', $data['active_reservation']['client_name']);
-        $this->assertEquals('confirmed', $data['active_reservation']['status']);
+        $this->assertArrayNotHasKey('active_reservation', $data);
+        $this->assertArrayNotHasKey('reservations', $data);
+        $this->assertArrayNotHasKey('client_name', $data);
     }
 
-    /** 4. Test unauthorized hotel cannot view other hotel's room details */
+    /** 4. Test unauthorized hotel cannot view other hotel's room */
     public function test_admin_cannot_view_other_hotels_room(): void
     {
         $otherHotel = Hotel::create([
@@ -232,8 +253,8 @@ class AdminRoomViewDetailsTest extends TestCase
         $response->assertForbidden();
     }
 
-    /** 5. Test Rooms Page HTML renders correctly across all three locales (EN, FR, AR) */
-    public function test_rooms_page_renders_with_client_details_support_in_all_locales(): void
+    /** 5. Test Rooms Page HTML renders room-only details in all locales (EN, FR, AR) */
+    public function test_rooms_page_renders_room_only_modal_in_all_locales(): void
     {
         $locales = ['en', 'fr', 'ar'];
 
@@ -245,22 +266,35 @@ class AdminRoomViewDetailsTest extends TestCase
             $response->assertOk();
             $content = $response->getContent();
 
-            // Modal elements exist
+            // Room-only modal elements exist
             $response->assertSee('id="viewRoomModal"', false);
-            $response->assertSee('id="viewReservationSection"', false);
-            $response->assertSee('id="viewClientName"', false);
-            $response->assertSee('id="viewClientPhone"', false);
-            $response->assertSee('id="viewClientEmail"', false);
-            $response->assertSee('id="viewNoReservation"', false);
-            $response->assertSee('id="viewMultipleReservationsSection"', false);
+            $response->assertSee('id="viewMainImage"', false);
+            $response->assertSee('id="viewRoomTitle"', false);
+            $response->assertSee('id="viewRoomSubtitle"', false);
+            $response->assertSee('id="viewStatusBadge"', false);
+            $response->assertSee('id="viewRoomNumber"', false);
+            $response->assertSee('id="viewRoomType"', false);
+            $response->assertSee('id="viewCapacity"', false);
+            $response->assertSee('id="viewPrice"', false);
+            $response->assertSee('id="viewDescription"', false);
 
-            // Script contains global status translations and reservation status translations
+            // Unwanted client & reservation sections are NOT present
+            $response->assertDontSee('id="viewReservationSection"', false);
+            $response->assertDontSee('id="viewReservationDetails"', false);
+            $response->assertDontSee('id="viewClientName"', false);
+            $response->assertDontSee('id="viewClientPhone"', false);
+            $response->assertDontSee('id="viewClientEmail"', false);
+            $response->assertDontSee('id="viewNoReservation"', false);
+            $response->assertDontSee('id="viewMultipleReservationsSection"', false);
+
+            // window.rooms must NOT contain client or reservation data
+            $response->assertDontSee('active_reservation');
+            $response->assertDontSee('Yassine Alami');
+            $response->assertDontSee('yassine.alami@example.com');
+            $response->assertDontSee('Fatima Zahra');
+
+            // Global translations for statuses are present (no JS ReferenceError)
             $response->assertSee('const statusTranslations =', false);
-            $response->assertSee('const resStatusTranslations =', false);
-            $response->assertSee('function renderRoomReservationDetails', false);
-
-            // Client data is embedded in window.rooms for instant rendering
-            $response->assertSee('Yassine Alami');
 
             // No raw translation keys
             $this->assertDoesNotMatchRegularExpression(
@@ -269,7 +303,7 @@ class AdminRoomViewDetailsTest extends TestCase
                 "Found raw translation key on rooms index in locale {$locale}"
             );
 
-            // Locale specific dir
+            // Locale specific direction
             if ($locale === 'ar') {
                 $response->assertSee('dir="rtl"', false);
             } else {

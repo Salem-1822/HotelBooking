@@ -380,6 +380,4 @@ return [
     'night_short' => 'night',
     'no_description' => 'No description provided.',
     'room' => 'Room',
-    'active_reservation' => 'Active Reservation',
-    'no_active_reservation' => 'No active reservation for this room.',
 ];
