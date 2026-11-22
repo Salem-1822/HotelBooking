@@ -479,6 +479,66 @@
                             <div class="text-muted small mb-2">{{ __('admin.description_optional') }}</div>
                             <p id="viewDescription" class="mb-0" style="word-break: break-word; overflow-wrap: anywhere; white-space: pre-line; max-width: 100%;"></p>
                         </div>
+
+                        {{-- Client & Reservation Details Section --}}
+                        <div class="mt-4 pt-3 border-top" id="viewReservationSection">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h6 class="fw-bold mb-0 text-dark">
+                                    <i class="bi bi-person-badge text-primary me-2"></i>{{ __('admin.customer_details') }}
+                                </h6>
+                                <span id="viewReservationStatusBadge" class="badge rounded-pill px-3 d-none"></span>
+                            </div>
+
+                            {{-- Active / Current Reservation Details --}}
+                            <div id="viewReservationDetails" class="card bg-light border-0 rounded-3 p-3 mb-2">
+                                <div class="row g-2">
+                                    <div class="col-sm-6">
+                                        <div class="text-muted small">{{ __('admin.th_client') }}</div>
+                                        <div id="viewClientName" class="fw-semibold text-dark"></div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-muted small">{{ __('admin.guest_phone') }}</div>
+                                        <div id="viewClientPhone" class="fw-semibold text-dark" dir="ltr" style="text-align:start;"></div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-muted small">{{ __('admin.th_email') }}</div>
+                                        <div id="viewClientEmail" class="fw-semibold text-dark" dir="ltr" style="text-align:start;"></div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-muted small">{{ __('admin.guests_count') }}</div>
+                                        <div id="viewGuestsCount" class="fw-semibold text-dark"></div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-muted small">{{ __('admin.check_in_date') }}</div>
+                                        <div id="viewCheckIn" class="fw-semibold text-dark" dir="ltr" style="text-align:start;"></div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="text-muted small">{{ __('admin.check_out_date') }}</div>
+                                        <div id="viewCheckOut" class="fw-semibold text-dark" dir="ltr" style="text-align:start;"></div>
+                                    </div>
+                                    <div class="col-12 mt-2 pt-2 border-top d-flex justify-content-between align-items-center">
+                                        <span class="text-muted small">
+                                            {{ __('admin.th_ref') }}: <strong id="viewReservationRef" dir="ltr"></strong>
+                                        </span>
+                                        <span class="fw-bold text-primary" id="viewReservationTotal"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- When no active reservation exists --}}
+                            <div id="viewNoReservation" class="alert alert-light border text-muted small mb-0 d-none">
+                                <i class="bi bi-info-circle me-1"></i> {{ __('admin.no_active_reservation') }}
+                            </div>
+
+                            {{-- Reservation history if multiple --}}
+                            <div id="viewMultipleReservationsSection" class="mt-3 d-none">
+                                <div class="text-muted small fw-bold mb-1">
+                                    {{ __('admin.reservation_history') }} (<span id="viewReservationsCount">0</span>)
+                                </div>
+                                <div id="viewReservationsList" class="small list-group list-group-flush border rounded-2" style="max-height: 140px; overflow-y: auto;">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -513,6 +573,19 @@
     window.roomsBaseUrl = "{{ $routePrefix === 'admin.' ? url('/admin/rooms') : url('/super-admin/rooms') }}";
     window.isSuperAdminArea = {{ $routePrefix === 'super_admin.' ? 'true' : 'false' }};
     window.assetBasePath = "{{ asset('storage') }}";
+
+    const statusTranslations = {
+        available: "{{ __('admin.available') }}",
+        occupied: "{{ __('admin.occupied') }}",
+        maintenance: "{{ __('admin.maintenance') }}"
+    };
+    const resStatusTranslations = {
+        confirmed: "{{ __('admin.confirmed') }}",
+        pending: "{{ __('admin.pending') }}",
+        checked_in: "{{ __('admin.checked_in') }}",
+        checked_out: "{{ __('admin.checked_out') }}",
+        cancelled: "{{ __('admin.cancelled') }}"
+    };
 
     const state = {
         search: '',
@@ -599,11 +672,6 @@
             occupied:    'bg-danger bg-opacity-15 text-danger',
             maintenance: 'bg-warning bg-opacity-15 text-warning',
         };
-        const statusTranslations = {
-            available: "{{ __('admin.available') }}",
-            occupied: "{{ __('admin.occupied') }}",
-            maintenance: "{{ __('admin.maintenance') }}"
-        };
         const statusClass = statusMap[room.status] || 'bg-secondary bg-opacity-15 text-secondary';
         const hotelInfo = window.isSuperAdminArea && room.hotel_name ? `<small class="text-muted">${escapeHtml(room.hotel_name)}</small>` : '';
         const image = room.main_image_url ? `<img src="${room.main_image_url}" class="room-image-thumb" alt="Room ${escapeHtml(room.room_number)}">` : '<div class="room-image-thumb d-flex align-items-center justify-content-center bg-light text-muted"><i class="bi bi-door-closed fs-5"></i></div>';
@@ -679,22 +747,112 @@
     }
 
     function showViewModal(room) {
-        const modal = new bootstrap.Modal(document.getElementById('viewRoomModal'));
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('viewRoomModal'));
         state.selectedRoomId = room.id;
         document.getElementById('viewMainImage').src = room.main_image_url || 'https://via.placeholder.com/600x400?text=No+Image';
-        document.getElementById('viewRoomTitle').textContent = `{{ __('admin.room') }} #${room.room_number}`;
+        document.getElementById('viewRoomTitle').innerHTML = `{{ __('admin.room') }} <span dir="ltr">#${escapeHtml(room.room_number)}</span>`;
         document.getElementById('viewRoomSubtitle').textContent = room.type;
         document.getElementById('viewStatusBadge').textContent = statusTranslations[room.status] || capitalize(room.status);
         document.getElementById('viewStatusBadge').className = `badge rounded-pill px-3 ${badgeClasses(room.status)}`;
-        document.getElementById('viewRoomNumber').textContent = `#${room.room_number}`;
+        document.getElementById('viewRoomNumber').innerHTML = `<span dir="ltr">#${escapeHtml(room.room_number)}</span>`;
         document.getElementById('viewRoomType').textContent = room.type;
         document.getElementById('viewCapacity').textContent = room.capacity;
         document.getElementById('viewPrice').textContent = `${room.price_per_night} {{ __('common.currency') }}`;
         if (window.isSuperAdminArea) {
             document.getElementById('viewHotelName').textContent = room.hotel_name || '—';
         }
-        document.getElementById('viewDescription').textContent = room.description || '{{ __('admin.no_description') ?? "No description provided." }}';
+        document.getElementById('viewDescription').textContent = room.description || '{{ __('admin.no_description') }}';
+
+        renderRoomReservationDetails(room);
+
+        // Asynchronously fetch latest room & reservation/client details
+        fetch(`${window.roomsBaseUrl}/${room.id}`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.ok ? res.json() : null)
+        .then(freshRoom => {
+            if (freshRoom && state.selectedRoomId === room.id) {
+                const idx = window.rooms.findIndex(r => String(r.id) === String(room.id));
+                if (idx >= 0) {
+                    window.rooms[idx] = Object.assign({}, window.rooms[idx], freshRoom);
+                }
+                renderRoomReservationDetails(freshRoom);
+            }
+        })
+        .catch(() => {});
+
         modal.show();
+    }
+
+    function renderRoomReservationDetails(room) {
+        const resDetailsEl = document.getElementById('viewReservationDetails');
+        const noResEl = document.getElementById('viewNoReservation');
+        const resStatusBadge = document.getElementById('viewReservationStatusBadge');
+        const multiResSection = document.getElementById('viewMultipleReservationsSection');
+        const multiResList = document.getElementById('viewReservationsList');
+        const multiResCount = document.getElementById('viewReservationsCount');
+
+        const activeRes = room.active_reservation || (Array.isArray(room.reservations) && room.reservations.length ? room.reservations[0] : null);
+
+        if (activeRes) {
+            resDetailsEl.classList.remove('d-none');
+            noResEl.classList.add('d-none');
+
+            document.getElementById('viewClientName').textContent = activeRes.client_name || '—';
+            document.getElementById('viewClientPhone').textContent = activeRes.client_phone || '—';
+            document.getElementById('viewClientEmail').textContent = activeRes.client_email || '—';
+            document.getElementById('viewGuestsCount').textContent = activeRes.guests_count || '1';
+            document.getElementById('viewCheckIn').textContent = activeRes.check_in || '—';
+            document.getElementById('viewCheckOut').textContent = activeRes.check_out || '—';
+            document.getElementById('viewReservationRef').textContent = activeRes.ref || `#${activeRes.id}`;
+            document.getElementById('viewReservationTotal').textContent = activeRes.total_price ? `${activeRes.total_price} {{ __('common.currency') }}` : '';
+
+            if (activeRes.status) {
+                resStatusBadge.classList.remove('d-none');
+                resStatusBadge.textContent = resStatusTranslations[activeRes.status] || capitalize(activeRes.status);
+                resStatusBadge.className = `badge rounded-pill px-3 ${resBadgeClasses(activeRes.status)}`;
+            } else {
+                resStatusBadge.classList.add('d-none');
+            }
+        } else {
+            resDetailsEl.classList.add('d-none');
+            resStatusBadge.classList.add('d-none');
+            noResEl.classList.remove('d-none');
+        }
+
+        if (Array.isArray(room.reservations) && room.reservations.length > 1) {
+            multiResSection.classList.remove('d-none');
+            multiResCount.textContent = room.reservations.length;
+            multiResList.innerHTML = room.reservations.map(r => `
+                <div class="list-group-item px-3 py-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong dir="ltr">${escapeHtml(r.ref || '#' + r.id)}</strong> — ${escapeHtml(r.client_name || '—')}
+                        <div class="text-muted" style="font-size:0.75rem;">
+                            <span dir="ltr">${escapeHtml(r.check_in)}</span> &rarr; <span dir="ltr">${escapeHtml(r.check_out)}</span>
+                            (${escapeHtml(r.guests_count || 1)} {{ __('admin.guests') }})
+                        </div>
+                    </div>
+                    <span class="badge rounded-pill ${resBadgeClasses(r.status)}">${escapeHtml(resStatusTranslations[r.status] || capitalize(r.status))}</span>
+                </div>
+            `).join('');
+        } else {
+            multiResSection.classList.add('d-none');
+            multiResList.innerHTML = '';
+        }
+    }
+
+    function resBadgeClasses(status) {
+        const classes = {
+            confirmed:   'bg-primary bg-opacity-15 text-primary',
+            checked_in:  'bg-success bg-opacity-15 text-success',
+            checked_out: 'bg-secondary bg-opacity-15 text-secondary',
+            cancelled:   'bg-danger bg-opacity-15 text-danger',
+            pending:     'bg-warning bg-opacity-15 text-warning',
+        };
+        return classes[status] || 'bg-secondary bg-opacity-15 text-secondary';
     }
 
     function showEditModal(room) {
@@ -805,6 +963,8 @@
             main_image_url: room.main_image ? `${window.assetBasePath}/${room.main_image}` : null,
             hotel_id: room.hotel_id,
             hotel_name: room.hotel_name || '',
+            active_reservation: room.active_reservation || null,
+            reservations: room.reservations || [],
             updated_at: `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`,
         };
     }

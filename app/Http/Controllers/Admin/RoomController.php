@@ -17,26 +17,16 @@ class RoomController extends Controller
 
     public function index(Request $request)
     {
-        $rooms = $this->roomQuery()->latest()->get();
+        $rooms = $this->roomQuery()->with(['hotel', 'reservations' => function ($q) {
+            $q->with(['user', 'customer'])->latest();
+        }])->latest()->get();
 
         $totalRooms       = $rooms->count();
         $availableRooms   = $rooms->where('status', 'available')->count();
         $occupiedRooms    = $rooms->where('status', 'occupied')->count();
         $maintenanceRooms = $rooms->where('status', 'maintenance')->count();
 
-        $roomsForJs = $rooms->map(function (Room $room) {
-            return [
-                'id'              => $room->id,
-                'room_number'     => $room->room_number,
-                'type'            => $room->type,
-                'capacity'        => $room->capacity,
-                'price_per_night' => number_format($room->price_per_night, 2),
-                'description'     => $room->description,
-                'status'          => $room->status,
-                'main_image_url'  => $room->main_image ? asset('storage/' . $room->main_image) : null,
-                'updated_at'      => $room->updated_at?->format('Y-m-d H:i'),
-            ];
-        });
+        $roomsForJs = $rooms->map(fn (Room $room) => $this->formatRoomForJs($room));
 
         return view('admin.rooms.index', [
             'layout'           => $this->getLayout(),
@@ -51,6 +41,23 @@ class RoomController extends Controller
             'occupiedRooms'    => $occupiedRooms,
             'maintenanceRooms' => $maintenanceRooms,
         ]);
+    }
+
+    public function show(Room $room)
+    {
+        $this->authorizeRoom($room);
+
+        $room->load(['hotel', 'reservations' => function ($q) {
+            $q->with(['user', 'customer'])->latest();
+        }]);
+
+        $data = $this->formatRoomForJs($room);
+
+        if (request()->expectsJson() || request()->ajax()) {
+            return response()->json($data);
+        }
+
+        return redirect()->route($this->getRoutePrefix() . 'rooms.index');
     }
 
     public function store(Request $request)
@@ -168,6 +175,92 @@ class RoomController extends Controller
     protected function getRoutePrefix(): string
     {
         return 'admin.';
+    }
+
+    public function formatRoomForJs(Room $room): array
+    {
+        $reservations = $room->reservations->map(function ($res) {
+            $clientName = $res->guest_name ?? $res->user?->name ?? $res->customer?->name ?? '—';
+            $clientPhone = $res->guest_phone ?? $res->user?->phone ?? $res->customer?->phone ?? '—';
+            $clientEmail = $res->user?->email ?? $res->customer?->email ?? '—';
+            $checkIn = is_string($res->check_in) ? $res->check_in : $res->check_in?->format('Y-m-d');
+            $checkOut = is_string($res->check_out) ? $res->check_out : $res->check_out?->format('Y-m-d');
+
+            return [
+                'id'           => $res->id,
+                'ref'          => '#MOR-RSV-' . str_pad($res->id, 5, '0', STR_PAD_LEFT),
+                'client_name'  => $clientName,
+                'client_phone' => $clientPhone,
+                'client_email' => $clientEmail,
+                'guests_count' => $res->guests_count,
+                'check_in'     => $checkIn,
+                'check_out'    => $checkOut,
+                'status'       => $res->status,
+                'total_price'  => number_format($res->total_price, 2),
+            ];
+        })->values()->all();
+
+        $today = now()->toDateString();
+        $activeReservation = $room->reservations->first(function ($r) use ($today) {
+            $checkIn = is_string($r->check_in) ? $r->check_in : $r->check_in?->format('Y-m-d');
+            $checkOut = is_string($r->check_out) ? $r->check_out : $r->check_out?->format('Y-m-d');
+            return in_array($r->status, ['confirmed', 'checked_in']) && $checkIn <= $today && $checkOut >= $today;
+        });
+
+        if (!$activeReservation) {
+            $activeReservation = $room->reservations->filter(function ($r) use ($today) {
+                $checkIn = is_string($r->check_in) ? $r->check_in : $r->check_in?->format('Y-m-d');
+                return in_array($r->status, ['confirmed', 'checked_in']) && $checkIn >= $today;
+            })->sortBy('check_in')->first();
+        }
+
+        if (!$activeReservation) {
+            $activeReservation = $room->reservations->first(function ($r) {
+                return in_array($r->status, ['confirmed', 'checked_in']);
+            });
+        }
+
+        if (!$activeReservation) {
+            $activeReservation = $room->reservations->first();
+        }
+
+        $activeData = null;
+        if ($activeReservation) {
+            $clientName = $activeReservation->guest_name ?? $activeReservation->user?->name ?? $activeReservation->customer?->name ?? '—';
+            $clientPhone = $activeReservation->guest_phone ?? $activeReservation->user?->phone ?? $activeReservation->customer?->phone ?? '—';
+            $clientEmail = $activeReservation->user?->email ?? $activeReservation->customer?->email ?? '—';
+            $checkIn = is_string($activeReservation->check_in) ? $activeReservation->check_in : $activeReservation->check_in?->format('Y-m-d');
+            $checkOut = is_string($activeReservation->check_out) ? $activeReservation->check_out : $activeReservation->check_out?->format('Y-m-d');
+
+            $activeData = [
+                'id'           => $activeReservation->id,
+                'ref'          => '#MOR-RSV-' . str_pad($activeReservation->id, 5, '0', STR_PAD_LEFT),
+                'client_name'  => $clientName,
+                'client_phone' => $clientPhone,
+                'client_email' => $clientEmail,
+                'guests_count' => $activeReservation->guests_count,
+                'check_in'     => $checkIn,
+                'check_out'    => $checkOut,
+                'status'       => $activeReservation->status,
+                'total_price'  => number_format($activeReservation->total_price, 2),
+            ];
+        }
+
+        return [
+            'id'                 => $room->id,
+            'room_number'        => $room->room_number,
+            'type'               => $room->type,
+            'capacity'           => $room->capacity,
+            'price_per_night'    => number_format($room->price_per_night, 2),
+            'description'        => $room->description,
+            'status'             => $room->status,
+            'main_image_url'     => $room->main_image ? asset('storage/' . $room->main_image) : null,
+            'updated_at'         => $room->updated_at?->format('Y-m-d H:i'),
+            'hotel_name'         => $room->hotel?->name ?? '',
+            'hotel_id'           => $room->hotel_id,
+            'active_reservation' => $activeData,
+            'reservations'       => $reservations,
+        ];
     }
 
     protected function getHotelsForForm(): ?\Illuminate\Support\Collection
