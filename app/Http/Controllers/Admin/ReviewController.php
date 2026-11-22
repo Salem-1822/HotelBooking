@@ -15,7 +15,7 @@ class ReviewController extends Controller
         $hotelId = $admin->hotel_id;
 
         if (!$hotelId) {
-            abort(403, 'No hotel assigned to your account.');
+            abort(403, __('admin.no_hotel_assigned_error'));
         }
 
         $reviews = Review::with(['user', 'hotel'])
@@ -39,13 +39,13 @@ class ReviewController extends Controller
         $hotelId = $admin->hotel_id;
 
         if (!$hotelId || $review->hotel_id !== $hotelId) {
-            abort(403, 'You are not authorised to delete this review.');
+            abort(403, __('admin.unauthorized_delete_review'));
         }
 
         $review->delete();
 
         return redirect()
             ->route('admin.reviews.index')
-            ->with('success', 'Review deleted successfully.');
+            ->with('success', __('admin.review_deleted_success'));
     }
 }

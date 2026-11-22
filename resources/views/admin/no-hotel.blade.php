@@ -20,7 +20,7 @@
                     <a href="{{ route('admin.profile') }}" class="btn btn-outline-secondary">
                         <i class="bi bi-person me-1"></i> {{ __('admin.my_profile') }}
                     </a>
-                    <form action="{{ route('super_admin.logout') }}" method="POST" class="d-inline">
+                    <form action="{{ route('admin.logout') }}" method="POST" class="d-inline">
                         @csrf
                         <button type="submit" class="btn btn-danger">
                             <i class="bi bi-box-arrow-right me-1"></i> {{ __('admin.sign_out') }}

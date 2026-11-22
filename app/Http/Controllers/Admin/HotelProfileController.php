@@ -67,7 +67,7 @@ class HotelProfileController extends Controller
 
         if (!$hotelId) {
             return redirect()->route('admin.dashboard')
-                ->with('error', 'No hotel has been assigned to your account. Please contact your Super Admin.');
+                ->with('error', __('admin.no_hotel_assigned_contact'));
         }
 
         $hotel = Hotel::with('city')->findOrFail($hotelId);
@@ -134,7 +134,7 @@ class HotelProfileController extends Controller
 
         if (!$hotelId) {
             return redirect()->route('admin.dashboard')
-                ->with('error', 'No hotel has been assigned to your account.');
+                ->with('error', __('admin.no_hotel_assigned_error'));
         }
 
         $hotel = Hotel::findOrFail($hotelId);
@@ -157,14 +157,14 @@ class HotelProfileController extends Controller
             'latitude'            => 'nullable|numeric|between:-90,90',
             'longitude'           => 'nullable|numeric|between:-180,180',
         ], [
-            'name.required'          => 'Hotel name is required.',
-            'address.required'       => 'Address is required.',
-            'email.email'            => 'Please enter a valid email address.',
-            'stars.min'              => 'Star rating must be between 1 and 5.',
-            'stars.max'              => 'Star rating must be between 1 and 5.',
-            'image.image'            => 'Cover image must be a valid image file.',
-            'image.max'              => 'Cover image must not exceed 5 MB.',
-            'image.mimes'            => 'Cover image must be JPG, PNG or WebP.',
+            'name.required'          => __('admin.val_hotel_name_required'),
+            'address.required'       => __('admin.val_address_required'),
+            'email.email'            => __('admin.val_valid_email'),
+            'stars.min'              => __('admin.val_star_rating_range'),
+            'stars.max'              => __('admin.val_star_rating_range'),
+            'image.image'            => __('admin.val_cover_image_valid'),
+            'image.max'              => __('admin.val_cover_image_max'),
+            'image.mimes'            => __('admin.val_cover_image_mimes'),
         ]);
 
         // ── Cover Image (existing 'image' column) ─────────────────────────
@@ -182,6 +182,6 @@ class HotelProfileController extends Controller
         $hotel->update($validated);
 
         return redirect()->route('admin.hotel-profile')
-            ->with('success', 'Hotel profile has been updated successfully.');
+            ->with('success', __('admin.hotel_profile_updated'));
     }
 }

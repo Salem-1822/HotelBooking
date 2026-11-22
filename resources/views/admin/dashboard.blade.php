@@ -18,7 +18,7 @@
     .dashboard-header::after {
         content: '';
         position: absolute;
-        right: 0;
+        inset-inline-end: 0;
         top: 0;
         height: 100%;
         width: 40%;
@@ -110,13 +110,13 @@
     
     .timeline {
         position: relative;
-        padding-left: 2rem;
+        padding-inline-start: 2rem;
     }
     
     .timeline::before {
         content: '';
         position: absolute;
-        left: 0.6rem;
+        inset-inline-start: 0.6rem;
         top: 0;
         bottom: 0;
         width: 2px;
@@ -131,7 +131,7 @@
     .timeline-item::before {
         content: '';
         position: absolute;
-        left: -2rem;
+        inset-inline-start: -2rem;
         top: 0.25rem;
         width: 1.25rem;
         height: 1.25rem;
@@ -359,11 +359,11 @@
                             @forelse($latestReservations as $res)
                             <tr>
                                 <td>
-                                    <span class="fw-bold" style="color: #0F172A;">#{{ str_pad($res->id, 5, '0', STR_PAD_LEFT) }}</span>
+                                    <span class="fw-bold" style="color: #0F172A;"><span dir="ltr">#{{ str_pad($res->id, 5, '0', STR_PAD_LEFT) }}</span></span>
                                 </td>
                                 <td>
                                     <div class="fw-semibold text-dark">{{ $res->user ? $res->user->name : $res->guest_name }}</div>
-                                    <div class="text-muted" style="font-size: 0.75rem;">{{ $res->user ? $res->user->email : $res->guest_phone }}</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;"><span dir="ltr">{{ $res->user ? $res->user->email : $res->guest_phone }}</span></div>
                                 </td>
                                 <td>
                                     <span class="badge bg-light text-dark border"><i class="bi bi-door-closed me-1"></i>{{ $res->room ? $res->room->room_number : 'N/A' }}</span>
@@ -372,7 +372,7 @@
                                     <div style="font-size: 0.85rem;"><span class="text-success fw-medium">{{ __('admin.check_in_short') }}</span> {{ \Carbon\Carbon::parse($res->check_in)->format('M d') }}</div>
                                     <div style="font-size: 0.85rem;"><span class="text-danger fw-medium">{{ __('admin.check_out_short') }}</span> {{ \Carbon\Carbon::parse($res->check_out)->format('M d') }}</div>
                                 </td>
-                                <td class="fw-bold" style="color: #0F172A;">{{ number_format($res->total_price, 2) }} MAD</td>
+                                <td class="fw-bold" style="color: #0F172A;">{{ number_format($res->total_price, 2) }} {{ __('common.currency') }}</td>
                                 <td>
                                     @php
                                         $badgeClass = match($res->status) {

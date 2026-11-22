@@ -25,7 +25,7 @@
                             onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=0F172A&color=fff&size=200';">
 
                         @if($admin->hasProfilePhoto())
-                            <form action="{{ route('admin.profile.photo.destroy') }}" method="POST" class="position-absolute" style="bottom: 0; right: 0;">
+                            <form action="{{ route('admin.profile.photo.destroy') }}" method="POST" class="position-absolute" style="bottom: 0; inset-inline-end: 0;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm rounded-circle shadow" title="{{ __('admin.remove_photo_title') }}" onclick="return confirm('{{ __('admin.remove_photo_confirm') }}')" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
@@ -89,7 +89,7 @@
                             
                             <div class="col-md-6">
                                 <label for="email" class="form-label fw-semibold">{{ __('admin.email_address') }} <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $admin->email) }}" required>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $admin->email) }}" dir="ltr" style="text-align:start;" required>
                                 @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -97,7 +97,7 @@
                             
                             <div class="col-md-6">
                                 <label for="phone" class="form-label fw-semibold">{{ __('admin.th_phone') }}</label>
-                                <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone', $admin->phone) }}">
+                                <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone', $admin->phone) }}" dir="ltr" style="text-align:start;">
                                 @error('phone')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

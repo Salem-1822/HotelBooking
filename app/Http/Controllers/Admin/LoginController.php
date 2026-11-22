@@ -91,7 +91,7 @@ class LoginController extends Controller
                 RateLimiter::hit($throttleKey, 60);
 
                 return back()->withErrors([
-                    'email' => 'Access denied. Super Administrators must log in through the Super Admin portal.',
+                    'email' => __('admin.access_denied_super_admin_portal'),
                 ])->onlyInput('email');
             }
 
@@ -120,7 +120,7 @@ class LoginController extends Controller
 
         if ($inactiveAccount && Hash::check($credentials['password'], $inactiveAccount->password)) {
             return back()->withErrors([
-                'email' => 'Your Administrator account is currently inactive. Please contact your Super Administrator.',
+                'email' => __('admin.account_inactive'),
             ])->onlyInput('email');
         }
 
@@ -130,14 +130,14 @@ class LoginController extends Controller
 
         if ($superAdmin && Hash::check($credentials['password'], $superAdmin->password)) {
             return back()->withErrors([
-                'email' => 'Access denied. Super Administrators must log in through the Super Admin portal.',
+                'email' => __('admin.access_denied_super_admin_portal'),
             ])->onlyInput('email');
         }
 
         $clientUser = User::where('email', $credentials['email'])->first();
         if ($clientUser && Hash::check($credentials['password'], $clientUser->password)) {
             return back()->withErrors([
-                'email' => 'Access denied. Client accounts cannot access the Admin Portal.',
+                'email' => __('admin.access_denied_client_portal'),
             ])->onlyInput('email');
         }
 
@@ -183,7 +183,7 @@ class LoginController extends Controller
         return view('admin.auth.blocked', [
             'admin' => $admin,
             'adminName' => $admin->name,
-            'blockedReason' => $admin->blocked_reason ?? 'Aucun motif spécifié par le Super Administrateur.',
+            'blockedReason' => $admin->blocked_reason ?? __('admin.default_blocked_reason'),
             'blockedAt' => $admin->blocked_at,
         ]);
     }

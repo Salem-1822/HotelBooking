@@ -792,7 +792,7 @@
 .hp-alert-error {
     background: #FEF2F2;
     border: 1px solid #FECACA;
-    border-left: 4px solid var(--brand-danger);
+    border-inline-start: 4px solid var(--brand-danger);
     border-radius: 0.875rem;
     padding: 1rem 1.25rem;
     margin-bottom: 1.25rem;
@@ -947,7 +947,7 @@
                                    name="name"
                                    class="hp-input @error('name') is-invalid @enderror"
                                    value="{{ old('name', $hotel->name) }}"
-                                   placeholder="e.g. Grand Palace Hotel"
+                                   placeholder="{{ __('admin.hotel_name_placeholder') }}"
                                    maxlength="255">
                         </div>
                         @error('name')
@@ -974,15 +974,15 @@
                                     </button>
                                 @endfor
                             </div>
-                            <button type="button" id="hpStarsClear" class="hp-star-clear" title="Clear">
+                            <button type="button" id="hpStarsClear" class="hp-star-clear" title="{{ __('admin.clear') }}">
                                 <i class="bi bi-x"></i>
                             </button>
                             <span id="hpStarsLabel" class="ms-2"
                                   style="font-size:0.8rem;color:var(--text-muted);font-weight:500;">
                                 @if($currentStars > 0)
-                                    {{ $currentStars }}-Star Hotel
+                                    {{ __('admin.star_hotel', ['stars' => $currentStars]) }}
                                 @else
-                                    Not rated
+                                    {{ __('admin.not_rated') }}
                                 @endif
                             </span>
                         </div>
@@ -1055,7 +1055,7 @@
                                    name="address"
                                    class="hp-input @error('address') is-invalid @enderror"
                                    value="{{ old('address', $hotel->address) }}"
-                                   placeholder="Street, District, ZIP Code"
+                                   placeholder="{{ __('admin.address_placeholder') }}"
                                    maxlength="500">
                         </div>
                         @error('address')
@@ -1077,6 +1077,8 @@
                                        name="phone"
                                        class="hp-input @error('phone') is-invalid @enderror"
                                        value="{{ old('phone', $hotel->phone) }}"
+                                       dir="ltr"
+                                       style="text-align:start;"
                                        placeholder="+1 555 000 0000"
                                        maxlength="50">
                             </div>
@@ -1087,7 +1089,7 @@
                         <div class="col-12 col-sm-6">
                             <label for="hp_email" class="hp-label">
                                 <i class="bi bi-envelope-fill"></i>
-                                Email
+                                {{ __('admin.th_email') }}
                             </label>
                             <div class="hp-input-icon-wrap">
                                 <i class="bi bi-envelope field-icon"></i>
@@ -1096,6 +1098,8 @@
                                        name="email"
                                        class="hp-input @error('email') is-invalid @enderror"
                                        value="{{ old('email', $hotel->email) }}"
+                                       dir="ltr"
+                                       style="text-align:start;"
                                        placeholder="contact@hotel.com"
                                        maxlength="255">
                             </div>
@@ -1482,10 +1486,10 @@
                     </div>
                     <div>
                         <div class="hp-revenue-label">{{ __('admin.month_revenue') }}</div>
-                        <div class="hp-revenue-value">{{ number_format($monthlyRevenue, 0) }} MAD</div>
+                        <div class="hp-revenue-value">{{ number_format($monthlyRevenue, 0) }} {{ __('common.currency') }}</div>
                         @if($totalRevenue > 0)
                             <div style="font-size:0.7rem;color:rgba(255,255,255,0.4);margin-top:2px;">
-                                {{ __('admin.all_time') }}: {{ number_format($totalRevenue, 0) }} MAD
+                                {{ __('admin.all_time') }}: {{ number_format($totalRevenue, 0) }} {{ __('common.currency') }}
                             </div>
                         @endif
                     </div>

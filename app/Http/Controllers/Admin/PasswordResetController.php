@@ -48,8 +48,8 @@ class PasswordResetController extends Controller
         $request->validate([
             'email' => ['required', 'email', 'max:255'],
         ], [
-            'email.required' => 'Please enter your email address.',
-            'email.email'    => 'Please enter a valid email address.',
+            'email.required' => __('auth.val_email_required'),
+            'email.email'    => __('auth.val_email_valid'),
         ]);
 
         // Attempt to send the reset link via the 'admins' broker.
@@ -63,7 +63,7 @@ class PasswordResetController extends Controller
         // Generic message regardless of whether the email is registered.
         return back()->with(
             'status',
-            'If that email address is registered to an admin account, you will receive a password reset link shortly.'
+            __('passwords.sent_generic')
         );
     }
 
@@ -96,12 +96,12 @@ class PasswordResetController extends Controller
             'email'    => ['required', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [
-            'token.required'     => 'The reset token is missing.',
-            'email.required'     => 'Please enter your email address.',
-            'email.email'        => 'Please enter a valid email address.',
-            'password.required'  => 'Please enter a new password.',
-            'password.min'       => 'Password must be at least 8 characters.',
-            'password.confirmed' => 'Passwords do not match.',
+            'token.required'     => __('passwords.token_missing'),
+            'email.required'     => __('auth.val_email_required'),
+            'email.email'        => __('auth.val_email_valid'),
+            'password.required'  => __('auth.val_password_required'),
+            'password.min'       => __('auth.val_password_min'),
+            'password.confirmed' => __('auth.val_password_confirmed'),
         ]);
 
         // Attempt to reset the password via the 'admins' broker.
@@ -124,7 +124,7 @@ class PasswordResetController extends Controller
             // Do NOT auto-login. Redirect to the shared login page with a success message.
             return redirect()
                 ->route('login')
-                ->with('success', 'Your password has been reset successfully. Please sign in with your new password.');
+                ->with('success', __('passwords.reset_success'));
         }
 
         // Token is invalid or expired — return an error on the email field.
@@ -145,10 +145,10 @@ class PasswordResetController extends Controller
     private function resolveResetError(string $status): string
     {
         return match ($status) {
-            Password::INVALID_TOKEN   => 'This password reset link is invalid or has already been used.',
-            Password::INVALID_USER    => 'We could not find an admin account with that email address.',
-            Password::RESET_THROTTLED => 'Please wait before requesting another password reset.',
-            default                   => 'Something went wrong. Please try again.',
+            Password::INVALID_TOKEN   => __('passwords.token'),
+            Password::INVALID_USER    => __('passwords.user'),
+            Password::RESET_THROTTLED => __('passwords.throttled'),
+            default                   => __('passwords.token'),
         };
     }
 }

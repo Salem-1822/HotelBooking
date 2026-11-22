@@ -142,7 +142,7 @@ class ReservationController extends Controller
                 ->exists();
 
             if ($conflict) {
-                return back()->withInput()->withErrors(['check_in' => 'This room is already reserved for the selected dates. Please choose different dates.']);
+                return back()->withInput()->withErrors(['check_in' => __('admin.room_already_reserved_dates')]);
             }
         }
 
@@ -165,7 +165,7 @@ class ReservationController extends Controller
             Reservation::create($data);
         });
 
-        return redirect()->route('admin.reservations.index')->with('success', 'Reservation created successfully.');
+        return redirect()->route('admin.reservations.index')->with('success', __('admin.reservation_created_success'));
     }
 
     public function update(Request $request, Reservation $reservation)
@@ -201,7 +201,7 @@ class ReservationController extends Controller
                                           ->where('id', '!=', $reservation->customer_id ?? 0)
                                           ->exists();
                         if ($exists) {
-                            $fail('A customer with this phone number already exists. Please select them from the dropdown.');
+                            $fail(__('admin.customer_select_from_dropdown'));
                         }
                     }
                 }
@@ -224,7 +224,7 @@ class ReservationController extends Controller
         // Verify room capacity and availability
         $room = Room::findOrFail($data['room_id']);
         if ($data['guests_count'] > $room->capacity) {
-            return back()->withInput()->withErrors(['guests_count' => "This room can accommodate a maximum of {$room->capacity} guest(s)."]);
+            return back()->withInput()->withErrors(['guests_count' => __('admin.room_max_capacity', ['capacity' => $room->capacity])]);
         }
 
         // Check for date conflicts if reservation is not cancelled
@@ -237,7 +237,7 @@ class ReservationController extends Controller
                 ->exists();
 
             if ($conflict) {
-                return back()->withInput()->withErrors(['check_in' => 'This room is already reserved for the selected dates. Please choose different dates.']);
+                return back()->withInput()->withErrors(['check_in' => __('admin.room_already_reserved_dates')]);
             }
         }
 
@@ -264,7 +264,7 @@ class ReservationController extends Controller
             $reservation->update($data);
         });
 
-        return redirect()->route('admin.reservations.index')->with('success', 'Reservation updated successfully.');
+        return redirect()->route('admin.reservations.index')->with('success', __('admin.reservation_updated_success'));
     }
 
     public function destroy(Reservation $reservation)
@@ -276,7 +276,7 @@ class ReservationController extends Controller
 
         $reservation->delete();
 
-        return redirect()->route('admin.reservations.index')->with('success', 'Reservation deleted successfully.');
+        return redirect()->route('admin.reservations.index')->with('success', __('admin.reservation_deleted_success'));
     }
 
     /**

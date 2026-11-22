@@ -50,7 +50,7 @@ class ProfileController extends Controller
 
         $admin->save();
 
-        return redirect()->route('admin.profile')->with('success', 'Profile updated successfully.');
+        return redirect()->route('admin.profile')->with('success', __('admin.profile_updated_success'));
     }
 
     /**
@@ -69,14 +69,14 @@ class ProfileController extends Controller
         // Verify the current password before allowing a change.
         if (! Hash::check($request->current_password, $admin->password)) {
             return back()->withErrors([
-                'current_password' => 'The current password you entered is incorrect.',
+                'current_password' => __('admin.current_password_incorrect'),
             ])->withInput()->with('password_section', true);
         }
 
         $admin->password = Hash::make($request->password);
         $admin->save();
 
-        return redirect()->route('admin.profile')->with('success', 'Password updated successfully.');
+        return redirect()->route('admin.profile')->with('success', __('admin.password_updated_success'));
     }
 
     /**
@@ -90,6 +90,6 @@ class ProfileController extends Controller
         $admin->profile_image = null;
         $admin->save();
 
-        return redirect()->route('admin.profile')->with('success', 'Profile photo removed.');
+        return redirect()->route('admin.profile')->with('success', __('admin.profile_photo_removed'));
     }
 }

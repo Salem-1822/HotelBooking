@@ -18,7 +18,7 @@ class CustomerController extends Controller
         $hotelId = Auth::guard('admin')->user()->hotel_id;
 
         if (!$hotelId) {
-            return redirect()->route('admin.dashboard')->with('error', 'No hotel assigned.');
+            return redirect()->route('admin.dashboard')->with('error', __('admin.no_hotel_assigned_error'));
         }
 
         // --- Dashboard-style summary cards via database aggregates ---
@@ -122,7 +122,7 @@ class CustomerController extends Controller
 
             if ($conflict) {
                 return back()
-                    ->withErrors(['phone' => 'A customer with this phone number already exists at this hotel.'])
+                    ->withErrors(['phone' => __('admin.customer_phone_conflict')])
                     ->withInput();
             }
         }
@@ -134,7 +134,7 @@ class CustomerController extends Controller
         ]);
 
         return redirect()->route('admin.customers.index')
-            ->with('success', "Customer \"{$customer->name}\" updated successfully.");
+            ->with('success', __('admin.customer_updated_success', ['name' => $customer->name]));
     }
 
     /**
@@ -158,13 +158,13 @@ class CustomerController extends Controller
         
         if ($reservationCount > 0) {
             return redirect()->route('admin.customers.index')
-                ->with('error', "Cannot delete customer \"{$customer->name}\" because they have {$reservationCount} reservation(s).");
+                ->with('error', __('admin.customer_delete_has_reservations', ['name' => $customer->name, 'count' => $reservationCount]));
         }
 
         $customerName = $customer->name;
         $customer->delete();
 
         return redirect()->route('admin.customers.index')
-            ->with('success', "Customer \"{$customerName}\" has been deleted.");
+            ->with('success', __('admin.customer_deleted_success', ['name' => $customerName]));
     }
 }

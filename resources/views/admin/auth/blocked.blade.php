@@ -91,11 +91,11 @@
         .reason-box {
             background: #FEF2F2;
             border: 1px solid #FCA5A5;
-            border-left: 4px solid #DC2626;
+            border-inline-start: 4px solid #DC2626;
             border-radius: 0.75rem;
             padding: 1.25rem;
             margin: 1.5rem 0;
-            text-align: left;
+            text-align: start;
         }
 
         .reason-box .reason-title {
@@ -198,7 +198,7 @@
 
             <!-- Return Action -->
             <a href="{{ route('admin.login') }}" class="btn-return-login">
-                <i class="bi bi-arrow-left"></i> {{ __('admin.return_to_login') }}
+                <i class="bi bi-arrow-left rtl-flip"></i> {{ __('admin.return_to_login') }}
             </a>
         </div>
     </div>

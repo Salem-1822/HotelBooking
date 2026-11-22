@@ -241,7 +241,7 @@
         border: none;
         background: #FEF2F2;
         color: #991B1B;
-        border-left: 4px solid #EF4444;
+        border-inline-start: 4px solid #EF4444;
         padding: 0.9rem 1rem;
     }
 

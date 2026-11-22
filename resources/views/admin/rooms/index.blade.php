@@ -80,7 +80,7 @@
     .toast-shell {
         position: fixed;
         top: 1.25rem;
-        right: 1.25rem;
+        inset-inline-end: 1.25rem;
         z-index: 1200;
     }
     .toast-item {
@@ -95,8 +95,8 @@
         gap: 0.75rem;
         animation: toastIn 0.4s ease both;
     }
-    .toast-item.success { background: #0F172A; border-left: 4px solid #22C55E; }
-    .toast-item.danger { background: #0F172A; border-left: 4px solid #EF4444; }
+    .toast-item.success { background: #0F172A; border-inline-start: 4px solid #22C55E; }
+    .toast-item.danger { background: #0F172A; border-inline-start: 4px solid #EF4444; }
     @keyframes toastIn {
         from { opacity: 0; transform: translateX(20px); }
         to { opacity: 1; transform: translateX(0); }
@@ -230,13 +230,13 @@
                         </div>
                         @endif
                     </td>
-                    <td>#{{ $room->room_number }}</td>
+                    <td><span dir="ltr">#{{ $room->room_number }}</span></td>
                     @if($routePrefix === 'super_admin.')
                     <td><small class="text-muted">{{ $room->hotel->name ?? '' }}</small></td>
                     @endif
                     <td>{{ $room->type }}</td>
                     <td>{{ $room->capacity }}</td>
-                    <td>{{ number_format($room->price_per_night, 2) }} MAD</td>
+                    <td>{{ number_format($room->price_per_night, 2) }} {{ __('common.currency') }}</td>
                     <td>
                         @php
                             $badgeClass = match($room->status) {
@@ -247,7 +247,7 @@
                             };
                         @endphp
                         <span class="badge rounded-pill px-3 badge-animate {{ $badgeClass }}">
-                            {{ ucfirst($room->status) }}
+                            {{ __('admin.' . $room->status) ?? ucfirst($room->status) }}
                         </span>
                     </td>
                     <td>{{ $room->updated_at->format('Y-m-d H:i') }}</td>
@@ -308,7 +308,7 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">{{ __('admin.room_number_label') }}</label>
-                            <input name="room_number" type="text" class="form-control" placeholder="e.g. 101" required>
+                            <input name="room_number" type="text" class="form-control" placeholder="{{ __('admin.room_number_placeholder') }}" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
@@ -316,7 +316,7 @@
                             <select name="type" class="form-select" required>
                                 <option value="">{{ __('admin.select_type') }}</option>
                                 @foreach($roomTypes as $type)
-                                <option value="{{ $type }}">{{ $type }}</option>
+                                <option value="{{ $type }}">{{ __('admin.' . strtolower($type)) ?? $type }}</option>
                                 @endforeach
                             </select>
                             <div class="invalid-feedback"></div>
@@ -328,14 +328,14 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">{{ __('admin.capacity_label') }}</label>
-                            <input name="capacity" type="number" min="1" class="form-control" placeholder="e.g. 2" required>
+                            <input name="capacity" type="number" min="1" class="form-control" placeholder="{{ __('admin.capacity_placeholder') }}" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-12">
                             <label class="form-label">{{ __('admin.status_label') }}</label>
                             <select name="status" class="form-select" required>
                                 @foreach($statusOptions as $key => $label)
-                                <option value="{{ $key }}">{{ $label }}</option>
+                                <option value="{{ $key }}">{{ __('admin.' . $key) ?? $label }}</option>
                                 @endforeach
                             </select>
                             <div class="invalid-feedback"></div>
@@ -375,7 +375,7 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">{{ __('admin.room_number_label') }}</label>
-                            <input name="room_number" type="text" class="form-control" placeholder="e.g. 101" required>
+                            <input name="room_number" type="text" class="form-control" placeholder="{{ __('admin.room_number_placeholder') }}" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6">
@@ -383,7 +383,7 @@
                             <select name="type" class="form-select" required>
                                 <option value="">{{ __('admin.select_type') }}</option>
                                 @foreach($roomTypes as $type)
-                                <option value="{{ $type }}">{{ $type }}</option>
+                                <option value="{{ $type }}">{{ __('admin.' . strtolower($type)) ?? $type }}</option>
                                 @endforeach
                             </select>
                             <div class="invalid-feedback"></div>
@@ -395,14 +395,14 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">{{ __('admin.capacity_label') }}</label>
-                            <input name="capacity" type="number" min="1" class="form-control" placeholder="e.g. 2" required>
+                            <input name="capacity" type="number" min="1" class="form-control" placeholder="{{ __('admin.capacity_placeholder') }}" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-12">
                             <label class="form-label">{{ __('admin.status_label') }}</label>
                             <select name="status" class="form-select" required>
                                 @foreach($statusOptions as $key => $label)
-                                <option value="{{ $key }}">{{ $label }}</option>
+                                <option value="{{ $key }}">{{ __('admin.' . $key) ?? $label }}</option>
                                 @endforeach
                             </select>
                             <div class="invalid-feedback"></div>
@@ -599,6 +599,11 @@
             occupied:    'bg-danger bg-opacity-15 text-danger',
             maintenance: 'bg-warning bg-opacity-15 text-warning',
         };
+        const statusTranslations = {
+            available: "{{ __('admin.available') }}",
+            occupied: "{{ __('admin.occupied') }}",
+            maintenance: "{{ __('admin.maintenance') }}"
+        };
         const statusClass = statusMap[room.status] || 'bg-secondary bg-opacity-15 text-secondary';
         const hotelInfo = window.isSuperAdminArea && room.hotel_name ? `<small class="text-muted">${escapeHtml(room.hotel_name)}</small>` : '';
         const image = room.main_image_url ? `<img src="${room.main_image_url}" class="room-image-thumb" alt="Room ${escapeHtml(room.room_number)}">` : '<div class="room-image-thumb d-flex align-items-center justify-content-center bg-light text-muted"><i class="bi bi-door-closed fs-5"></i></div>';
@@ -606,27 +611,27 @@
         const actionButtons = window.isSuperAdminArea ? `
             <td class="text-end">
                 <div class="d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-sm btn-light border" data-action="view" data-id="${room.id}" title="View Room">
+                    <button type="button" class="btn btn-sm btn-light border" data-action="view" data-id="${room.id}" title="{{ __('admin.view_room') }}">
                         <i class="bi bi-eye"></i>
                     </button>
-                    <button type="button" class="btn btn-sm btn-light border" data-action="edit" data-id="${room.id}" title="Edit Room">
+                    <button type="button" class="btn btn-sm btn-light border" data-action="edit" data-id="${room.id}" title="{{ __('admin.edit_room') }}">
                         <i class="bi bi-pencil"></i>
                     </button>
-                    <button type="button" class="btn btn-sm btn-light border text-danger" data-action="delete" data-id="${room.id}" title="Delete Room">
+                    <button type="button" class="btn btn-sm btn-light border text-danger" data-action="delete" data-id="${room.id}" title="{{ __('admin.delete_room') }}">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
             </td>
         ` : `
             <td class="text-end pe-4">
-                <button type="button" class="btn btn-sm btn-outline-dark px-3 mb-1" data-action="view" data-id="${room.id}" title="View Room">
-                    <i class="bi bi-eye-fill me-1"></i> View
+                <button type="button" class="btn btn-sm btn-outline-dark px-3 mb-1" data-action="view" data-id="${room.id}" title="{{ __('admin.view_room') }}">
+                    <i class="bi bi-eye-fill me-1"></i> {{ __('admin.view') }}
                 </button>
-                <button type="button" class="btn btn-sm btn-outline-primary px-3 mb-1" data-action="edit" data-id="${room.id}" title="Edit Room">
-                    <i class="bi bi-pencil-fill me-1"></i> Edit
+                <button type="button" class="btn btn-sm btn-outline-primary px-3 mb-1" data-action="edit" data-id="${room.id}" title="{{ __('admin.edit_room') }}">
+                    <i class="bi bi-pencil-fill me-1"></i> {{ __('admin.edit') }}
                 </button>
-                <button type="button" class="btn btn-sm btn-outline-danger px-3 mb-1" data-action="delete" data-id="${room.id}" title="Delete Room">
-                    <i class="bi bi-trash-fill me-1"></i> Delete
+                <button type="button" class="btn btn-sm btn-outline-danger px-3 mb-1" data-action="delete" data-id="${room.id}" title="{{ __('admin.delete_room') }}">
+                    <i class="bi bi-trash-fill me-1"></i> {{ __('admin.delete') }}
                 </button>
             </td>
         `;
@@ -634,13 +639,13 @@
         return `
             <tr data-id="${room.id}" data-status="${escapeHtml(room.status)}" data-type="${escapeHtml(room.type)}">
                 <td class="pe-0">${image}</td>
-                <td>#${escapeHtml(room.room_number)}</td>
+                <td><span dir="ltr">#${escapeHtml(room.room_number)}</span></td>
                 ${window.isSuperAdminArea ? `<td>${hotelInfo}</td>` : ''}
                 <td>${escapeHtml(room.type)}</td>
                 <td>${escapeHtml(room.capacity)}</td>
-                <td>${escapeHtml(room.price_per_night)} MAD</td>
+                <td>${escapeHtml(room.price_per_night)} {{ __('common.currency') }}</td>
                 <td>
-                    <span class="badge rounded-pill px-3 badge-animate ${statusClass}">${escapeHtml(capitalize(room.status))}</span>
+                    <span class="badge rounded-pill px-3 badge-animate ${statusClass}">${escapeHtml(statusTranslations[room.status] || capitalize(room.status))}</span>
                 </td>
                 <td>${escapeHtml(room.updated_at || '')}</td>
                 ${actionButtons}
@@ -677,18 +682,18 @@
         const modal = new bootstrap.Modal(document.getElementById('viewRoomModal'));
         state.selectedRoomId = room.id;
         document.getElementById('viewMainImage').src = room.main_image_url || 'https://via.placeholder.com/600x400?text=No+Image';
-        document.getElementById('viewRoomTitle').textContent = `Room #${room.room_number}`;
+        document.getElementById('viewRoomTitle').textContent = `{{ __('admin.room') }} #${room.room_number}`;
         document.getElementById('viewRoomSubtitle').textContent = room.type;
-        document.getElementById('viewStatusBadge').textContent = capitalize(room.status);
+        document.getElementById('viewStatusBadge').textContent = statusTranslations[room.status] || capitalize(room.status);
         document.getElementById('viewStatusBadge').className = `badge rounded-pill px-3 ${badgeClasses(room.status)}`;
         document.getElementById('viewRoomNumber').textContent = `#${room.room_number}`;
         document.getElementById('viewRoomType').textContent = room.type;
         document.getElementById('viewCapacity').textContent = room.capacity;
-        document.getElementById('viewPrice').textContent = `${room.price_per_night} MAD`;
+        document.getElementById('viewPrice').textContent = `${room.price_per_night} {{ __('common.currency') }}`;
         if (window.isSuperAdminArea) {
             document.getElementById('viewHotelName').textContent = room.hotel_name || '—';
         }
-        document.getElementById('viewDescription').textContent = room.description || 'No description provided.';
+        document.getElementById('viewDescription').textContent = room.description || '{{ __('admin.no_description') ?? "No description provided." }}';
         modal.show();
     }
 

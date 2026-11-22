@@ -157,7 +157,7 @@
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
                                 <span class="kpi-label text-muted d-block mb-1">{{ __('admin.total_revenue') }}</span>
-                                <h3 class="kpi-value text-dark mb-0">{{ number_format($totalRevenue, 2) }} <span style="font-size: 1.2rem; font-weight: 600; color: #64748b;">MAD</span></h3>
+                                <h3 class="kpi-value text-dark mb-0">{{ number_format($totalRevenue, 2) }} <span style="font-size: 1.2rem; font-weight: 600; color: #64748b;">{{ __('common.currency') }}</span></h3>
                             </div>
                             <div class="kpi-icon-wrapper bg-success bg-opacity-10 text-success">
                                 <i class="bi bi-cash-stack"></i>

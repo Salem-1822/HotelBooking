@@ -153,16 +153,16 @@
                 @forelse($reservations as $res)
                 <tr>
                     <td class="ps-4">
-                        <span class="fw-bold text-dark">#MOR-RSV-{{ $res->id }}</span>
+                        <span class="fw-bold text-dark"><span dir="ltr">#MOR-RSV-{{ $res->id }}</span></span>
                     </td>
                     <td>
                         <div class="fw-semibold text-dark">{{ $res->guest_name }}</div>
-                        <small class="text-muted"><i class="bi bi-telephone text-primary me-1"></i> {{ $res->guest_phone }}</small>
+                        <small class="text-muted"><i class="bi bi-telephone text-primary me-1"></i> <span dir="ltr">{{ $res->guest_phone }}</span></small>
                     </td>
                     <td>
                         @if($res->room)
-                            <div class="fw-semibold text-dark">Room {{ $res->room->room_number }}</div>
-                            <small class="text-muted">{{ $res->room->type }} ({{ number_format($res->room->price_per_night, 0) }} MAD/night)</small>
+                            <div class="fw-semibold text-dark">{{ __('admin.room') }} {{ $res->room->room_number }}</div>
+                            <small class="text-muted">{{ $res->room->type }} ({{ number_format($res->room->price_per_night, 0) }} {{ __('common.currency') }}/{{ __('admin.night_short') }})</small>
                         @else
                             <span class="text-danger small">{{ __('admin.no_room_assigned') }}</span>
                         @endif
@@ -181,7 +181,7 @@
                         <span class="badge bg-light text-dark border">{{ $res->guests_count }}</span>
                     </td>
                     <td>
-                        <span class="fw-bold text-primary">{{ number_format($res->total_price, 0) }} MAD</span>
+                        <span class="fw-bold text-primary">{{ number_format($res->total_price, 0) }} {{ __('common.currency') }}</span>
                     </td>
                     <td>
                         @php
@@ -195,7 +195,7 @@
                             };
                         @endphp
                         <span class="badge {{ $badgeClass }} px-2.5 py-1.5 fw-bold">
-                            {{ $statusOptions[$res->status] ?? ucfirst($res->status) }}
+                            {{ __('admin.' . $res->status) ?? ($statusOptions[$res->status] ?? ucfirst($res->status)) }}
                         </span>
                     </td>
                     <td class="text-end pe-4">
@@ -232,12 +232,12 @@
                                     <div>
                                         <p class="text-muted small mb-1 text-uppercase ls-1" style="font-size:0.7rem;">{{ __('admin.th_status') }}</p>
                                         <span class="badge {{ $badgeClass }} px-2.5 py-1.5 fw-bold">
-                                            {{ $statusOptions[$res->status] ?? ucfirst($res->status) }}
+                                            {{ __('admin.' . $res->status) ?? ($statusOptions[$res->status] ?? ucfirst($res->status)) }}
                                         </span>
                                     </div>
                                     <div class="text-end">
                                         <p class="text-muted small mb-1 text-uppercase ls-1" style="font-size:0.7rem;">{{ __('admin.total_cost') }}</p>
-                                        <h4 class="fw-bold text-primary mb-0">{{ number_format($res->total_price, 0) }} MAD</h4>
+                                        <h4 class="fw-bold text-primary mb-0">{{ number_format($res->total_price, 0) }} {{ __('common.currency') }}</h4>
                                     </div>
                                 </div>
                                 <hr class="my-3 opacity-50">
@@ -248,7 +248,7 @@
                                     </div>
                                     <div class="col-6">
                                         <label class="text-muted small fw-bold text-uppercase d-block mb-1">{{ __('admin.guest_phone') }}</label>
-                                        <span class="text-dark fw-semibold">{{ $res->guest_phone ?? '—' }}</span>
+                                        <span class="text-dark fw-semibold" dir="ltr">{{ $res->guest_phone ?? '—' }}</span>
                                     </div>
                                     @if($res->user)
                                     <div class="col-12">
@@ -256,18 +256,18 @@
                                         <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1" style="font-size:.72rem;">
                                             <i class="bi bi-person-check-fill me-1"></i>{{ __('admin.client_portal') }}
                                         </span>
-                                        <div class="text-muted small mt-1">{{ $res->user->email }}</div>
+                                        <div class="text-muted small mt-1" dir="ltr">{{ $res->user->email }}</div>
                                     </div>
                                     @endif
                                     @if($res->customer && $res->customer->email)
                                     <div class="col-6">
                                         <label class="text-muted small fw-bold text-uppercase d-block mb-1">{{ __('admin.th_email') }}</label>
-                                        <span class="text-dark fw-semibold">{{ $res->customer->email }}</span>
+                                        <span class="text-dark fw-semibold" dir="ltr">{{ $res->customer->email }}</span>
                                     </div>
                                     @endif
                                     <div class="col-6">
                                         <label class="text-muted small fw-bold text-uppercase d-block mb-1">{{ __('admin.room_number_label') }}</label>
-                                        <span class="text-dark fw-semibold">Room {{ $res->room?->room_number ?? 'N/A' }}</span>
+                                        <span class="text-dark fw-semibold">{{ __('admin.room') }} {{ $res->room?->room_number ?? 'N/A' }}</span>
                                     </div>
                                     <div class="col-6">
                                         <label class="text-muted small fw-bold text-uppercase d-block mb-1">{{ __('admin.room_type_label') }}</label>
@@ -282,7 +282,7 @@
                                         <span class="text-dark fw-semibold">{{ $res->check_out }}</span>
                                     </div>
                                     <div class="col-6">
-                                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">{{ __('admin.nights_count', ['count' => '']) }}</label>
+                                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">{{ __('client.nights') }}</label>
                                         <span class="text-dark fw-semibold">{{ $res->check_in && $res->check_out ? \Carbon\Carbon::parse($res->check_in)->diffInDays(\Carbon\Carbon::parse($res->check_out)) : 'N/A' }}</span>
                                     </div>
                                     <div class="col-6">
@@ -385,7 +385,7 @@
                                             <select name="room_id" class="form-select" required>
                                                 @foreach($rooms as $room)
                                                     <option value="{{ $room->id }}" {{ $res->room_id == $room->id ? 'selected' : '' }}>
-                                                        Room {{ $room->room_number }} ({{ $room->type }} - {{ number_format($room->price_per_night, 0) }} MAD)
+                                                        {{ __('admin.room') }} {{ $room->room_number }} ({{ $room->type }} - {{ number_format($room->price_per_night, 0) }} {{ __('common.currency') }})
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -476,11 +476,11 @@
                     <div class="new-customer-fields">
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">{{ __('admin.guest_name') }}</label>
-                            <input type="text" name="guest_name" class="form-control guest-name-input" placeholder="John Doe">
+                            <input type="text" name="guest_name" class="form-control guest-name-input" placeholder="{{ __('admin.guest_name') }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">{{ __('admin.guest_phone') }}</label>
-                            <input type="text" name="guest_phone" class="form-control guest-phone-input" placeholder="+212 600-000000">
+                            <input type="text" name="guest_phone" class="form-control guest-phone-input" placeholder="+212 600-000000" dir="ltr" style="text-align:start;">
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">{{ __('admin.guest_email_optional') }}</label>
@@ -494,7 +494,7 @@
                                 <option value="" disabled selected>{{ __('admin.select_room') }}</option>
                                 @foreach($rooms as $room)
                                     <option value="{{ $room->id }}">
-                                        Room {{ $room->room_number }} ({{ $room->type }} - {{ number_format($room->price_per_night, 0) }} MAD)
+                                        {{ __('admin.room') }} {{ $room->room_number }} ({{ $room->type }} - {{ number_format($room->price_per_night, 0) }} {{ __('common.currency') }})
                                     </option>
                                 @endforeach
                             </select>

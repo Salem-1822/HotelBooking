@@ -571,15 +571,15 @@
 
         <div class="p-4 p-md-5 page-content-wrapper">
             @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert" style="border-radius: 0.875rem; border: none; border-left: 4px solid var(--brand-success);">
+                <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert" style="border-radius: 0.875rem; border: none; border-inline-start: 4px solid var(--brand-success);">
                     <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('common.close') ?? 'Close' }}"></button>
                 </div>
             @endif
             @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert" style="border-radius: 0.875rem; border: none; border-left: 4px solid var(--brand-danger);">
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert" style="border-radius: 0.875rem; border: none; border-inline-start: 4px solid var(--brand-danger);">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('common.close') ?? 'Close' }}"></button>
                 </div>
             @endif
             

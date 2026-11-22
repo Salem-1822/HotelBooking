@@ -57,7 +57,7 @@ class RoomController extends Controller
     {
         $hotelId = Auth::guard('admin')->user()->hotel_id;
         if (!$hotelId) {
-            abort(403, 'No hotel assigned.');
+            abort(403, __('admin.no_hotel_assigned_error'));
         }
         $data = $this->validateRoom($request, $hotelId);
         $data['hotel_id'] = $hotelId;
@@ -66,7 +66,7 @@ class RoomController extends Controller
 
         $room = Room::create($data);
 
-        return $this->jsonOrRedirect($request, 'Room created successfully.', $room);
+        return $this->jsonOrRedirect($request, __('admin.room_created_success'), $room);
     }
 
     public function update(Request $request, Room $room)
@@ -79,7 +79,7 @@ class RoomController extends Controller
 
         $room->update($data);
 
-        return $this->jsonOrRedirect($request, 'Room updated successfully.', $room);
+        return $this->jsonOrRedirect($request, __('admin.room_updated_success'), $room);
     }
 
     public function destroy(Room $room)
@@ -88,7 +88,7 @@ class RoomController extends Controller
         $this->deleteFiles($room);
         $room->delete();
 
-        return $this->jsonOrRedirect(request(), 'Room deleted successfully.');
+        return $this->jsonOrRedirect(request(), __('admin.room_deleted_success'));
     }
 
     protected function roomQuery()

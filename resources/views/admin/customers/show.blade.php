@@ -56,7 +56,7 @@
         <p class="mb-0 text-muted">{{ __('admin.detailed_view_history') }}</p>
     </div>
     <a href="{{ route('admin.customers.index') }}" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-left me-1"></i> {{ __('admin.back_to_customers') }}
+        <i class="bi bi-arrow-left me-1 rtl-flip"></i> {{ __('admin.back_to_customers') }}
     </a>
 </div>
 
@@ -72,7 +72,7 @@
                 </div>
                 <div class="col-sm-6 info-item">
                     <div class="info-label">{{ __('admin.th_phone') }}</div>
-                    <div class="info-value">{{ $customer->phone }}</div>
+                    <div class="info-value"><span dir="ltr">{{ $customer->phone }}</span></div>
                 </div>
                 <div class="col-sm-6 info-item mb-0">
                     <div class="info-label">{{ __('admin.th_email') }}</div>
@@ -173,7 +173,7 @@
                         @endphp
                         <span class="badge {{ $badgeClass }} border px-2 py-1 rounded-pill">{{ $badgeLabel }}</span>
                     </td>
-                    <td class="text-end pe-4 fw-bold" style="color: #0F172A;">{{ number_format($res->total_price, 2) }} MAD</td>
+                    <td class="text-end pe-4 fw-bold" style="color: #0F172A;">{{ number_format($res->total_price, 2) }} {{ __('common.currency') }}</td>
                 </tr>
                 @empty
                 <tr>

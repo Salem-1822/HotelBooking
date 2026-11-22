@@ -140,7 +140,7 @@
                                 class="client-avatar" alt="{{ $review->user->name ?? 'Unknown' }}" loading="lazy" decoding="async">
                             <div>
                                 <div class="fw-semibold" style="font-size:0.875rem;">{{ $review->user->name ?? '—' }}</div>
-                                <div class="text-muted" style="font-size:0.78rem;">{{ $review->user->email ?? '—' }}</div>
+                                <div class="text-muted" style="font-size:0.78rem;"><span dir="ltr">{{ $review->user->email ?? '—' }}</span></div>
                             </div>
                         </div>
                     </td>
@@ -154,7 +154,7 @@
                                 @endif
                             @endfor
                         </span>
-                        <span class="badge bg-warning bg-opacity-10 text-warning ms-1">{{ $review->rating }}/5</span>
+                        <span class="badge bg-warning bg-opacity-10 text-warning ms-1"><span dir="ltr">{{ $review->rating }}/5</span></span>
                     </td>
                     <td>
                         <div class="comment-preview" title="{{ $review->comment }}">

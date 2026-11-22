@@ -119,20 +119,20 @@
 
     <table class="meta-table">
         <tr>
-            <td class="meta-label">Generated on:</td>
+            <td class="meta-label">{{ __('admin.pdf_generated_on') }}</td>
             <td class="meta-val">{{ now()->format('F d, Y @ h:i A') }}</td>
         </tr>
         <tr>
-            <td class="meta-label">Filtered Scope:</td>
-            <td class="meta-val">All Time (Default Period)</td>
+            <td class="meta-label">{{ __('admin.pdf_filtered_scope') }}</td>
+            <td class="meta-val">{{ __('admin.all_time') }}</td>
         </tr>
         <tr>
-            <td class="meta-label">Currency Standard:</td>
-            <td class="meta-val">Moroccan Dirham (MAD / DH)</td>
+            <td class="meta-label">{{ __('admin.pdf_currency_standard') }}</td>
+            <td class="meta-val">{{ __('admin.moroccan_dirham') }} ({{ __('common.currency') }})</td>
         </tr>
     </table>
 
-    <div class="section-title">Key Performance Indicators</div>
+    <div class="section-title">{{ __('admin.pdf_kpi_title') }}</div>
 
     @if($totalReservations === 0)
         <div class="empty-state">
@@ -144,7 +144,7 @@
         <table class="kpi-grid">
             <tr>
                 <td>
-                    <div class="kpi-val">{{ number_format($totalRevenue, 2) }} MAD</div>
+                    <div class="kpi-val">{{ number_format($totalRevenue, 2) }} {{ __('common.currency') }}</div>
                     <div class="kpi-name">{{ __('admin.total_revenue') }}</div>
                 </td>
                 <td>

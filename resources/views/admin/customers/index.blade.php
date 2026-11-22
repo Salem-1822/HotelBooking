@@ -135,7 +135,7 @@
                         <span class="text-muted">{{ $customer->email ?? '—' }}</span>
                     </td>
                     <td>
-                        <span>{{ $customer->phone ?? 'N/A' }}</span>
+                        <span><span dir="ltr">{{ $customer->phone ?? 'N/A' }}</span></span>
                     </td>
                     <td class="text-center">
                         <span class="badge bg-light text-dark px-3 py-2 fw-semibold">{{ $customer->reservations_count }}</span>
@@ -196,7 +196,7 @@
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">{{ __('admin.th_phone') }}</div>
-                                                            <div class="fw-medium text-dark">{{ $customer->phone }}</div>
+                                                            <div class="fw-medium text-dark"><span dir="ltr">{{ $customer->phone }}</span></div>
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">{{ __('admin.th_email') }}</div>
@@ -299,7 +299,7 @@
                                                                 @endphp
                                                                 <span class="badge {{ $badgeClass }} px-2.5 py-1.5 fw-bold">{{ $badgeLabel }}</span>
                                                             </td>
-                                                            <td class="text-end pe-4 fw-bold" style="color: #0F172A;">{{ number_format($res->total_price, 2) }} MAD</td>
+                                                            <td class="text-end pe-4 fw-bold" style="color: #0F172A;">{{ number_format($res->total_price, 2) }} {{ __('common.currency') }}</td>
                                                         </tr>
                                                         @empty
                                                         <tr>

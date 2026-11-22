@@ -14,7 +14,7 @@ class ReportController extends Controller
         $hotelId = Auth::guard('admin')->user()->hotel_id;
 
         if (!$hotelId) {
-            return redirect()->route('admin.dashboard')->with('error', 'No hotel assigned.');
+            return redirect()->route('admin.dashboard')->with('error', __('admin.no_hotel_assigned_error'));
         }
 
         // 1. Total Reservations
@@ -58,7 +58,7 @@ class ReportController extends Controller
         $hotelId = Auth::guard('admin')->user()->hotel_id;
 
         if (!$hotelId) {
-            abort(403, 'No hotel assigned.');
+            abort(403, __('admin.no_hotel_assigned_error'));
         }
 
         $hotel = \App\Models\Hotel::findOrFail($hotelId);
