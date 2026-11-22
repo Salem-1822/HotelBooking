@@ -45,4 +45,6 @@ return [
     'confirm_new_password' => 'تأكيد كلمة المرور الجديدة',
     'update_password_btn' => 'تحديث كلمة المرور',
     'confirm_delete' => 'هل أنت متأكد من رغبتك في الحذف؟',
+    'profile_updated' => 'تم تحديث معلومات الملف الشخصي بنجاح.',
+    'password_updated' => 'تم تحديث كلمة المرور بنجاح.',
 ];

@@ -43,14 +43,14 @@ class AuthController extends Controller
             'email'                 => ['required', 'email', 'max:255', 'unique:users,email'],
             'password'              => ['required', 'string', 'min:8', 'confirmed'],
         ], [
-            'name.required'         => 'Please enter your full name.',
-            'name.max'              => 'Name may not exceed 255 characters.',
-            'email.required'        => 'Please enter your email address.',
-            'email.email'           => 'Please enter a valid email address.',
-            'email.unique'          => 'An account with this email already exists.',
-            'password.required'     => 'Please enter a password.',
-            'password.min'          => 'Password must be at least 8 characters.',
-            'password.confirmed'    => 'Passwords do not match.',
+            'name.required'         => __('auth.val_name_required'),
+            'name.max'              => __('auth.val_name_max'),
+            'email.required'        => __('auth.val_email_required'),
+            'email.email'           => __('auth.val_email_valid'),
+            'email.unique'          => __('auth.val_email_unique'),
+            'password.required'     => __('auth.val_password_required'),
+            'password.min'          => __('auth.val_password_min'),
+            'password.confirmed'    => __('auth.val_password_confirmed'),
         ]);
 
         // Create the client account in the users table
@@ -64,7 +64,7 @@ class AuthController extends Controller
 
         // Redirect to the login page with a success message
         return redirect()->route('login')
-            ->with('success', 'Account created successfully! Please log in to continue.');
+            ->with('success', __('auth.account_created'));
     }
 
     /**

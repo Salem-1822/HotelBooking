@@ -45,9 +45,9 @@ class ContactController extends Controller
 
             return back()
                 ->withInput()
-                ->with('error', 'An error occurred while sending your message. Please try again later.');
+                ->with('error', __('contact.send_error'));
         }
 
-        return back()->with('success', 'Your message has been sent successfully. We will get back to you soon!');
+        return back()->with('success', __('contact.send_success'));
     }
 }

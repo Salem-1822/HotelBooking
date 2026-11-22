@@ -243,7 +243,7 @@
 
                 {{-- Hotel & Reference --}}
                 <div class="res-info-block" style="flex: 2; min-width: 160px;">
-                    <div class="res-ref">#MOR-RSV-{{ $res->id }} &nbsp;·&nbsp; {{ $res->created_at->format('d M Y') }}</div>
+                    <div class="res-ref"><span dir="ltr">#MOR-RSV-{{ $res->id }}</span> &nbsp;·&nbsp; {{ $res->created_at->format('d M Y') }}</div>
                     <div class="res-hotel-name">{{ $res->hotel->name ?? '—' }}</div>
                     <div class="res-room">
                         @if($res->room)
@@ -277,7 +277,7 @@
                 {{-- Price --}}
                 <div class="res-info-block" style="min-width: 100px;">
                     <div class="res-ref">{{ __('booking.total') }}</div>
-                    <div class="res-price">{{ number_format($res->total_price, 0) }} MAD</div>
+                    <div class="res-price">{{ number_format($res->total_price, 0) }} {{ __('common.currency') }}</div>
                 </div>
 
                 {{-- Status --}}

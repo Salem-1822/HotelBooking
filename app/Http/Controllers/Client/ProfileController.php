@@ -45,7 +45,7 @@ class ProfileController extends Controller
             'phone' => $validated['phone'] ?? null,
         ]);
 
-        return redirect()->route('client.profile.edit')->with('success', 'Profile information updated successfully.');
+        return redirect()->route('client.profile.edit')->with('success', __('client.profile_updated'));
     }
 
     /**
@@ -61,13 +61,13 @@ class ProfileController extends Controller
         ]);
 
         if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'The provided password does not match your current password.']);
+            return back()->withErrors(['current_password' => __('auth.password')]);
         }
 
         $user->update([
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('client.profile.edit')->with('success', 'Password updated successfully.');
+        return redirect()->route('client.profile.edit')->with('success', __('client.password_updated'));
     }
 }

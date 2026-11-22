@@ -144,22 +144,22 @@ class ReservationController extends Controller
 
             // ── Handle failure cases safely ───────────────────────────────────
             if ($reservation === 'room_unavailable') {
-                return back()->withErrors(['room' => 'This room is no longer available.']);
+                return back()->withErrors(['room' => __('booking.room_not_available')]);
             }
             
             if ($reservation === 'conflict') {
                 return back()
                     ->withInput()
-                    ->withErrors(['check_in' => 'This room is already reserved for the selected dates. Please choose different dates.']);
+                    ->withErrors(['check_in' => __('booking.room_already_reserved')]);
             }
 
             return redirect()->route('client.reservations.confirmation', $reservation)
-                ->with('success', 'Your reservation has been submitted successfully!');
+                ->with('success', __('booking.reservation_submitted_success'));
 
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'We encountered an issue processing your booking due to high traffic. Please try again.');
+                ->with('error', __('booking.booking_traffic_error'));
         }
     }
 
@@ -211,11 +211,12 @@ class ReservationController extends Controller
         Gate::authorize('cancel', $reservation);
 
         if (!in_array($reservation->status, ['pending', 'confirmed'])) {
-            return back()->with('error', 'This reservation cannot be cancelled because it is already ' . str_replace('_', ' ', $reservation->status) . '.');
+            $statusLabel = __('booking.status_' . $reservation->status);
+            return back()->with('error', __('booking.cancel_status_error', ['status' => $statusLabel]));
         }
 
         $reservation->update(['status' => 'cancelled']);
 
-        return back()->with('success', 'Reservation has been cancelled successfully.');
+        return back()->with('success', __('booking.cancel_success'));
     }
 }

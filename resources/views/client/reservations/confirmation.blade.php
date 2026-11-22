@@ -133,7 +133,7 @@
             {{ __('booking.reservation_submitted_subtitle') }}
         </p>
         <div class="ref-badge">
-            <i class="bi bi-hash"></i> MOR-RSV-{{ $reservation->id }}
+            <i class="bi bi-hash"></i> <span dir="ltr">MOR-RSV-{{ $reservation->id }}</span>
         </div>
     </div>
 </div>
@@ -143,7 +143,7 @@
     <div class="container">
 
         @if(session('success'))
-            <div class="alert border-0 rounded-3 mb-4 text-center" style="max-width:680px; margin-left:auto; margin-right:auto; background:#F0FDF4; color:#166534; border-left:4px solid #22C55E!important;">
+            <div class="alert border-0 rounded-3 mb-4 text-center" style="max-width:680px; margin-left:auto; margin-right:auto; background:#F0FDF4; color:#166534; border-inline-start:4px solid #22C55E!important;">
                 <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
             </div>
         @endif
@@ -157,7 +157,7 @@
                 {{-- Reference --}}
                 <div class="detail-row">
                     <span class="d-label">{{ __('booking.reference') }}</span>
-                    <span class="d-value">#MOR-RSV-{{ $reservation->id }}</span>
+                    <span class="d-value" dir="ltr">#MOR-RSV-{{ $reservation->id }}</span>
                 </div>
 
                 {{-- Status --}}
@@ -239,7 +239,7 @@
                     <span class="label">
                         <i class="bi bi-wallet2 me-2"></i>{{ __('booking.estimated_total') }}
                     </span>
-                    <span class="amount">{{ number_format($reservation->total_price, 2) }} MAD</span>
+                    <span class="amount">{{ number_format($reservation->total_price, 2) }} {{ __('common.currency') }}</span>
                 </div>
 
                 <p class="text-center text-muted mt-3" style="font-size:.78rem;">

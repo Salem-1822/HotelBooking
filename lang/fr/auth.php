@@ -57,4 +57,13 @@ return [
     'min_characters' => 'Minimum 8 caractères.',
     'reset_password_button' => 'Réinitialiser le mot de passe',
     'toggle_password' => 'Afficher ou masquer le mot de passe',
+    'account_created' => 'Compte créé avec succès ! Veuillez vous connecter pour continuer.',
+    'val_name_required' => 'Veuillez saisir votre nom complet.',
+    'val_name_max' => 'Le nom ne doit pas dépasser 255 caractères.',
+    'val_email_required' => 'Veuillez saisir votre adresse e-mail.',
+    'val_email_valid' => 'Veuillez saisir une adresse e-mail valide.',
+    'val_email_unique' => 'Un compte avec cette adresse e-mail existe déjà.',
+    'val_password_required' => 'Veuillez saisir un mot de passe.',
+    'val_password_min' => 'Le mot de passe doit comporter au moins 8 caractères.',
+    'val_password_confirmed' => 'Les mots de passe ne correspondent pas.',
 ];

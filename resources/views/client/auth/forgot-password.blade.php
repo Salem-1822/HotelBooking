@@ -195,7 +195,7 @@
         border: none;
         background: #F0FDF4;
         color: #166534;
-        border-left: 4px solid #22C55E;
+        border-inline-start: 4px solid #22C55E;
         padding: 0.9rem 1rem;
     }
 

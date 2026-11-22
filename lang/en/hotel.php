@@ -78,4 +78,7 @@ return [
     'book_now' => 'Book Now',
     'no_rooms_available' => 'No rooms available',
     'from' => 'From',
+    'clients_only_title' => 'Booking is available for client accounts only',
+    'sign_in_to_book' => 'Sign in to book this room',
+    'filters_active' => 'Active',
 ];

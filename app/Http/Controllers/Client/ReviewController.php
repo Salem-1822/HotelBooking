@@ -26,12 +26,12 @@ class ReviewController extends Controller
 
         // 3. Completed stay check
         if ($reservation->status !== 'checked_out') {
-            return back()->with('error', 'Reviews can only be submitted after your stay is completed.');
+            return back()->with('error', __('booking.stay_not_completed'));
         }
 
         // 4. Existing review check
         if ($reservation->review()->exists()) {
-            return back()->with('error', 'You have already reviewed this reservation.');
+            return back()->with('error', __('booking.already_reviewed'));
         }
 
         // 6. Validation
@@ -54,6 +54,6 @@ class ReviewController extends Controller
             'comment'  => $cleanComment,
         ]);
 
-        return back()->with('success', 'Thank you! Your review has been published.');
+        return back()->with('success', __('booking.review_published'));
     }
 }

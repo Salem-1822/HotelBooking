@@ -78,4 +78,7 @@ return [
     'book_now' => 'Réserver maintenant',
     'no_rooms_available' => 'Aucune chambre disponible',
     'from' => 'À partir de',
+    'clients_only_title' => 'La réservation est disponible uniquement pour les comptes clients',
+    'sign_in_to_book' => 'Connectez-vous pour réserver cette chambre',
+    'filters_active' => 'Actif',
 ];

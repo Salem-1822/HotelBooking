@@ -18,4 +18,6 @@ return [
     'message' => 'Message',
     'message_placeholder' => 'Écrivez votre message ici...',
     'send_message' => 'Envoyer le message',
+    'send_error' => 'Une erreur est survenue lors de l’envoi de votre message. Veuillez réessayer plus tard.',
+    'send_success' => 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais !',
 ];

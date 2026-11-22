@@ -45,4 +45,6 @@ return [
     'confirm_new_password' => 'Confirmer le nouveau mot de passe',
     'update_password_btn' => 'Mettre à jour le mot de passe',
     'confirm_delete' => 'Êtes-vous sûr de vouloir supprimer cet élément ?',
+    'profile_updated' => 'Informations du profil mises à jour avec succès.',
+    'password_updated' => 'Mot de passe mis à jour avec succès.',
 ];

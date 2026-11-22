@@ -212,7 +212,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('navigation.home') }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('client.reservations.index') }}">{{ __('booking.my_reservations_title') }}</a></li>
-                <li class="breadcrumb-item active">#MOR-RSV-{{ $reservation->id }}</li>
+                <li class="breadcrumb-item active"><span dir="ltr">#MOR-RSV-{{ $reservation->id }}</span></li>
             </ol>
         </nav>
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
@@ -290,7 +290,7 @@
 
                     <div class="data-row">
                         <span class="data-label">{{ __('booking.reference') }}</span>
-                        <span class="data-value" style="font-family:'Poppins',sans-serif; color:var(--brand-primary);">#MOR-RSV-{{ $reservation->id }}</span>
+                        <span class="data-value" style="font-family:'Poppins',sans-serif; color:var(--brand-primary);"><span dir="ltr">#MOR-RSV-{{ $reservation->id }}</span></span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">{{ __('booking.booked_on') }}</span>
@@ -372,7 +372,7 @@
             <div class="summary-card mb-4">
                 <div class="summary-card-header">
                     <div class="ref">{{ __('booking.reference') }}</div>
-                    <div class="ref-val">#MOR-RSV-{{ $reservation->id }}</div>
+                    <div class="ref-val"><span dir="ltr">#MOR-RSV-{{ $reservation->id }}</span></div>
                 </div>
                 <div class="summary-card-body">
 
@@ -413,7 +413,7 @@
                             <div class="label">{{ __('booking.total_paid') }}</div>
                             <div style="font-size:0.72rem; color:var(--text-muted);">{{ trans_choice('client.nights', $nights) }} · {{ trans_choice('hotel.guest_count', $reservation->guests_count) }}</div>
                         </div>
-                        <div class="amount">{{ number_format($reservation->total_price, 0) }}<small style="font-size:0.7rem; font-weight:500; color:var(--text-muted);"> MAD</small></div>
+                        <div class="amount">{{ number_format($reservation->total_price, 0) }}<small style="font-size:0.7rem; font-weight:500; color:var(--text-muted);"> {{ __('common.currency') }}</small></div>
                     </div>
 
                     {{-- Cancel action --}}
@@ -470,7 +470,7 @@
                     <a href="tel:{{ $reservation->hotel->phone }}"
                        style="display:flex; align-items:center; gap:0.625rem; font-size:0.82rem; color:var(--brand-primary); text-decoration:none; margin-bottom:0.5rem; font-weight:600;">
                         <i class="bi bi-telephone" style="color:var(--brand-accent);"></i>
-                        {{ $reservation->hotel->phone }}
+                        <span dir="ltr">{{ $reservation->hotel->phone }}</span>
                     </a>
                     @endif
                     @if($reservation->hotel->email)
@@ -504,7 +504,7 @@
             {{ $reservation->hotel->name ?? 'Your stay' }}
           </p>
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
       </div>
 
       <form action="{{ route('client.reservations.reviews.store', $reservation) }}" method="POST">
@@ -519,15 +519,15 @@
                 <div class="star-rating d-flex flex-row-reverse justify-content-end gap-1"
                      style="font-size:2rem; color:#E2E8F0;">
                     <input type="radio" id="star5" name="rating" value="5" class="d-none" required />
-                    <label for="star5" class="bi bi-star-fill mb-0" title="5 stars" style="cursor:pointer;"></label>
+                    <label for="star5" class="bi bi-star-fill mb-0" title="{{ __('hotel.stars_count', ['count' => 5]) }}" style="cursor:pointer;"></label>
                     <input type="radio" id="star4" name="rating" value="4" class="d-none" />
-                    <label for="star4" class="bi bi-star-fill mb-0" title="4 stars" style="cursor:pointer;"></label>
+                    <label for="star4" class="bi bi-star-fill mb-0" title="{{ __('hotel.stars_count', ['count' => 4]) }}" style="cursor:pointer;"></label>
                     <input type="radio" id="star3" name="rating" value="3" class="d-none" />
-                    <label for="star3" class="bi bi-star-fill mb-0" title="3 stars" style="cursor:pointer;"></label>
+                    <label for="star3" class="bi bi-star-fill mb-0" title="{{ __('hotel.stars_count', ['count' => 3]) }}" style="cursor:pointer;"></label>
                     <input type="radio" id="star2" name="rating" value="2" class="d-none" />
-                    <label for="star2" class="bi bi-star-fill mb-0" title="2 stars" style="cursor:pointer;"></label>
+                    <label for="star2" class="bi bi-star-fill mb-0" title="{{ __('hotel.stars_count', ['count' => 2]) }}" style="cursor:pointer;"></label>
                     <input type="radio" id="star1" name="rating" value="1" class="d-none" />
-                    <label for="star1" class="bi bi-star-fill mb-0" title="1 star" style="cursor:pointer;"></label>
+                    <label for="star1" class="bi bi-star-fill mb-0" title="{{ __('hotel.stars_count', ['count' => 1]) }}" style="cursor:pointer;"></label>
                 </div>
                 @error('rating')
                     <div class="text-danger mt-1" style="font-size:0.78rem;">{{ $message }}</div>

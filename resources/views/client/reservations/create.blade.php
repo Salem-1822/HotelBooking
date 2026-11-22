@@ -57,29 +57,23 @@
 }
 .input-icon-wrap { position: relative; }
 .input-icon-wrap .field-icon {
-    position: absolute; left: 1rem; top: 50%;
+    position: absolute;
+    inset-inline-start: 1rem;
+    inset-inline-end: auto;
+    top: 50%;
     transform: translateY(-50%);
     color: #9CA3AF; font-size: 1rem;
     pointer-events: none; z-index: 2;
 }
 .input-icon-wrap .form-control {
-    padding-left: 2.75rem;
+    padding-inline-start: 2.75rem;
+    padding-inline-end: 1rem;
     border-radius: .75rem;
     border: 1.5px solid var(--border-color);
     background: #F9FAFB;
     font-size: .875rem;
     transition: all .2s ease;
 }
-@if(app()->getLocale() === 'ar')
-.input-icon-wrap .field-icon {
-    left: auto;
-    right: 1rem;
-}
-.input-icon-wrap .form-control {
-    padding-left: 1rem;
-    padding-right: 2.75rem;
-}
-@endif
 .input-icon-wrap .form-control:focus {
     border-color: var(--brand-primary);
     box-shadow: 0 0 0 4px rgba(15,23,42,.08);
@@ -198,7 +192,7 @@
                     <div class="form-card-body">
 
                         @if($errors->any())
-                            <div class="alert alert-danger border-0 rounded-3 mb-4" style="font-size:.875rem; border-left:4px solid #EF4444!important; background:#FEF2F2; color:#991B1B;">
+                            <div class="alert alert-danger border-0 rounded-3 mb-4" style="font-size:.875rem; border-inline-start:4px solid #EF4444!important; background:#FEF2F2; color:#991B1B;">
                                 <ul class="mb-0 ps-3">
                                     @foreach($errors->all() as $error)
                                         <li>{{ $error }}</li>
@@ -289,7 +283,8 @@
                                     <input type="tel" name="phone" id="phone"
                                            class="form-control @error('phone') is-invalid @enderror"
                                            value="{{ old('phone', Auth::guard('web')->user()->phone ?? '') }}"
-                                           placeholder="e.g. +212 600-000000">
+                                           dir="ltr" style="text-align:start;"
+                                           placeholder="{{ __('booking.phone_placeholder') }}">
                                 </div>
                                 @error('phone')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -376,7 +371,7 @@
                         {{-- Price per night --}}
                         <div class="summary-row">
                             <span class="label">{{ __('booking.rate') }}</span>
-                            <span class="value">{{ number_format($room->price_per_night, 2) }} MAD {{ __('hotel.per_night') }}</span>
+                            <span class="value">{{ number_format($room->price_per_night, 2) }} {{ __('common.currency') }} {{ __('hotel.per_night') }}</span>
                         </div>
 
                         {{-- Dynamic total (JS) --}}
@@ -384,7 +379,7 @@
                             <span class="label">{{ __('booking.estimated_total') }}</span>
                             <div class="text-end">
                                 <div class="value" id="totalDisplay">—</div>
-                                <div id="nightsBadge" class="nights-badge d-none">— nights</div>
+                                <div id="nightsBadge" class="nights-badge d-none">— {{ trans_choice('client.nights', 2) }}</div>
                             </div>
                         </div>
 
@@ -421,7 +416,7 @@
         }
         const nights = Math.round((co - ci) / 86400000);
         const total  = nights * pricePerNight;
-        totalEl.textContent = total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' MAD';
+        totalEl.textContent = total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + '{{ __('common.currency') }}';
         badgeEl.textContent = nights + ' ' + (nights === 1 ? '{{ app()->getLocale() === 'fr' ? 'nuit' : (app()->getLocale() === 'ar' ? 'ليلة' : 'night') }}' : '{{ app()->getLocale() === 'fr' ? 'nuits' : (app()->getLocale() === 'ar' ? 'ليالٍ' : 'nights') }}');
         badgeEl.classList.remove('d-none');
 

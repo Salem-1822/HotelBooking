@@ -579,11 +579,11 @@
                     <button class="btn-mobile-filter" id="openFilterDrawer" type="button" aria-label="Open filters">
                         <i class="bi bi-sliders"></i> {{ __('hotel.filters') }}
                         @if($hasFilters)
-                            <span class="badge bg-warning text-dark ms-1" style="font-size:0.7rem;">ON</span>
+                            <span class="badge bg-warning text-dark ms-1" style="font-size:0.7rem;">{{ __('hotel.filters_active') }}</span>
                         @endif
                     </button>
                     <span class="results-count">
-                        <strong>{{ $hotels->total() }}</strong> {{ trans_choice('hotel.hotels_found', $hotels->total()) }}
+                        {!! trans_choice('hotel.hotels_found', $hotels->total(), ['count' => '<strong>' . $hotels->total() . '</strong>']) !!}
                         @if(!empty($validated['search']))
                             {{ __('hotel.for_search', ['search' => $validated['search']]) }}
                         @endif
@@ -670,7 +670,7 @@
                                 <div class="hotel-footer">
                                     <div>
                                         <div class="hotel-price">
-                                            {{ number_format($hotel->starting_price ?? $hotel->price_per_night, 2) }} MAD
+                                            {{ number_format($hotel->starting_price ?? $hotel->price_per_night, 2) }} {{ __('common.currency') }}
                                             <small>{{ __('hotel.per_night') }}</small>
                                         </div>
                                         @if(!$hotel->starting_price && $hotel->rooms()->count() === 0)

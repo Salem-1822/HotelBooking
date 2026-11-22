@@ -25,12 +25,12 @@
     }
     
     .search-input-group {
-        border-right: 1px solid #E2E8F0;
+        border-inline-end: 1px solid #E2E8F0;
     }
     
     @media (max-width: 991px) {
         .search-input-group {
-            border-right: none;
+            border-inline-end: none;
             border-bottom: 1px solid #E2E8F0;
             margin-bottom: 1rem;
             padding-bottom: 1rem;
@@ -367,10 +367,10 @@
                     <div class="col-lg-2 col-md-6 px-3 search-input-group border-0">
                         <label class="search-label"><i class="bi bi-person-fill me-1 text-accent"></i> {{ __('home.search.guests') }}</label>
                         <select class="form-select search-input" name="guests">
-                            <option value="1">1 {{ __('common.room') }} (1)</option>
-                            <option value="2" selected>2 (2)</option>
-                            <option value="3">3 (3)</option>
-                            <option value="4">4+ (4+)</option>
+                            <option value="1">{{ trans_choice('hotel.guest_count', 1) }}</option>
+                            <option value="2" selected>{{ trans_choice('hotel.guest_count', 2) }}</option>
+                            <option value="3">{{ trans_choice('hotel.guest_count', 3) }}</option>
+                            <option value="4">4+ {{ __('hotel.guests') }}</option>
                         </select>
                     </div>
                     <div class="col-lg-1 px-3 mt-3 mt-lg-0 text-center text-lg-end">

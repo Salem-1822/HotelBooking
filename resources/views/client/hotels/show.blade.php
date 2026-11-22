@@ -356,7 +356,7 @@
                     @endfor
                 </div>
                 <span style="font-weight:700; color:#fff;">{{ $avgRating }}</span>
-                <span style="color:rgba(255,255,255,0.6); font-size:0.85rem;">({{ $reviewCount }} {{ trans_choice('hotel.reviews_count', $reviewCount) }})</span>
+                <span style="color:rgba(255,255,255,0.6); font-size:0.85rem;">({{ trans_choice('hotel.reviews_count', $reviewCount) }})</span>
             </div>
             @endif
         </div>
@@ -478,7 +478,7 @@
                     @if($hotel->phone)
                     <div class="hotel-quick-fact">
                         <i class="bi bi-telephone-fill"></i>
-                        <span>{{ $hotel->phone }}</span>
+                        <span dir="ltr">{{ $hotel->phone }}</span>
                     </div>
                     @endif
                     @if($hotel->email)
@@ -645,7 +645,7 @@
                             <div class="room-footer">
                                 <div>
                                     <div class="room-price">
-                                        {{ number_format($room->price_per_night, 2) }} MAD
+                                        {{ number_format($room->price_per_night, 2) }} {{ __('common.currency') }}
                                         <small>{{ __('hotel.per_night') }}</small>
                                     </div>
                                 </div>
@@ -662,7 +662,7 @@
                                         <button type="button"
                                                 class="btn-book-now disabled"
                                                 disabled
-                                                title="Booking is available for client accounts only"
+                                                title="{{ __('hotel.clients_only_title') }}"
                                                 style="opacity: 0.65; cursor: not-allowed; background: #64748B; border-color: #64748B;">
                                             <i class="bi bi-shield-lock me-1"></i> {{ __('hotel.clients_only') }}
                                         </button>
@@ -670,15 +670,15 @@
                                         <a href="{{ route('client.reserve.create', [$hotel, $room]) }}{{ $queryStr }}"
                                            class="btn-book-now"
                                            data-room-id="{{ $room->id }}"
-                                           data-room-title="Room {{ $room->room_number }}"
+                                           data-room-title="{{ __('client.room', ['number' => $room->room_number]) }}"
                                            data-room-price="{{ $room->price_per_night }}"
-                                           title="Book this room">
+                                           title="{{ __('hotel.book_room') }}">
                                             <i class="bi bi-calendar-check me-1"></i> {{ __('hotel.book_room') }}
                                         </a>
                                     @else
                                         <a href="{{ route('client.reserve.create', [$hotel, $room]) }}{{ $queryStr }}"
                                            class="btn-book-now"
-                                           title="Sign in to book this room">
+                                           title="{{ __('hotel.sign_in_to_book') }}">
                                             <i class="bi bi-calendar-check me-1"></i> {{ __('hotel.book_room') }}
                                         </a>
                                     @endif
@@ -714,7 +714,7 @@
                                        style="color:#F59E0B; font-size:0.9rem;"></i>
                                 @endfor
                             </div>
-                            <div class="text-muted mt-1" style="font-size:0.8rem;">{{ $reviewCount }} {{ trans_choice('hotel.reviews_count', $reviewCount) }}</div>
+                            <div class="text-muted mt-1" style="font-size:0.8rem;">{{ trans_choice('hotel.reviews_count', $reviewCount) }}</div>
                         </div>
                         <div class="col">
                             @for($s = 5; $s >= 1; $s--)
@@ -783,7 +783,7 @@
                                 @if($rh->avg_rating)
                                 <div style="font-size:0.8rem; color:var(--text-muted);">
                                     <i class="bi bi-star-fill text-warning" style="font-size:0.72rem;"></i>
-                                    {{ $rh->avg_rating }} &nbsp;·&nbsp; {{ $rh->reviews_count }} {{ trans_choice('hotel.reviews_count', $rh->reviews_count) }}
+                                    {{ $rh->avg_rating }} &nbsp;·&nbsp; {{ trans_choice('hotel.reviews_count', $rh->reviews_count) }}
                                 </div>
                                 @endif
                                 @if($rh->starting_price)
@@ -813,7 +813,7 @@
                     @if($minRoomPrice)
                     <div class="price-from-label">{{ __('hotel.rooms_starting_from') }}</div>
                     <div class="price-hero">
-                        {{ number_format($minRoomPrice, 2) }} MAD
+                        {{ number_format($minRoomPrice, 2) }} {{ __('common.currency') }}
                         <small>{{ __('hotel.per_night') }}</small>
                     </div>
                     @endif
@@ -884,7 +884,7 @@
                 @if($hotel->phone)
                 <div class="text-center mt-4" style="font-size:0.82rem; color:var(--text-muted);">
                     {{ __('hotel.questions_call_us') }}<br>
-                    <a href="tel:{{ $hotel->phone }}" style="color:var(--brand-primary); font-weight:600;">{{ $hotel->phone }}</a>
+                    <a href="tel:{{ $hotel->phone }}" dir="ltr" style="color:var(--brand-primary); font-weight:600;">{{ $hotel->phone }}</a>
                 </div>
                 @endif
             </div>
@@ -901,7 +901,7 @@
         @if($minRoomPrice ?? null)
         <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">{{ __('hotel.from') }}</div>
         <div style="font-size:1.25rem; font-weight:800; color:var(--brand-primary);">
-            {{ number_format($minRoomPrice, 2) }} MAD<small style="font-size:0.72rem; font-weight:400; color:var(--text-muted);">{{ __('hotel.per_night') }}</small>
+            {{ number_format($minRoomPrice, 2) }} {{ __('common.currency') }}<small style="font-size:0.72rem; font-weight:400; color:var(--text-muted);">{{ __('hotel.per_night') }}</small>
         </div>
         @endif
     </div>
@@ -926,7 +926,7 @@ function selectRoom(btn) {
     const panel = document.getElementById('selectedRoomInfo');
     if (!panel) return;
     document.getElementById('selectedRoomTitle').textContent = title;
-    document.getElementById('selectedRoomPrice').textContent = price.toFixed(2) + ' MAD / night';
+    document.getElementById('selectedRoomPrice').textContent = price.toFixed(2) + ' ' + '{{ __('common.currency') }} {{ __('hotel.per_night') }}';
     panel.style.display = 'block';
     // Highlight all book-now buttons; dim others
     document.querySelectorAll('.btn-book-now:not(.unavailable)').forEach(b => {

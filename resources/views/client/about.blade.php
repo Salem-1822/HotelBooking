@@ -145,7 +145,7 @@
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        margin-right: 1.25rem;
+        margin-inline-end: 1.25rem;
     }
 
     .feature-icon-wrapper i {

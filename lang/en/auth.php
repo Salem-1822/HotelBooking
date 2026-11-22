@@ -57,4 +57,13 @@ return [
     'min_characters' => 'Minimum 8 characters.',
     'reset_password_button' => 'Reset Password',
     'toggle_password' => 'Toggle password visibility',
+    'account_created' => 'Account created successfully! Please log in to continue.',
+    'val_name_required' => 'Please enter your full name.',
+    'val_name_max' => 'Name may not exceed 255 characters.',
+    'val_email_required' => 'Please enter your email address.',
+    'val_email_valid' => 'Please enter a valid email address.',
+    'val_email_unique' => 'An account with this email already exists.',
+    'val_password_required' => 'Please enter a password.',
+    'val_password_min' => 'Password must be at least 8 characters.',
+    'val_password_confirmed' => 'Passwords do not match.',
 ];

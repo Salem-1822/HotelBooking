@@ -232,7 +232,7 @@
                                 @endphp
                                 <tr style="border-bottom:1px solid var(--border-color);">
                                     <td style="padding:.875rem 1.25rem; white-space:nowrap;">
-                                        <span style="font-weight:700; color:var(--brand-primary); font-size:.82rem;">#MOR-RSV-{{ $res->id }}</span>
+                                        <span style="font-weight:700; color:var(--brand-primary); font-size:.82rem;" dir="ltr">#MOR-RSV-{{ $res->id }}</span>
                                         <div style="font-size:.72rem; color:var(--text-muted); margin-top:.15rem;">
                                             {{ $res->created_at->format('d M Y') }}
                                         </div>
@@ -256,14 +256,14 @@
                                         </div>
                                         <div style="font-size:.78rem; color:var(--text-muted);">
                                             <i class="bi bi-arrow-right mx-1 rtl-flip text-muted"></i>{{ \Carbon\Carbon::parse($res->check_out)->format('d M Y') }}
-                                            <span style="margin-left:.35rem; font-weight:600;">{{ $nights }}n</span>
+                                            <span style="margin-inline-start:.35rem; font-weight:600;">({{ trans_choice('client.nights', $nights) }})</span>
                                         </div>
                                     </td>
                                     <td style="padding:.875rem 1rem; text-align:center;">
                                         <span style="font-weight:600;">{{ $res->guests_count }}</span>
                                     </td>
                                     <td style="padding:.875rem 1rem; white-space:nowrap;">
-                                        <span style="font-weight:700; color:var(--brand-primary);">{{ number_format($res->total_price, 2) }} MAD</span>
+                                        <span style="font-weight:700; color:var(--brand-primary);">{{ number_format($res->total_price, 2) }} {{ __('common.currency') }}</span>
                                     </td>
                                     <td style="padding:.875rem 1rem;">
                                         <span style="display:inline-flex; align-items:center; gap:.3rem;
@@ -281,7 +281,7 @@
                         </table>
                     </div>
                 </div>
-                <p style="font-size:.75rem; color:var(--text-muted); margin-top:.75rem; text-align:right;">
+                <p style="font-size:.75rem; color:var(--text-muted); margin-top:.75rem; text-align:end;">
                     <i class="bi bi-info-circle me-1"></i>
                     {{ __('client.recent_reservations_note', ['count' => $reservations->count()]) }}
                 </p>

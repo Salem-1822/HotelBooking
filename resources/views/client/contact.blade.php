@@ -44,16 +44,9 @@
     .info-item i {
         font-size: 1.5rem;
         color: var(--brand-accent);
-        margin-right: 1rem;
+        margin-inline-end: 1rem;
         margin-top: 0.25rem;
     }
-
-    @if(app()->getLocale() === 'ar')
-    .info-item i {
-        margin-right: 0;
-        margin-left: 1rem;
-    }
-    @endif
 
     .contact-form-panel {
         padding: 3rem;
@@ -85,7 +78,7 @@
                         <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
                             <i class="bi bi-check-circle-fill me-2"></i>
                             {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('common.close') }}"></button>
                         </div>
                     @endif
 
@@ -93,7 +86,7 @@
                         <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
                             <i class="bi bi-exclamation-octagon-fill me-2"></i>
                             {{ session('error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('common.close') }}"></button>
                         </div>
                     @endif
 
@@ -120,7 +113,7 @@
                                     <i class="bi bi-telephone-fill"></i>
                                     <div>
                                         <h6 class="mb-1 fw-bold">{{ __('contact.call_us') }}</h6>
-                                        <p class="text-white-50 mb-0">+212 500 000 000</p>
+                                        <p class="text-white-50 mb-0" dir="ltr">+212 500 000 000</p>
                                     </div>
                                 </div>
                             </div>

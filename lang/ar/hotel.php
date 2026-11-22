@@ -78,4 +78,7 @@ return [
     'book_now' => 'احجز الآن',
     'no_rooms_available' => 'لا توجد غرف متاحة',
     'from' => 'ابتداءً من',
+    'clients_only_title' => 'الحجز متاح فقط لحسابات العملاء',
+    'sign_in_to_book' => 'سجل الدخول لحجز هذه الغرفة',
+    'filters_active' => 'مفعل',
 ];

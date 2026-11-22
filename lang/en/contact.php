@@ -18,4 +18,6 @@ return [
     'message' => 'Message',
     'message_placeholder' => 'Type your message here...',
     'send_message' => 'Send Message',
+    'send_error' => 'An error occurred while sending your message. Please try again later.',
+    'send_success' => 'Your message has been sent successfully. We will get back to you soon!',
 ];
