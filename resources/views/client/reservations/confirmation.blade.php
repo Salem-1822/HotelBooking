@@ -218,14 +218,14 @@
                         @php
                             $nights = \Carbon\Carbon::parse($reservation->check_in)->diffInDays(\Carbon\Carbon::parse($reservation->check_out));
                         @endphp
-                        {{ $nights }} {{ trans_choice('client.nights', $nights) }}
+                        {{ trans_choice('client.nights', $nights) }}
                     </span>
                 </div>
 
                 {{-- Guests --}}
                 <div class="detail-row">
                     <span class="d-label">{{ __('booking.guests') }}</span>
-                    <span class="d-value">{{ $reservation->guests_count }} {{ trans_choice('hotel.guest_count', $reservation->guests_count) }}</span>
+                    <span class="d-value">{{ trans_choice('hotel.guest_count', $reservation->guests_count) }}</span>
                 </div>
 
                 {{-- Guest name (from auth) --}}

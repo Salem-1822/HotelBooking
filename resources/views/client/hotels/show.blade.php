@@ -539,9 +539,9 @@
                         <i class="bi bi-calendar-range-fill" style="color:#3B82F6;"></i>
                         <span>
                             {{ __('hotel.showing_availability_for') }} <strong>{{ $ci->format('d M Y') }}</strong> <i class="bi bi-arrow-right mx-1 rtl-flip text-muted"></i> <strong>{{ $co->format('d M Y') }}</strong>
-                            ({{ $nights }} {{ trans_choice('client.nights', $nights) }})
+                            ({{ trans_choice('client.nights', $nights) }})
                             @if(!empty($validated['guests']))
-                                · <strong>{{ $validated['guests'] }}</strong> {{ trans_choice('hotel.guest_count', (int)$validated['guests']) }}
+                                · <strong>{{ trans_choice('hotel.guest_count', (int)$validated['guests']) }}</strong>
                             @endif
                         </span>
                         <a href="{{ route('hotels.show', $hotel) }}" class="ms-auto text-muted" style="font-size:0.78rem; text-decoration:none; white-space:nowrap;">

@@ -307,12 +307,12 @@
                     <div class="data-row">
                         <span class="data-label">{{ __('booking.duration') }}</span>
                         <span class="data-value">
-                            {{ $nights }} {{ trans_choice('client.nights', $nights) }}
+                            {{ trans_choice('client.nights', $nights) }}
                         </span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">{{ __('booking.guests') }}</span>
-                        <span class="data-value"><i class="bi bi-people me-1 text-muted"></i>{{ $reservation->guests_count }} {{ trans_choice('hotel.guest_count', $reservation->guests_count) }}</span>
+                        <span class="data-value"><i class="bi bi-people me-1 text-muted"></i>{{ trans_choice('hotel.guest_count', $reservation->guests_count) }}</span>
                     </div>
                     @if($reservation->hotel?->check_in_time || $reservation->hotel?->check_out_time)
                     <div class="data-row">
@@ -398,7 +398,7 @@
                             </div>
                             <div style="display:flex; justify-content:space-between; font-size:0.82rem;">
                                 <span style="color:var(--text-muted);">{{ __('booking.duration') }}</span>
-                                <span style="font-weight:600;">{{ $nights }} {{ trans_choice('client.nights', $nights) }}</span>
+                                <span style="font-weight:600;">{{ trans_choice('client.nights', $nights) }}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; font-size:0.82rem;">
                                 <span style="color:var(--text-muted);">{{ __('booking.guests') }}</span>
@@ -411,7 +411,7 @@
                     <div class="price-total mb-4">
                         <div>
                             <div class="label">{{ __('booking.total_paid') }}</div>
-                            <div style="font-size:0.72rem; color:var(--text-muted);">{{ $nights }} {{ trans_choice('client.nights', $nights) }} · {{ $reservation->guests_count }} {{ trans_choice('hotel.guest_count', $reservation->guests_count) }}</div>
+                            <div style="font-size:0.72rem; color:var(--text-muted);">{{ trans_choice('client.nights', $nights) }} · {{ trans_choice('hotel.guest_count', $reservation->guests_count) }}</div>
                         </div>
                         <div class="amount">{{ number_format($reservation->total_price, 0) }}<small style="font-size:0.7rem; font-weight:500; color:var(--text-muted);"> MAD</small></div>
                     </div>

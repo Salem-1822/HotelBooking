@@ -263,7 +263,7 @@
                         <div class="date-label">{{ __('booking.check_out') }}</div>
                         <div class="date-val">{{ \Carbon\Carbon::parse($res->check_out)->format('d M Y') }}</div>
                     </div>
-                    <span class="res-nights-badge">{{ $nights }} {{ trans_choice('client.nights', $nights) }}</span>
+                    <span class="res-nights-badge">{{ trans_choice('client.nights', $nights) }}</span>
                 </div>
 
                 {{-- Guests --}}
