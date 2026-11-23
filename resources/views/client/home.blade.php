@@ -3,8 +3,7 @@
 @section('title', 'Luxury Hotels & Resorts')
 
 @push('head')
-<link rel="preload" as="image" href="{{ asset('images/hero-bg.webp') }}" fetchpriority="high" media="(min-width: 769px)" type="image/webp">
-<link rel="preload" as="image" href="{{ asset('images/hero-bg-mobile.webp') }}" fetchpriority="high" media="(max-width: 768px)" type="image/webp">
+<link rel="preload" as="image" href="{{ asset('images/hero-bg-mobile.webp') }}" media="(max-width: 768px)" fetchpriority="high" type="image/webp">
 @endpush
 
 @push('styles')
@@ -485,6 +484,8 @@
                                 <div class="hotel-img-wrapper">
                                     @if($hotel->stars)
                                         <div class="hotel-badge" style="background-color: #0F172A !important; color: #FFFFFF !important; font-weight: 700 !important;"><i class="bi bi-star-fill me-1" style="color:#F59E0B !important;" aria-hidden="true"></i> {{ $hotel->stars }} {{ __('common.stars') }}</div>
+                                    @else
+                                        <div class="hotel-badge" style="background-color: #0F172A !important; color: #FFFFFF !important; font-weight: 700 !important;"><i class="bi bi-building me-1" style="color:#D4AF37 !important;" aria-hidden="true"></i> HOTEL</div>
                                     @endif
                                     @php
                                         $hotelImgUrl = $hotel->image_url;

@@ -109,7 +109,7 @@
             border-color: #D4AF37 !important;
             color: #0F172A !important;
             border-radius: 0.625rem;
-            font-weight: 600 !important;
+            font-weight: 700 !important;
             font-size: 0.95rem;
             padding: 0.5rem 1.5rem;
             transition: all 0.2s ease;
@@ -491,7 +491,7 @@
                         </div>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-outline-light-custom">{{ __('navigation.login') }}</a>
-                        <a href="{{ route('client.register') }}" class="btn btn-accent" style="background-color: #D4AF37 !important; color: #0F172A !important; border-color: #D4AF37 !important; font-weight: 600 !important;">{{ __('navigation.register') }}</a>
+                        <a href="{{ route('client.register') }}" class="btn btn-accent" style="background-color: #D4AF37 !important; color: #0F172A !important; border-color: #D4AF37 !important; font-weight: 700 !important;">{{ __('navigation.register') }}</a>
                     @endauth
                 </div>
             </div>

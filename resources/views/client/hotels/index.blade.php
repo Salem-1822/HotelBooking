@@ -640,6 +640,10 @@
                                     <div class="hotel-stars-badge" style="background-color: #0F172A !important; color: #FFFFFF !important; font-weight: 700 !important;">
                                         <i class="bi bi-star-fill me-1" style="color:#F59E0B !important;" aria-hidden="true"></i>{{ __('hotel.stars_count', ['count' => $hotel->stars]) }}
                                     </div>
+                                @else
+                                    <div class="hotel-stars-badge" style="background-color: #0F172A !important; color: #FFFFFF !important; font-weight: 700 !important;">
+                                        <i class="bi bi-building me-1" style="color:#D4AF37 !important;" aria-hidden="true"></i> HOTEL
+                                    </div>
                                 @endif
                                 @php
                                     $hotelCardImg = $hotel->image_url;
