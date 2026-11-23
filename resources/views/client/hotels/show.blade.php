@@ -327,8 +327,16 @@
     <div class="hero-gallery-wrap" id="heroGallery">
 
         {{-- Main hotel photo --}}
+        @php
+            $heroHotelImg = $hotel->image_url;
+            if (str_contains($heroHotelImg, 'images.unsplash.com')) {
+                $heroHotelImg = preg_match('/w=\d+/', $heroHotelImg)
+                    ? preg_replace('/w=\d+/', 'w=1200&q=75&fm=webp', $heroHotelImg)
+                    : $heroHotelImg . (str_contains($heroHotelImg, '?') ? '&' : '?') . 'w=1200&q=75&fm=webp';
+            }
+        @endphp
         <img id="heroMainImg"
-             src="{{ $hotel->image_url }}"
+             src="{{ $heroHotelImg }}"
              class="hero-main-img"
              alt="{{ $hotel->name }}"
              width="1200"
@@ -601,8 +609,9 @@
                             @php
                                 $roomCardImg = $room->main_image_url;
                                 if (str_contains($roomCardImg, 'images.unsplash.com')) {
-                                    $roomCardImg = preg_replace('/[?&](?:w|h|fit|fm|q)=[^&]*/', '', $roomCardImg);
-                                    $roomCardImg .= (str_contains($roomCardImg, '?') ? '&' : '?') . 'w=220&h=160&fit=crop&fm=webp&q=75';
+                                    $roomCardImg = preg_match('/w=\d+/', $roomCardImg)
+                                        ? preg_replace('/w=\d+/', 'w=220&q=75&fm=webp', $roomCardImg)
+                                        : $roomCardImg . (str_contains($roomCardImg, '?') ? '&' : '?') . 'w=220&q=75&fm=webp';
                                 }
                             @endphp
                             <img src="{{ $roomCardImg }}"
@@ -787,8 +796,9 @@
                         @php
                             $rhImg = $rh->image_url;
                             if (str_contains($rhImg, 'images.unsplash.com')) {
-                                $rhImg = preg_replace('/[?&](?:w|h|fit|fm|q)=[^&]*/', '', $rhImg);
-                                $rhImg .= (str_contains($rhImg, '?') ? '&' : '?') . 'w=300&h=140&fit=crop&fm=webp&q=75';
+                                $rhImg = preg_match('/w=\d+/', $rhImg)
+                                    ? preg_replace('/w=\d+/', 'w=300&q=75&fm=webp', $rhImg)
+                                    : $rhImg . (str_contains($rhImg, '?') ? '&' : '?') . 'w=300&q=75&fm=webp';
                             }
                         @endphp
                         <a href="{{ route('hotels.show', $rh) }}" class="related-card">

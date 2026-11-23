@@ -212,7 +212,10 @@
     display: flex; align-items: center; justify-content: center;
 }
 .hotel-img-placeholder i { font-size: 3.5rem; color: rgba(255,255,255,0.12); }
-.hotel-stars-badge {
+.hotel-stars-badge,
+.hotel-badge,
+.category-badge,
+.hotel-card .badge {
     position: absolute; top: 0.75rem; left: 0.75rem;
     background-color: #0F172A !important;
     color: #FFFFFF !important;
@@ -224,7 +227,10 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 @if(app()->getLocale() === 'ar')
-.hotel-stars-badge { left: auto; right: 0.75rem; }
+.hotel-stars-badge,
+.hotel-badge,
+.category-badge,
+.hotel-card .badge { left: auto; right: 0.75rem; }
 @endif
 .hotel-body {
     padding: 1.25rem;
@@ -638,8 +644,9 @@
                                 @php
                                     $hotelCardImg = $hotel->image_url;
                                     if (str_contains($hotelCardImg, 'images.unsplash.com')) {
-                                        $hotelCardImg = preg_replace('/[?&](?:w|h|fit|fm|q)=[^&]*/', '', $hotelCardImg);
-                                        $hotelCardImg .= (str_contains($hotelCardImg, '?') ? '&' : '?') . 'w=400&h=210&fit=crop&fm=webp&q=75';
+                                        $hotelCardImg = preg_match('/w=\d+/', $hotelCardImg)
+                                            ? preg_replace('/w=\d+/', 'w=500&q=75&fm=webp', $hotelCardImg)
+                                            : $hotelCardImg . (str_contains($hotelCardImg, '?') ? '&' : '?') . 'w=500&q=75&fm=webp';
                                     }
                                 @endphp
                                 <img src="{{ $hotelCardImg }}"
@@ -648,7 +655,7 @@
                                      height="210"
                                      loading="lazy"
                                      decoding="async"
-                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=210&fit=crop&fm=webp&q=75'">
+                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&q=75&fm=webp'">
                             </div>
 
                             <!-- Body -->

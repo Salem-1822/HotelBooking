@@ -219,7 +219,10 @@
         transform: scale(1.05);
     }
     
-    .hotel-badge {
+    .hotel-badge,
+    .hotel-stars-badge,
+    .category-badge,
+    .hotel-card .badge {
         position: absolute;
         top: 1rem;
         left: 1rem;
@@ -438,13 +441,14 @@
                         @php
                             $cityImgUrl = $city->image_url;
                             if (str_contains($cityImgUrl, 'images.unsplash.com')) {
-                                $cityImgUrl = preg_replace('/[?&](?:w|h|fit|fm|q)=[^&]*/', '', $cityImgUrl);
-                                $cityImgUrl .= (str_contains($cityImgUrl, '?') ? '&' : '?') . 'w=500&h=300&fit=crop&fm=webp&q=75';
+                                $cityImgUrl = preg_match('/w=\d+/', $cityImgUrl)
+                                    ? preg_replace('/w=\d+/', 'w=500&q=75&fm=webp', $cityImgUrl)
+                                    : $cityImgUrl . (str_contains($cityImgUrl, '?') ? '&' : '?') . 'w=500&q=75&fm=webp';
                             }
                         @endphp
                         <div class="{{ $index % 4 == 0 || $index % 4 == 3 ? 'col-lg-7' : 'col-lg-5' }} col-md-6 reveal" style="transition-delay: {{ ($index % 4) * 0.1 }}s;">
                             <a href="{{ route('hotels.index', ['city_id' => $city->id]) }}" class="destination-card" aria-label="{{ $city->name }} - {{ __('home.destinations.hotels_count', ['count' => $city->hotels_count]) }}">
-                                <img src="{{ $cityImgUrl }}" width="500" height="300" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=500&h=300&fm=webp&q=75';" alt="{{ $city->name }}">
+                                <img src="{{ $cityImgUrl }}" width="500" height="300" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=500&q=75&fm=webp';" alt="{{ $city->name }}">
                                 <div class="destination-content">
                                     <h3 class="destination-title">{{ $city->name }}</h3>
                                     <div class="destination-count">{{ __('home.destinations.hotels_count', ['count' => $city->hotels_count]) }}</div>
@@ -485,11 +489,12 @@
                                     @php
                                         $hotelImgUrl = $hotel->image_url;
                                         if (str_contains($hotelImgUrl, 'images.unsplash.com')) {
-                                            $hotelImgUrl = preg_replace('/[?&](?:w|h|fit|fm|q)=[^&]*/', '', $hotelImgUrl);
-                                            $hotelImgUrl .= (str_contains($hotelImgUrl, '?') ? '&' : '?') . 'w=400&h=220&fit=crop&fm=webp&q=75';
+                                            $hotelImgUrl = preg_match('/w=\d+/', $hotelImgUrl)
+                                                ? preg_replace('/w=\d+/', 'w=500&q=75&fm=webp', $hotelImgUrl)
+                                                : $hotelImgUrl . (str_contains($hotelImgUrl, '?') ? '&' : '?') . 'w=500&q=75&fm=webp';
                                         }
                                     @endphp
-                                    <img src="{{ $hotelImgUrl }}" width="400" height="220" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-c6a4d27a6582?auto=format&fit=crop&w=400&h=220&fm=webp&q=75';" alt="{{ $hotel->name }}">
+                                    <img src="{{ $hotelImgUrl }}" width="400" height="220" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-c6a4d27a6582?w=500&q=75&fm=webp';" alt="{{ $hotel->name }}">
                                 </div>
                                 <div class="hotel-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
