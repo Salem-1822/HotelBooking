@@ -56,6 +56,19 @@
         border-color: var(--brand-accent);
         box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
     }
+
+    /* RTL email input: ensure email text and placeholder remain LTR and left-aligned */
+    [dir="rtl"] #email,
+    html[dir="rtl"] #email {
+        direction: ltr !important;
+        text-align: left !important;
+    }
+
+    [dir="rtl"] #email::placeholder,
+    html[dir="rtl"] #email::placeholder {
+        direction: ltr !important;
+        text-align: left !important;
+    }
 </style>
 @endpush
 
@@ -137,7 +150,7 @@
                                         
                                         <div class="col-sm-6">
                                             <label for="email" class="form-label fw-semibold">{{ __('contact.your_email') }} <span class="text-danger">*</span></label>
-                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', Auth::guard('web')->user()?->email) }}" placeholder="{{ __('contact.email_placeholder') }}" required>
+                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', Auth::guard('web')->user()?->email) }}" placeholder="{{ __('contact.email_placeholder') }}" dir="ltr" style="text-align: left;" required>
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
