@@ -29,6 +29,7 @@
         justify-content: center;
     }
 
+    .contact-info-panel h2,
     .contact-info-panel h4 {
         color: var(--brand-accent);
         font-weight: 700;
@@ -107,25 +108,25 @@
                         <!-- Contact Info -->
                         <div class="col-md-5 d-none d-md-block">
                             <div class="contact-info-panel">
-                                <h4>{{ __('contact.get_in_touch') }}</h4>
+                                <h2 class="h4 fw-bold mb-4" style="color: var(--brand-accent);">{{ __('contact.get_in_touch') }}</h2>
                                 <div class="info-item">
-                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
                                     <div>
-                                        <h6 class="mb-1 fw-bold">{{ __('contact.our_location') }}</h6>
+                                        <h3 class="h6 mb-1 fw-bold">{{ __('contact.our_location') }}</h3>
                                         <p class="text-white-50 mb-0">{!! __('contact.our_location_val') !!}</p>
                                     </div>
                                 </div>
                                 <div class="info-item">
-                                    <i class="bi bi-envelope-paper-fill"></i>
+                                    <i class="bi bi-envelope-paper-fill" aria-hidden="true"></i>
                                     <div>
-                                        <h6 class="mb-1 fw-bold">{{ __('contact.email_us') }}</h6>
+                                        <h3 class="h6 mb-1 fw-bold">{{ __('contact.email_us') }}</h3>
                                         <p class="text-white-50 mb-0">support@hotelbooking.com</p>
                                     </div>
                                 </div>
                                 <div class="info-item">
-                                    <i class="bi bi-telephone-fill"></i>
+                                    <i class="bi bi-telephone-fill" aria-hidden="true"></i>
                                     <div>
-                                        <h6 class="mb-1 fw-bold">{{ __('contact.call_us') }}</h6>
+                                        <h3 class="h6 mb-1 fw-bold">{{ __('contact.call_us') }}</h3>
                                         <p class="text-white-50 mb-0" dir="ltr">+212 500 000 000</p>
                                     </div>
                                 </div>
@@ -135,7 +136,7 @@
                         <!-- Contact Form -->
                         <div class="col-md-7">
                             <div class="contact-form-panel">
-                                <h3 class="fw-bold mb-4">{{ __('contact.send_us_a_message') }}</h3>
+                                <h2 class="h3 fw-bold mb-4">{{ __('contact.send_us_a_message') }}</h2>
                                 <form action="{{ route('contact.store') }}" method="POST">
                                     @csrf
                                     

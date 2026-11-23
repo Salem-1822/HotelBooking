@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', __('common.app_name')) | HotelBooking</title>
+    <meta name="description" content="@yield('meta_description', 'Discover and book luxury hotels, resorts, and exclusive rooms with HotelBooking. Seamless reservations, best rates, and premium comfort.')">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Fonts: Poppins + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,7 +78,7 @@
         }
 
         .nav-link {
-            color: rgba(255, 255, 255, 0.8) !important;
+            color: rgba(255, 255, 255, 0.9) !important;
             font-weight: 500;
             font-size: 0.95rem;
             margin: 0 0.5rem;
@@ -90,9 +93,9 @@
         .btn-accent {
             background-color: var(--brand-accent);
             border-color: var(--brand-accent);
-            color: #fff;
+            color: #0F172A;
             border-radius: 0.625rem;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.95rem;
             padding: 0.5rem 1.5rem;
             transition: all 0.2s ease;
@@ -102,7 +105,7 @@
         .btn-accent:hover {
             background-color: var(--brand-accent-dark);
             border-color: var(--brand-accent-dark);
-            color: #fff;
+            color: #0F172A;
             transform: translateY(-1px);
         }
 
@@ -140,7 +143,7 @@
         /* Footer */
         .footer {
             background-color: var(--brand-primary);
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.85);
             padding: 4rem 0 2rem;
             margin-top: auto;
         }
@@ -152,7 +155,7 @@
         }
 
         .footer-link {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
             transition: color 0.2s;
             display: block;
@@ -362,6 +365,7 @@
         }
     </style>
     @stack('styles')
+    @stack('head')
 </head>
 
 <body>
@@ -373,7 +377,7 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
                 aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation"
                 style="border-color: rgba(255,255,255,0.5);">
-                <i class="bi bi-list text-white fs-2"></i>
+                <i class="bi bi-list text-white fs-2" aria-hidden="true"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -408,15 +412,15 @@
                     <!-- Language Dropdown -->
                     <div class="dropdown">
                         <button class="btn lang-dropdown-btn d-flex align-items-center gap-2" type="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-globe" style="font-size: 1.1rem; color: rgba(255,255,255,0.7);"></i>
+                            data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language">
+                            <i class="bi bi-globe" style="font-size: 1.1rem; color: rgba(255,255,255,0.85);" aria-hidden="true"></i>
                             <span style="font-size: 0.85rem; font-weight: 500;">
                                 @if(app()->getLocale() === 'fr') Français
                                 @elseif(app()->getLocale() === 'ar') العربية
                                 @else English
                                 @endif
                             </span>
-                            <i class="bi bi-chevron-expand" style="font-size: 0.8rem; color: rgba(255,255,255,0.5);"></i>
+                            <i class="bi bi-chevron-expand" style="font-size: 0.8rem; color: rgba(255,255,255,0.7);" aria-hidden="true"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-sm"
                             style="border-radius: 0.625rem; border: 1px solid rgba(255,255,255,0.1); background: #1E293B; padding: 0.5rem; min-width: 150px;">
@@ -441,8 +445,8 @@
                                         {{ Auth::guard('web')->user()->name }}
                                     </div>
                                 </div>
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('web')->user()->name) }}&background=D4AF37&color=fff"
-                                    class="rounded-circle" width="38" height="38" alt="">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('web')->user()->name) }}&background=D4AF37&color=0F172A"
+                                    class="rounded-circle" width="38" height="38" alt="{{ Auth::guard('web')->user()->name }}" loading="lazy" decoding="async">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm"
                                 style="border-radius: 0.875rem; border: 1px solid var(--border-color);">
@@ -480,12 +484,12 @@
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
                     <div class="navbar-brand mb-3" style="font-size: 1.8rem;">HotelBooking</div>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem;">{{ __('navigation.footer_tagline') }}</p>
+                    <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">{{ __('navigation.footer_tagline') }}</p>
                     <div class="d-flex gap-3 mt-4">
-                        <a href="#" class="text-white text-decoration-none fs-5"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="text-white text-decoration-none fs-5"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="text-white text-decoration-none fs-5"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="text-white text-decoration-none fs-5"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="text-white text-decoration-none fs-5" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white text-decoration-none fs-5" aria-label="Twitter / X"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white text-decoration-none fs-5" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white text-decoration-none fs-5" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-6">
@@ -502,21 +506,22 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <h5 class="footer-heading">{{ __('navigation.newsletter') }}</h5>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem;">{{ __('navigation.newsletter_desc') }}</p>
+                    <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">{{ __('navigation.newsletter_desc') }}</p>
                     <div class="input-group mt-3">
-                        <input type="email" class="form-control bg-transparent text-white" placeholder="{{ __('navigation.email_placeholder') }}"
-                            style="border-color: rgba(255,255,255,0.2);">
-                        <button class="btn btn-accent" type="button">{{ __('navigation.subscribe') }}</button>
+                        <label for="footer_newsletter_email" class="visually-hidden">{{ __('navigation.email_placeholder') }}</label>
+                        <input type="email" id="footer_newsletter_email" class="form-control bg-transparent text-white" placeholder="{{ __('navigation.email_placeholder') }}" aria-label="{{ __('navigation.email_placeholder') }}"
+                            style="border-color: rgba(255,255,255,0.25);">
+                        <button class="btn btn-accent" type="button" aria-label="{{ __('navigation.subscribe') }}">{{ __('navigation.subscribe') }}</button>
                     </div>
                 </div>
             </div>
             <div class="border-top mt-5 pt-4 text-center" style="border-color: rgba(255,255,255,0.1) !important;">
-                <p class="mb-0" style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">{!! __('navigation.all_rights_reserved', ['year' => date('Y')]) !!}</p>
+                <p class="mb-0" style="color: rgba(255,255,255,0.8); font-size: 0.85rem;">{!! __('navigation.all_rights_reserved', ['year' => date('Y')]) !!}</p>
             </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
     <script>
         // Navbar scroll effect
         window.addEventListener('scroll', function () {

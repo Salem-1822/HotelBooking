@@ -208,7 +208,7 @@
                             <div class="mb-4 p-3" style="background:#F8FAFC; border-radius:.875rem; border:1px solid var(--border-color);">
                                 <div class="d-flex align-items-center gap-3">
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('web')->user()->name) }}&background=0F172A&color=fff&size=48"
-                                         class="rounded-circle" width="48" height="48" alt="">
+                                         class="rounded-circle" width="48" height="48" alt="{{ Auth::guard('web')->user()->name }}" loading="lazy" decoding="async">
                                     <div>
                                         <div style="font-weight:700; color:var(--text-primary);">{{ Auth::guard('web')->user()->name }}</div>
                                         <div style="font-size:.82rem; color:var(--text-muted);">{{ Auth::guard('web')->user()->email }}</div>

@@ -281,17 +281,17 @@
                 </p>
                 <div class="d-flex align-items-center gap-4 mt-5">
                     <div>
-                        <h4 class="fw-bold text-dark mb-1">{{ __('about.mission.simple') }}</h4>
+                        <h3 class="fw-bold text-dark mb-1 fs-5">{{ __('about.mission.simple') }}</h3>
                         <span class="text-muted small">{{ __('about.mission.simple_sub') }}</span>
                     </div>
                     <div style="width: 1px; height: 40px; background: #E2E8F0;"></div>
                     <div>
-                        <h4 class="fw-bold text-dark mb-1">{{ __('about.mission.secure') }}</h4>
+                        <h3 class="fw-bold text-dark mb-1 fs-5">{{ __('about.mission.secure') }}</h3>
                         <span class="text-muted small">{{ __('about.mission.secure_sub') }}</span>
                     </div>
                     <div style="width: 1px; height: 40px; background: #E2E8F0;"></div>
                     <div>
-                        <h4 class="fw-bold text-dark mb-1">{{ __('about.mission.clear') }}</h4>
+                        <h3 class="fw-bold text-dark mb-1 fs-5">{{ __('about.mission.clear') }}</h3>
                         <span class="text-muted small">{{ __('about.mission.clear_sub') }}</span>
                     </div>
                 </div>
@@ -371,7 +371,7 @@
                             <i class="bi bi-building"></i>
                         </div>
                         <div class="feature-content">
-                            <h5>{{ __('about.offer.item1_title') }}</h5>
+                            <h3 class="fw-bold fs-6 mb-1 text-dark">{{ __('about.offer.item1_title') }}</h3>
                             <p>{{ __('about.offer.item1_desc') }}</p>
                         </div>
                     </li>
@@ -380,7 +380,7 @@
                             <i class="bi bi-check-circle"></i>
                         </div>
                         <div class="feature-content">
-                            <h5>{{ __('about.offer.item2_title') }}</h5>
+                            <h3 class="fw-bold fs-6 mb-1 text-dark">{{ __('about.offer.item2_title') }}</h3>
                             <p>{{ __('about.offer.item2_desc') }}</p>
                         </div>
                     </li>
@@ -389,7 +389,7 @@
                             <i class="bi bi-person-workspace"></i>
                         </div>
                         <div class="feature-content">
-                            <h5>{{ __('about.offer.item3_title') }}</h5>
+                            <h3 class="fw-bold fs-6 mb-1 text-dark">{{ __('about.offer.item3_title') }}</h3>
                             <p>{{ __('about.offer.item3_desc') }}</p>
                         </div>
                     </li>
@@ -398,7 +398,7 @@
                             <i class="bi bi-star"></i>
                         </div>
                         <div class="feature-content">
-                            <h5>{{ __('about.offer.item4_title') }}</h5>
+                            <h3 class="fw-bold fs-6 mb-1 text-dark">{{ __('about.offer.item4_title') }}</h3>
                             <p>{{ __('about.offer.item4_desc') }}</p>
                         </div>
                     </li>
@@ -413,7 +413,7 @@
                     </div>
                 </div>
                 <div class="bg-light-neutral p-4 rounded-4 border-0">
-                    <h4 class="fw-bold text-dark mb-3">{{ __('about.offer.designed_title') }}</h4>
+                    <h3 class="fw-bold text-dark mb-3 fs-5">{{ __('about.offer.designed_title') }}</h3>
                     <p class="text-muted mb-0" style="line-height: 1.7;">
                         {{ __('about.offer.designed_desc') }}
                     </p>

@@ -13,13 +13,13 @@
     color: #fff;
 }
 .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem; }
-.page-header p  { color: rgba(255,255,255,0.7); margin: 0; font-size: 0.95rem; }
+.page-header p  { color: rgba(255,255,255,0.85); margin: 0; font-size: 0.95rem; }
 
 /* Breadcrumb */
-.breadcrumb-custom .breadcrumb-item a { color: rgba(255,255,255,0.6); text-decoration:none; }
+.breadcrumb-custom .breadcrumb-item a { color: rgba(255,255,255,0.85); text-decoration:none; }
 .breadcrumb-custom .breadcrumb-item a:hover { color: var(--brand-accent); }
-.breadcrumb-custom .breadcrumb-item.active { color: rgba(255,255,255,0.9); }
-.breadcrumb-custom .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,0.4); }
+.breadcrumb-custom .breadcrumb-item.active { color: rgba(255,255,255,0.95); }
+.breadcrumb-custom .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,0.5); }
 
 /* ══════════════════════════════════════════════════════
    Search Bar (inline, inside header)
@@ -54,7 +54,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255,255,255,0.85);
     margin-bottom: 0.3rem;
     display: block;
 }
@@ -215,7 +215,7 @@
 .hotel-stars-badge {
     position: absolute; top: 0.75rem; left: 0.75rem;
     background: var(--brand-accent);
-    color: #fff;
+    color: #0F172A;
     font-size: 0.72rem; font-weight: 700;
     padding: 0.2rem 0.625rem;
     border-radius: 2rem;
@@ -397,15 +397,16 @@
         <form method="GET" action="{{ route('hotels.index') }}" class="search-bar-wrap reveal delay-2" id="searchForm">
             <div class="row g-3 align-items-end">
                 <div class="col-lg-3 col-md-6">
-                    <span class="search-bar-label">{{ __('hotel.search_by_name_or_location') }}</span>
-                    <input type="text" name="search" class="form-control"
+                    <label for="header_search" class="search-bar-label">{{ __('hotel.search_by_name_or_location') }}</label>
+                    <input type="text" id="header_search" name="search" class="form-control"
                            placeholder="{{ __('hotel.search_placeholder') }}"
                            value="{{ $validated['search'] ?? '' }}"
-                           autocomplete="off">
+                           autocomplete="off"
+                           aria-label="{{ __('hotel.search_by_name_or_location') }}">
                 </div>
                 <div class="col-lg-2 col-md-6">
-                    <span class="search-bar-label">{{ __('hotel.destination') }}</span>
-                    <select name="city_id" class="form-select">
+                    <label for="header_city_id" class="search-bar-label">{{ __('hotel.destination') }}</label>
+                    <select id="header_city_id" name="city_id" class="form-select" aria-label="{{ __('hotel.destination') }}">
                         <option value="">{{ __('hotel.all_destinations') }}</option>
                         @foreach($cities as $city)
                             <option value="{{ $city->id }}" {{ ($validated['city_id'] ?? '') == $city->id ? 'selected' : '' }}>
@@ -415,20 +416,22 @@
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-4">
-                    <span class="search-bar-label"><i class="bi bi-calendar-check me-1"></i> {{ __('hotel.check_in') }}</span>
-                    <input type="date" name="check_in" class="form-control"
+                    <label for="header_check_in" class="search-bar-label"><i class="bi bi-calendar-check me-1" aria-hidden="true"></i> {{ __('hotel.check_in') }}</label>
+                    <input type="date" id="header_check_in" name="check_in" class="form-control"
                            value="{{ $validated['check_in'] ?? '' }}"
-                           min="{{ date('Y-m-d') }}">
+                           min="{{ date('Y-m-d') }}"
+                           aria-label="{{ __('hotel.check_in') }}">
                 </div>
                 <div class="col-lg-2 col-md-4">
-                    <span class="search-bar-label"><i class="bi bi-calendar-x me-1"></i> {{ __('hotel.check_out') }}</span>
-                    <input type="date" name="check_out" class="form-control"
+                    <label for="header_check_out" class="search-bar-label"><i class="bi bi-calendar-x me-1" aria-hidden="true"></i> {{ __('hotel.check_out') }}</label>
+                    <input type="date" id="header_check_out" name="check_out" class="form-control"
                            value="{{ $validated['check_out'] ?? '' }}"
-                           min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                           min="{{ date('Y-m-d', strtotime('+1 day')) }}"
+                           aria-label="{{ __('hotel.check_out') }}">
                 </div>
                 <div class="col-lg-1 col-md-4">
-                    <span class="search-bar-label">{{ __('hotel.guests') }}</span>
-                    <select name="guests" class="form-select">
+                    <label for="header_guests" class="search-bar-label">{{ __('hotel.guests') }}</label>
+                    <select id="header_guests" name="guests" class="form-select" aria-label="{{ __('hotel.guests') }}">
                         @for($g = 1; $g <= 8; $g++)
                             <option value="{{ $g }}" {{ ($validated['guests'] ?? 1) == $g ? 'selected' : '' }}>{{ $g }}</option>
                         @endfor
@@ -439,8 +442,8 @@
                     <input type="hidden" name="stars" value="{{ $validated['stars'] }}">
                 @endif
                 <div class="col-lg-2 col-md-4">
-                    <button type="submit" class="btn btn-accent w-100 py-2">
-                        <i class="bi bi-search me-1"></i> {{ __('hotel.search_button') }}
+                    <button type="submit" class="btn btn-accent w-100 py-2" aria-label="{{ __('hotel.search_button') }}">
+                        <i class="bi bi-search me-1" aria-hidden="true"></i> {{ __('hotel.search_button') }}
                     </button>
                 </div>
             </div>
@@ -627,11 +630,13 @@
                             <div class="hotel-img-wrap">
                                 @if($hotel->stars)
                                     <div class="hotel-stars-badge">
-                                        <i class="bi bi-star-fill me-1"></i>{{ __('hotel.stars_count', ['count' => $hotel->stars]) }}
+                                        <i class="bi bi-star-fill me-1" style="color:#0F172A;" aria-hidden="true"></i>{{ __('hotel.stars_count', ['count' => $hotel->stars]) }}
                                     </div>
                                 @endif
                                 <img src="{{ $hotel->image_url }}"
                                      alt="{{ $hotel->name }}"
+                                     width="400"
+                                     height="210"
                                      loading="lazy"
                                      decoding="async"
                                      onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop'">
@@ -639,9 +644,11 @@
 
                             <!-- Body -->
                             <div class="hotel-body">
-                                <a href="{{ $hotelUrl }}" class="hotel-name" title="{{ $hotel->name }}">
-                                    {{ $hotel->name }}
-                                </a>
+                                <h2 class="h5 mb-1">
+                                    <a href="{{ $hotelUrl }}" class="hotel-name" title="{{ $hotel->name }}">
+                                        {{ $hotel->name }}
+                                    </a>
+                                </h2>
                                 <div class="hotel-location">
                                     <i class="bi bi-geo-alt me-1"></i>{{ $hotel->city->name ?? '—' }}
                                     @if($hotel->address)
@@ -728,7 +735,8 @@
         <!-- Destination / City -->
         <p class="filter-section-title">{{ __('hotel.filter_by_city') }}</p>
         <div class="mb-4">
-            <select name="city_id" class="form-select mb-2">
+            <label for="m_city_id" class="visually-hidden">{{ __('hotel.destination') }}</label>
+            <select name="city_id" id="m_city_id" class="form-select mb-2" aria-label="{{ __('hotel.destination') }}">
                 <option value="">{{ __('hotel.all_destinations') }}</option>
                 @foreach($cities as $city)
                     <option value="{{ $city->id }}" {{ ($validated['city_id'] ?? '') == $city->id ? 'selected' : '' }}>

@@ -223,7 +223,7 @@
         {{-- Card Header --}}
         <div class="auth-card-header">
             <div class="auth-brand reveal delay-1">HotelBooking</div>
-            <h5 class="reveal delay-1">{{ __('auth.forgot_password_title') }}</h5>
+            <h1 class="h5 reveal delay-1">{{ __('auth.forgot_password_title') }}</h1>
             <p class="reveal delay-2">{{ __('auth.forgot_password_subtitle') }}</p>
         </div>
 

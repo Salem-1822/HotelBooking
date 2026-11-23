@@ -2,6 +2,10 @@
 
 @section('title', $hotel->name)
 
+@push('head')
+<link rel="preload" as="image" href="{{ $hotel->image_url }}" fetchpriority="high">
+@endpush
+
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <style>
@@ -153,11 +157,11 @@
 @if(app()->getLocale() === 'ar')
 .room-status-badge { left: auto; right: 0.75rem; }
 @endif
-.room-status-badge.available  { background: #10B981; color: #fff; }
+.room-status-badge.available  { background: #059669; color: #fff; font-weight: 600; }
 .room-status-badge.occupied,
-.room-status-badge.reserved   { background: #F59E0B; color: #fff; }
+.room-status-badge.reserved   { background: #F59E0B; color: #0F172A; font-weight: 700; }
 .room-status-badge.maintenance,
-.room-status-badge.inactive   { background: #94A3B8; color: #fff; }
+.room-status-badge.inactive   { background: #64748B; color: #fff; }
 
 .room-card-body {
     padding: 1.25rem 1.5rem;
@@ -327,7 +331,9 @@
              src="{{ $hotel->image_url }}"
              class="hero-main-img"
              alt="{{ $hotel->name }}"
-             loading="lazy"
+             width="1200"
+             height="480"
+             fetchpriority="high"
              decoding="async"
              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop'">
         <div class="hero-overlay"></div>
@@ -594,6 +600,8 @@
                             </div>
                             <img src="{{ $room->main_image_url }}"
                                  alt="Room {{ $room->room_number }}"
+                                 width="220"
+                                 height="160"
                                  loading="lazy"
                                  decoding="async"
                                  onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&h=600&fit=crop'">
@@ -772,6 +780,8 @@
                         <a href="{{ route('hotels.show', $rh) }}" class="related-card">
                             <div class="related-card-img">
                                 <img src="{{ $rh->image_url }}" alt="{{ $rh->name }}"
+                                     width="300"
+                                     height="140"
                                      loading="lazy"
                                      decoding="async"
                                      onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop'">
@@ -917,7 +927,7 @@
 @endsection
 
 @push('scripts')
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
 <script>
 /* ── Room selection feedback ───────────────────────────────── */
 function selectRoom(btn) {

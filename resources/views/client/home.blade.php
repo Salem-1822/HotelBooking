@@ -2,6 +2,10 @@
 
 @section('title', 'Luxury Hotels & Resorts')
 
+@push('head')
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" fetchpriority="high">
+@endpush
+
 @push('styles')
 <style>
     /* Hero Section */
@@ -190,11 +194,11 @@
         top: 1rem;
         left: 1rem;
         background: var(--brand-accent);
-        color: #fff;
+        color: #0F172A;
         padding: 0.25rem 0.75rem;
         border-radius: 2rem;
         font-size: 0.75rem;
-        font-weight: 600;
+        font-weight: 700;
         z-index: 2;
     }
 
@@ -266,7 +270,7 @@
     .stat-label {
         font-size: 1rem;
         font-weight: 500;
-        color: rgba(255,255,255,0.8);
+        color: rgba(255,255,255,0.95);
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
@@ -338,7 +342,7 @@
     <section class="hero-section text-center">
         <div class="container">
             <h1 class="display-4 fw-bold mb-3 reveal" style="font-family: 'Poppins', sans-serif;">{{ __('home.hero_title') }}</h1>
-            <p class="lead mb-5 mx-auto reveal delay-1" style="max-width: 600px; color: rgba(255,255,255,0.8);">{{ __('home.hero_subtitle') }}</p>
+            <p class="lead mb-5 mx-auto reveal delay-1" style="max-width: 600px; color: rgba(255,255,255,0.95);">{{ __('home.hero_subtitle') }}</p>
         </div>
     </section>
 
@@ -348,8 +352,8 @@
             <form action="{{ route('hotels.index') }}" method="GET">
                 <div class="row g-0 align-items-center">
                     <div class="col-lg-3 col-md-6 px-3 search-input-group">
-                        <label class="search-label"><i class="bi bi-geo-alt-fill me-1 text-accent"></i> {{ __('home.search.destination') }}</label>
-                        <select class="form-select search-input" name="city_id">
+                        <label for="search_city_id" class="search-label"><i class="bi bi-geo-alt-fill me-1 text-accent" aria-hidden="true"></i> {{ __('home.search.destination') }}</label>
+                        <select class="form-select search-input" id="search_city_id" name="city_id" aria-label="{{ __('home.search.destination') }}">
                             <option value="">{{ __('home.search.where_going') }}</option>
                             @foreach($cities as $city)
                                 <option value="{{ $city->id }}">{{ $city->name }}</option>
@@ -357,16 +361,16 @@
                         </select>
                     </div>
                     <div class="col-lg-3 col-md-6 px-3 search-input-group">
-                        <label class="search-label"><i class="bi bi-calendar-check me-1 text-accent"></i> {{ __('home.search.check_in') }}</label>
-                        <input type="date" class="form-control search-input" name="check_in" min="{{ date('Y-m-d') }}">
+                        <label for="search_check_in" class="search-label"><i class="bi bi-calendar-check me-1 text-accent" aria-hidden="true"></i> {{ __('home.search.check_in') }}</label>
+                        <input type="date" class="form-control search-input" id="search_check_in" name="check_in" min="{{ date('Y-m-d') }}" aria-label="{{ __('home.search.check_in') }}">
                     </div>
                     <div class="col-lg-3 col-md-6 px-3 search-input-group">
-                        <label class="search-label"><i class="bi bi-calendar-check-fill me-1 text-accent"></i> {{ __('home.search.check_out') }}</label>
-                        <input type="date" class="form-control search-input" name="check_out" min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                        <label for="search_check_out" class="search-label"><i class="bi bi-calendar-check-fill me-1 text-accent" aria-hidden="true"></i> {{ __('home.search.check_out') }}</label>
+                        <input type="date" class="form-control search-input" id="search_check_out" name="check_out" min="{{ date('Y-m-d', strtotime('+1 day')) }}" aria-label="{{ __('home.search.check_out') }}">
                     </div>
                     <div class="col-lg-2 col-md-6 px-3 search-input-group border-0">
-                        <label class="search-label"><i class="bi bi-person-fill me-1 text-accent"></i> {{ __('home.search.guests') }}</label>
-                        <select class="form-select search-input" name="guests">
+                        <label for="search_guests" class="search-label"><i class="bi bi-person-fill me-1 text-accent" aria-hidden="true"></i> {{ __('home.search.guests') }}</label>
+                        <select class="form-select search-input" id="search_guests" name="guests" aria-label="{{ __('home.search.guests') }}">
                             <option value="1">{{ trans_choice('hotel.guest_count', 1) }}</option>
                             <option value="2" selected>{{ trans_choice('hotel.guest_count', 2) }}</option>
                             <option value="3">{{ trans_choice('hotel.guest_count', 3) }}</option>
@@ -374,8 +378,8 @@
                         </select>
                     </div>
                     <div class="col-lg-1 px-3 mt-3 mt-lg-0 text-center text-lg-end">
-                        <button type="submit" class="btn btn-accent w-100 py-3" style="border-radius: 0.875rem;" title="{{ __('home.search.search_hotels') }}">
-                            <i class="bi bi-search fs-5"></i>
+                        <button type="submit" class="btn btn-accent w-100 py-3" style="border-radius: 0.875rem;" title="{{ __('home.search.search_hotels') }}" aria-label="{{ __('home.search.search_hotels') }}">
+                            <i class="bi bi-search fs-5" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
@@ -395,8 +399,8 @@
                 <div class="row g-4">
                     @foreach($cities as $index => $city)
                         <div class="{{ $index % 4 == 0 || $index % 4 == 3 ? 'col-lg-7' : 'col-lg-5' }} col-md-6 reveal" style="transition-delay: {{ ($index % 4) * 0.1 }}s;">
-                            <a href="{{ route('hotels.index', ['city_id' => $city->id]) }}" class="destination-card">
-                                <img src="{{ $city->image_url }}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $city->name }}">
+                            <a href="{{ route('hotels.index', ['city_id' => $city->id]) }}" class="destination-card" aria-label="{{ $city->name }} - {{ __('home.destinations.hotels_count', ['count' => $city->hotels_count]) }}">
+                                <img src="{{ $city->image_url }}" width="600" height="320" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $city->name }}">
                                 <div class="destination-content">
                                     <h3 class="destination-title">{{ $city->name }}</h3>
                                     <div class="destination-count">{{ __('home.destinations.hotels_count', ['count' => $city->hotels_count]) }}</div>
@@ -422,7 +426,7 @@
                     <h2 class="section-title mb-2">{{ __('home.featured.title') }}</h2>
                     <p class="text-muted mb-0">{{ __('home.featured.subtitle') }}</p>
                 </div>
-                <a href="{{ route('hotels.index') }}" class="btn btn-outline-dark d-none d-md-inline-block" style="border-radius: 2rem; padding: 0.5rem 1.5rem; font-weight: 500;">{{ __('common.all') }} <i class="bi bi-arrow-right ms-1"></i></a>
+                <a href="{{ route('hotels.index') }}" class="btn btn-outline-dark d-none d-md-inline-block" style="border-radius: 2rem; padding: 0.5rem 1.5rem; font-weight: 500;" aria-label="{{ __('home.featured.title') }} - {{ __('common.all') }}">{{ __('common.all') }} <i class="bi bi-arrow-right ms-1"></i></a>
             </div>
 
             @if($featuredHotels->count() > 0)
@@ -432,14 +436,14 @@
                             <div class="hotel-card">
                                 <div class="hotel-img-wrapper">
                                     @if($hotel->stars)
-                                        <div class="hotel-badge"><i class="bi bi-star-fill text-warning me-1"></i> {{ $hotel->stars }} {{ __('common.stars') }}</div>
+                                        <div class="hotel-badge"><i class="bi bi-star-fill me-1" style="color:#0F172A;" aria-hidden="true"></i> {{ $hotel->stars }} {{ __('common.stars') }}</div>
                                     @endif
                                     
-                                    <img src="{{ $hotel->image_url }}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-c6a4d27a6582?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $hotel->name }}">
+                                    <img src="{{ $hotel->image_url }}" width="400" height="220" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-c6a4d27a6582?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $hotel->name }}">
                                 </div>
                                 <div class="hotel-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <a href="{{ route('hotels.show', $hotel) }}" class="hotel-title">{{ $hotel->name }}</a>
+                                        <h3 class="h5 mb-0"><a href="{{ route('hotels.show', $hotel) }}" class="hotel-title">{{ $hotel->name }}</a></h3>
                                         @if($hotel->avg_rating)
                                             <div class="d-flex align-items-center bg-light px-2 py-1 rounded" style="font-size: 0.85rem; font-weight: 600;">
                                                 <i class="bi bi-star-fill text-warning me-1"></i> {{ number_format($hotel->avg_rating, 1) }}
@@ -452,7 +456,7 @@
                                         <div class="hotel-price">
                                             {{ number_format($hotel->starting_price ?? $hotel->price_per_night, 2) }} {{ __('common.currency') }} <span>{{ __('common.per_night') }}</span>
                                         </div>
-                                        <a href="{{ route('hotels.show', $hotel) }}" class="btn btn-sm btn-accent" style="border-radius: 0.5rem;">{{ __('home.featured.view_details') }}</a>
+                                        <a href="{{ route('hotels.show', $hotel) }}" class="btn btn-sm btn-accent" style="border-radius: 0.5rem;" aria-label="{{ __('home.featured.view_details') }}: {{ $hotel->name }}">{{ __('home.featured.view_details') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -460,7 +464,7 @@
                     @endforeach
                 </div>
                 <div class="text-center mt-4 d-md-none">
-                    <a href="{{ route('hotels.index') }}" class="btn btn-outline-dark" style="border-radius: 2rem; padding: 0.5rem 1.5rem;">{{ __('common.all') }}</a>
+                    <a href="{{ route('hotels.index') }}" class="btn btn-outline-dark" style="border-radius: 2rem; padding: 0.5rem 1.5rem;" aria-label="{{ __('home.featured.title') }} - {{ __('common.all') }}">{{ __('common.all') }}</a>
                 </div>
             @else
                 <div class="text-center py-5 bg-light" style="border-radius: 1rem; border: 1px dashed var(--border-color);">
@@ -513,27 +517,27 @@
                 <div class="col-lg-4 col-md-6 reveal delay-1">
                     <div class="feature-card px-3">
                         <div class="feature-icon">
-                            <i class="bi bi-shield-check"></i>
+                            <i class="bi bi-shield-check" aria-hidden="true"></i>
                         </div>
-                        <h4 class="fw-bold mb-3" style="font-size: 1.25rem;">{{ __('home.features.secure_title') }}</h4>
+                        <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">{{ __('home.features.secure_title') }}</h3>
                         <p class="text-muted">{{ __('home.features.secure_desc') }}</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 reveal delay-2">
                     <div class="feature-card px-3">
                         <div class="feature-icon">
-                            <i class="bi bi-tags"></i>
+                            <i class="bi bi-tags" aria-hidden="true"></i>
                         </div>
-                        <h4 class="fw-bold mb-3" style="font-size: 1.25rem;">{{ __('home.features.price_title') }}</h4>
+                        <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">{{ __('home.features.price_title') }}</h3>
                         <p class="text-muted">{{ __('home.features.price_desc') }}</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 offset-md-3 offset-lg-0 reveal delay-3">
                     <div class="feature-card px-3">
                         <div class="feature-icon">
-                            <i class="bi bi-headset"></i>
+                            <i class="bi bi-headset" aria-hidden="true"></i>
                         </div>
-                        <h4 class="fw-bold mb-3" style="font-size: 1.25rem;">{{ __('home.features.support_title') }}</h4>
+                        <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">{{ __('home.features.support_title') }}</h3>
                         <p class="text-muted">{{ __('home.features.support_desc') }}</p>
                     </div>
                 </div>
@@ -563,9 +567,9 @@
                             </div>
                             <p class="review-comment mb-4">"{{ \Illuminate\Support\Str::limit($review->comment, 150, '...') }}"</p>
                             <div class="d-flex align-items-center">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($review->user->name ?? 'Guest') }}&background=0F172A&color=fff" class="rounded-circle me-3" width="48" height="48" alt="">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($review->user->name ?? 'Guest') }}&background=0F172A&color=fff" class="rounded-circle me-3" width="48" height="48" alt="{{ $review->user->name ?? 'Guest' }}" loading="lazy" decoding="async">
                                 <div>
-                                    <h6 class="mb-0 fw-bold">{{ $review->user->name ?? 'Guest' }}</h6>
+                                    <div class="mb-0 fw-bold">{{ $review->user->name ?? 'Guest' }}</div>
                                     <small class="text-muted">{{ __('home.reviews.stayed_at', ['hotel' => $review->hotel->name ?? 'Hotel']) }}</small>
                                 </div>
                             </div>

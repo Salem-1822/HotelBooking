@@ -60,15 +60,16 @@
             margin-bottom: 0.5rem;
         }
 
+        .auth-card-header h1,
         .auth-card-header h5 {
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.95);
             font-size: 1rem;
             font-weight: 500;
             margin: 0;
         }
 
         .auth-card-header p {
-            color: rgba(255, 255, 255, 0.55);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 0.83rem;
             margin: 0.35rem 0 0;
         }
@@ -326,7 +327,7 @@
             {{-- Card Header --}}
             <div class="auth-card-header">
                 <div class="auth-brand">HotelBooking</div>
-                <h5>{{ __('auth.welcome_back') }}</h5>
+                <h1 class="h5">{{ __('auth.welcome_back') }}</h1>
                 <p>{{ __('auth.login_subtitle') }}</p>
             </div>
 

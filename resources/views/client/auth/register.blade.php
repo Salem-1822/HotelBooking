@@ -62,15 +62,16 @@
         margin-bottom: 0.5rem;
     }
 
+    .auth-card-header h1,
     .auth-card-header h5 {
-        color: rgba(255, 255, 255, 0.9);
+        color: rgba(255, 255, 255, 0.95);
         font-size: 1rem;
         font-weight: 500;
         margin: 0;
     }
 
     .auth-card-header p {
-        color: rgba(255, 255, 255, 0.55);
+        color: rgba(255, 255, 255, 0.8);
         font-size: 0.83rem;
         margin: 0.35rem 0 0;
     }
@@ -277,7 +278,7 @@
         {{-- Card Header --}}
         <div class="auth-card-header">
             <div class="auth-brand reveal delay-1">HotelBooking</div>
-            <h5 class="reveal delay-1">{{ __('auth.register_title') }}</h5>
+            <h1 class="h5 reveal delay-1">{{ __('auth.register_title') }}</h1>
             <p class="reveal delay-2">{{ __('auth.register_subtitle') }}</p>
         </div>
 
