@@ -198,18 +198,18 @@
 .room-price sup { font-size: 0.8rem; font-weight: 600; vertical-align: super; }
 .room-price small { font-size: 0.75rem; font-weight: 400; color: var(--text-muted); }
 .btn-book-now {
-    background: var(--brand-accent);
+    background: var(--brand-accent) !important;
     border: none;
-    color: #fff;
+    color: #0F172A !important;
     border-radius: 0.625rem;
-    font-size: 0.9rem; font-weight: 700;
+    font-size: 0.9rem; font-weight: 700 !important;
     padding: 0.625rem 1.5rem;
     text-decoration: none;
     transition: all 0.2s ease;
     box-shadow: 0 4px 12px rgba(212,175,55,0.3);
     white-space: nowrap;
 }
-.btn-book-now:hover { background: var(--brand-accent-dark); color: #fff; transform: translateY(-1px); }
+.btn-book-now:hover { background: var(--brand-accent-dark) !important; color: #0F172A !important; transform: translateY(-1px); }
 .btn-book-now:disabled, .btn-book-now.unavailable {
     background: #94A3B8; box-shadow: none; cursor: not-allowed; opacity: 0.7;
 }
@@ -598,13 +598,20 @@
                             <div class="room-status-badge {{ $displayStatus }}">
                                 {{ $displayLabel }}
                             </div>
-                            <img src="{{ $room->main_image_url }}"
+                            @php
+                                $roomCardImg = $room->main_image_url;
+                                if (str_contains($roomCardImg, 'images.unsplash.com')) {
+                                    $roomCardImg = preg_replace('/[?&](?:w|h|fit|fm|q)=[^&]*/', '', $roomCardImg);
+                                    $roomCardImg .= (str_contains($roomCardImg, '?') ? '&' : '?') . 'w=220&h=160&fit=crop&fm=webp&q=75';
+                                }
+                            @endphp
+                            <img src="{{ $roomCardImg }}"
                                  alt="Room {{ $room->room_number }}"
                                  width="220"
                                  height="160"
                                  loading="lazy"
                                  decoding="async"
-                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&h=450&fit=crop&fm=webp&q=75'">
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1590490360182-c33d57733427?w=220&h=160&fit=crop&fm=webp&q=75'">
                         </div>
 
                         {{-- Room body --}}
@@ -777,14 +784,21 @@
                 <div class="row g-3">
                     @foreach($relatedHotels as $rh)
                     <div class="col-md-4">
+                        @php
+                            $rhImg = $rh->image_url;
+                            if (str_contains($rhImg, 'images.unsplash.com')) {
+                                $rhImg = preg_replace('/[?&](?:w|h|fit|fm|q)=[^&]*/', '', $rhImg);
+                                $rhImg .= (str_contains($rhImg, '?') ? '&' : '?') . 'w=300&h=140&fit=crop&fm=webp&q=75';
+                            }
+                        @endphp
                         <a href="{{ route('hotels.show', $rh) }}" class="related-card">
                             <div class="related-card-img">
-                                <img src="{{ $rh->image_url }}" alt="{{ $rh->name }}"
+                                <img src="{{ $rhImg }}" alt="{{ $rh->name }}"
                                      width="300"
                                      height="140"
                                      loading="lazy"
                                      decoding="async"
-                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=200&fit=crop&fm=webp&q=75'">
+                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=300&h=140&fit=crop&fm=webp&q=75'">
                             </div>
                             <div class="related-card-body">
                                 <div style="font-weight:700; font-size:0.95rem; color:var(--brand-primary); margin-bottom:0.3rem;">

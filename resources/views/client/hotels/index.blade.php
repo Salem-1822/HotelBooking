@@ -214,12 +214,14 @@
 .hotel-img-placeholder i { font-size: 3.5rem; color: rgba(255,255,255,0.12); }
 .hotel-stars-badge {
     position: absolute; top: 0.75rem; left: 0.75rem;
-    background: var(--brand-accent);
-    color: #0F172A;
-    font-size: 0.72rem; font-weight: 700;
+    background-color: #0F172A !important;
+    color: #FFFFFF !important;
+    font-size: 0.72rem; font-weight: 700 !important;
     padding: 0.2rem 0.625rem;
     border-radius: 2rem;
     letter-spacing: 0.02em;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 @if(app()->getLocale() === 'ar')
 .hotel-stars-badge { left: auto; right: 0.75rem; }
@@ -582,7 +584,7 @@
                     <button class="btn-mobile-filter" id="openFilterDrawer" type="button" aria-label="Open filters">
                         <i class="bi bi-sliders"></i> {{ __('hotel.filters') }}
                         @if($hasFilters)
-                            <span class="badge bg-warning text-dark ms-1" style="font-size:0.7rem;">{{ __('hotel.filters_active') }}</span>
+                            <span class="badge ms-1" style="background-color: #0F172A !important; color: #FFFFFF !important; font-size:0.7rem; font-weight: 700 !important;">{{ __('hotel.filters_active') }}</span>
                         @endif
                     </button>
                     <span class="results-count">
@@ -629,17 +631,24 @@
                             <!-- Image -->
                             <div class="hotel-img-wrap">
                                 @if($hotel->stars)
-                                    <div class="hotel-stars-badge">
-                                        <i class="bi bi-star-fill me-1" style="color:#0F172A;" aria-hidden="true"></i>{{ __('hotel.stars_count', ['count' => $hotel->stars]) }}
+                                    <div class="hotel-stars-badge" style="background-color: #0F172A !important; color: #FFFFFF !important; font-weight: 700 !important;">
+                                        <i class="bi bi-star-fill me-1" style="color:#F59E0B !important;" aria-hidden="true"></i>{{ __('hotel.stars_count', ['count' => $hotel->stars]) }}
                                     </div>
                                 @endif
-                                <img src="{{ $hotel->image_url }}"
+                                @php
+                                    $hotelCardImg = $hotel->image_url;
+                                    if (str_contains($hotelCardImg, 'images.unsplash.com')) {
+                                        $hotelCardImg = preg_replace('/[?&](?:w|h|fit|fm|q)=[^&]*/', '', $hotelCardImg);
+                                        $hotelCardImg .= (str_contains($hotelCardImg, '?') ? '&' : '?') . 'w=400&h=210&fit=crop&fm=webp&q=75';
+                                    }
+                                @endphp
+                                <img src="{{ $hotelCardImg }}"
                                      alt="{{ $hotel->name }}"
                                      width="400"
                                      height="210"
                                      loading="lazy"
                                      decoding="async"
-                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=450&fit=crop&fm=webp&q=75'">
+                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=210&fit=crop&fm=webp&q=75'">
                             </div>
 
                             <!-- Body -->

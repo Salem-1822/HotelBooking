@@ -24,16 +24,101 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"></noscript>
 
-    <!-- Bootstrap 5 & Icons (Icons Non-blocking) -->
+    <!-- Bootstrap 5 (Non-blocking) & Icons (Non-blocking) -->
     @if(app()->getLocale() === 'ar')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css"></noscript>
     @else
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></noscript>
     @endif
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"></noscript>
 
     <style>
+        /* Critical Above-The-Fold Layout Rules (Zero FOUC & Zero CLS) */
+        *, *::before, *::after { box-sizing: border-box; }
+        .container, .container-fluid {
+            width: 100%;
+            padding-right: var(--bs-gutter-x, 0.75rem);
+            padding-left: var(--bs-gutter-x, 0.75rem);
+            margin-right: auto;
+            margin-left: auto;
+        }
+        @media (min-width: 576px) { .container { max-width: 540px; } }
+        @media (min-width: 768px) { .container { max-width: 720px; } }
+        @media (min-width: 992px) { .container { max-width: 960px; } }
+        @media (min-width: 1200px) { .container { max-width: 1140px; } }
+        @media (min-width: 1400px) { .container { max-width: 1320px; } }
+        .row {
+            --bs-gutter-x: 1.5rem;
+            --bs-gutter-y: 0;
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: calc(-1 * var(--bs-gutter-y));
+            margin-right: calc(-0.5 * var(--bs-gutter-x));
+            margin-left: calc(-0.5 * var(--bs-gutter-x));
+        }
+        .row > * {
+            flex-shrink: 0;
+            width: 100%;
+            max-width: 100%;
+            padding-right: calc(var(--bs-gutter-x) * 0.5);
+            padding-left: calc(var(--bs-gutter-x) * 0.5);
+            margin-top: var(--bs-gutter-y);
+        }
+        .d-flex { display: flex !important; }
+        .align-items-center { align-items: center !important; }
+        .justify-content-between { justify-content: space-between !important; }
+        .fixed-top { position: fixed; top: 0; right: 0; left: 0; z-index: 1030; }
+        .navbar {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        .navbar-brand {
+            padding-top: 0.3125rem;
+            padding-bottom: 0.3125rem;
+            margin-right: 1rem;
+            font-size: 1.25rem;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .navbar-nav {
+            display: flex;
+            flex-direction: column;
+            padding-left: 0;
+            margin-bottom: 0;
+            list-style: none;
+        }
+        @media (min-width: 992px) {
+            .navbar-expand-lg { flex-wrap: nowrap; justify-content: flex-start; }
+            .navbar-expand-lg .navbar-nav { flex-direction: row; }
+            .navbar-expand-lg .navbar-collapse { display: flex !important; flex-basis: auto; }
+        }
+        .btn {
+            display: inline-block;
+            font-weight: 600;
+            line-height: 1.5;
+            color: #212529;
+            text-align: center;
+            text-decoration: none;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            border-radius: 0.375rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
         :root {
             --brand-primary: #0F172A;
             --brand-secondary: #334155;
@@ -99,22 +184,28 @@
             color: var(--brand-accent) !important;
         }
 
-        .btn-accent {
-            background-color: var(--brand-accent);
-            border-color: var(--brand-accent);
-            color: #0F172A;
+        .btn-accent,
+        a.btn-accent,
+        a.btn-accent:visited,
+        a.btn-accent:hover,
+        a.btn-accent:focus,
+        a.btn-accent:active {
+            background-color: var(--brand-accent) !important;
+            border-color: var(--brand-accent) !important;
+            color: #0F172A !important;
             border-radius: 0.625rem;
-            font-weight: 700;
+            font-weight: 700 !important;
             font-size: 0.95rem;
             padding: 0.5rem 1.5rem;
             transition: all 0.2s ease;
             box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
 
-        .btn-accent:hover {
-            background-color: var(--brand-accent-dark);
-            border-color: var(--brand-accent-dark);
-            color: #0F172A;
+        .btn-accent:hover,
+        a.btn-accent:hover {
+            background-color: var(--brand-accent-dark) !important;
+            border-color: var(--brand-accent-dark) !important;
+            color: #0F172A !important;
             transform: translateY(-1px);
         }
 
@@ -475,7 +566,7 @@
                         </div>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-outline-light-custom">{{ __('navigation.login') }}</a>
-                        <a href="{{ route('client.register') }}" class="btn btn-accent">{{ __('navigation.register') }}</a>
+                        <a href="{{ route('client.register') }}" class="btn btn-accent" style="background-color: #D4AF37 !important; color: #0F172A !important; font-weight: 700 !important; border-color: #D4AF37 !important;">{{ __('navigation.register') }}</a>
                     @endauth
                 </div>
             </div>
