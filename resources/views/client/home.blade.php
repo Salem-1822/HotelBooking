@@ -3,18 +3,48 @@
 @section('title', 'Luxury Hotels & Resorts')
 
 @push('head')
-<link rel="preload" as="image" href="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" fetchpriority="high">
+<link rel="preload" as="image" href="{{ asset('images/hero-bg.webp') }}" fetchpriority="high" media="(min-width: 769px)" type="image/webp">
+<link rel="preload" as="image" href="{{ asset('images/hero-bg-mobile.webp') }}" fetchpriority="high" media="(max-width: 768px)" type="image/webp">
 @endpush
 
 @push('styles')
 <style>
     /* Hero Section */
     .hero-section {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 58, 138, 0.8) 100%), 
-                    url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        position: relative;
+        overflow: hidden;
+        background-color: var(--brand-primary);
         padding: 8rem 0 6rem;
         color: #fff;
+    }
+
+    .hero-bg-picture {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .hero-bg-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 58, 138, 0.85) 100%);
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .hero-section .container {
         position: relative;
+        z-index: 2;
     }
     
     /* Search Widget */
@@ -340,6 +370,12 @@
 @section('content')
     <!-- Hero Section -->
     <section class="hero-section text-center">
+        <picture class="hero-bg-picture">
+            <source media="(max-width: 768px)" srcset="{{ asset('images/hero-bg-mobile.webp') }}" type="image/webp">
+            <source srcset="{{ asset('images/hero-bg.webp') }}" type="image/webp">
+            <img src="{{ asset('images/hero-bg.webp') }}" alt="Luxury Hotel Resort" class="hero-bg-img" width="1600" height="900" fetchpriority="high" decoding="sync">
+        </picture>
+        <div class="hero-overlay"></div>
         <div class="container">
             <h1 class="display-4 fw-bold mb-3 reveal" style="font-family: 'Poppins', sans-serif;">{{ __('home.hero_title') }}</h1>
             <p class="lead mb-5 mx-auto reveal delay-1" style="max-width: 600px; color: rgba(255,255,255,0.95);">{{ __('home.hero_subtitle') }}</p>
@@ -400,7 +436,7 @@
                     @foreach($cities as $index => $city)
                         <div class="{{ $index % 4 == 0 || $index % 4 == 3 ? 'col-lg-7' : 'col-lg-5' }} col-md-6 reveal" style="transition-delay: {{ ($index % 4) * 0.1 }}s;">
                             <a href="{{ route('hotels.index', ['city_id' => $city->id]) }}" class="destination-card" aria-label="{{ $city->name }} - {{ __('home.destinations.hotels_count', ['count' => $city->hotels_count]) }}">
-                                <img src="{{ $city->image_url }}" width="600" height="320" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $city->name }}">
+                                <img src="{{ $city->image_url }}" width="600" height="320" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=600&fm=webp&q=75';" alt="{{ $city->name }}">
                                 <div class="destination-content">
                                     <h3 class="destination-title">{{ $city->name }}</h3>
                                     <div class="destination-count">{{ __('home.destinations.hotels_count', ['count' => $city->hotels_count]) }}</div>
@@ -439,7 +475,7 @@
                                         <div class="hotel-badge"><i class="bi bi-star-fill me-1" style="color:#0F172A;" aria-hidden="true"></i> {{ $hotel->stars }} {{ __('common.stars') }}</div>
                                     @endif
                                     
-                                    <img src="{{ $hotel->image_url }}" width="400" height="220" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-c6a4d27a6582?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';" alt="{{ $hotel->name }}">
+                                    <img src="{{ $hotel->image_url }}" width="400" height="220" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-c6a4d27a6582?auto=format&fit=crop&w=500&fm=webp&q=75';" alt="{{ $hotel->name }}">
                                 </div>
                                 <div class="hotel-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">

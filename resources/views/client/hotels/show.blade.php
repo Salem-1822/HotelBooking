@@ -335,7 +335,7 @@
              height="480"
              fetchpriority="high"
              decoding="async"
-             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop'">
+             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop&fm=webp&q=75'">
         <div class="hero-overlay"></div>
 
         {{-- Hero content overlay --}}
@@ -380,7 +380,7 @@
 
             <!-- Description -->
             @if($hotel->description)
-            <section class="mb-5 overflow-hidden" aria-label="Hotel description" style="max-width: 100%;">
+            <section class="mb-5 overflow-hidden" style="max-width: 100%;">
                 <h2 class="section-heading">{{ __('hotel.about_this_hotel') }}</h2>
                 <div class="hotel-description-content break-words overflow-hidden max-w-full"
                      style="color:#475569; font-size:0.975rem; line-height:1.8; word-break: break-word; overflow-wrap: anywhere; word-wrap: break-word; max-width: 100%;">
@@ -396,7 +396,7 @@
 
             <!-- Amenities -->
             @if(!empty($hotel->amenities))
-            <section class="mb-5" aria-label="Amenities">
+            <section class="mb-5">
                 <h2 class="section-heading">{{ __('hotel.amenities_services') }}</h2>
                 <div class="d-flex flex-wrap gap-2">
                     @php
@@ -431,7 +431,7 @@
                     || $hotel->pets_policy || $hotel->smoking_policy;
             @endphp
             @if($hasPolicies || $hotel->phone || $hotel->email)
-            <section class="mb-5" aria-label="Hotel information">
+            <section class="mb-5">
                 <h2 class="section-heading">{{ __('hotel.hotel_information') }}</h2>
                 <div class="row g-4">
                     @if($hotel->check_in_time || $hotel->check_out_time)
@@ -499,7 +499,7 @@
             @endif
 
             <!-- Location Section -->
-            <section class="mb-5" aria-label="Location" id="location">
+            <section class="mb-5" id="location">
                 <h2 class="section-heading">{{ __('hotel.location') }}</h2>
                 @if($hotel->latitude && $hotel->longitude)
                     <div class="mb-3" style="font-size: 0.95rem; color: #475569;">
@@ -530,7 +530,7 @@
                 @endif
             </section>
 
-            <section class="mb-5" aria-label="Available rooms" id="rooms">
+            <section class="mb-5" id="rooms">
                 <h2 class="section-heading">{{ __('hotel.available_rooms') }}</h2>
 
                 {{-- Show date context if dates were provided --}}
@@ -588,7 +588,7 @@
                     @endif
 
                     @foreach($rooms as $room)
-                    <article class="room-card" aria-label="Room {{ $room->room_number }}">
+                    <article class="room-card">
                         {{-- Room image --}}
                         <div class="room-card-img">
                             @php
@@ -604,7 +604,7 @@
                                  height="160"
                                  loading="lazy"
                                  decoding="async"
-                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&h=600&fit=crop'">
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&h=450&fit=crop&fm=webp&q=75'">
                         </div>
 
                         {{-- Room body --}}
@@ -703,7 +703,7 @@
             </section>
 
             <!-- ── REVIEWS ──────────────────────────────────── -->
-            <section class="mb-5" aria-label="Guest reviews" id="reviews">
+            <section class="mb-5" id="reviews">
                 <h2 class="section-heading">{{ __('hotel.guest_reviews') }}</h2>
 
                 @if($reviewCount === 0)
@@ -772,7 +772,7 @@
 
             <!-- ── RELATED HOTELS ───────────────────────────── -->
             @if($relatedHotels->isNotEmpty())
-            <section class="mb-5" aria-label="Similar hotels">
+            <section class="mb-5">
                 <h2 class="section-heading">{{ __('hotel.more_hotels_in', ['city' => $hotel->city->name ?? __('hotel.this_city')]) }}</h2>
                 <div class="row g-3">
                     @foreach($relatedHotels as $rh)
@@ -784,7 +784,7 @@
                                      height="140"
                                      loading="lazy"
                                      decoding="async"
-                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop'">
+                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=200&fit=crop&fm=webp&q=75'">
                             </div>
                             <div class="related-card-body">
                                 <div style="font-weight:700; font-size:0.95rem; color:var(--brand-primary); margin-bottom:0.3rem;">
@@ -906,7 +906,7 @@
 <!-- ══════════════════════════════════════════
      Mobile Sticky CTA
 ════════════════════════════════════════════ -->
-<div class="sticky-cta-mobile" aria-label="Book room">
+<div class="sticky-cta-mobile">
     <div>
         @if($minRoomPrice ?? null)
         <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">{{ __('hotel.from') }}</div>

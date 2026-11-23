@@ -249,6 +249,10 @@
                     @if($reservation->hotel?->image)
                         <img src="{{ asset('storage/' . $reservation->hotel->image) }}"
                              alt="{{ $reservation->hotel->name }}"
+                             width="800"
+                             height="180"
+                             loading="lazy"
+                             decoding="async"
                              onerror="this.parentElement.classList.add('no-img'); this.remove();">
                     @endif
                     <div class="hotel-banner-overlay"></div>

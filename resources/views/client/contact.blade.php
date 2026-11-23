@@ -78,7 +78,7 @@
     <section class="contact-hero">
         <div class="container">
             <h1 class="display-4 fw-bold mb-3 reveal">{{ __('contact.contact_us_title') }}</h1>
-            <p class="lead mb-0 text-white-50 reveal delay-1">{{ __('contact.contact_subtitle') }}</p>
+            <p class="lead mb-0 reveal delay-1" style="color: rgba(255, 255, 255, 0.9);">{{ __('contact.contact_subtitle') }}</p>
         </div>
     </section>
 
@@ -113,21 +113,21 @@
                                     <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
                                     <div>
                                         <h3 class="h6 mb-1 fw-bold">{{ __('contact.our_location') }}</h3>
-                                        <p class="text-white-50 mb-0">{!! __('contact.our_location_val') !!}</p>
+                                        <p class="mb-0" style="color: rgba(255, 255, 255, 0.88);">{!! __('contact.our_location_val') !!}</p>
                                     </div>
                                 </div>
                                 <div class="info-item">
                                     <i class="bi bi-envelope-paper-fill" aria-hidden="true"></i>
                                     <div>
                                         <h3 class="h6 mb-1 fw-bold">{{ __('contact.email_us') }}</h3>
-                                        <p class="text-white-50 mb-0">support@hotelbooking.com</p>
+                                        <p class="mb-0" style="color: rgba(255, 255, 255, 0.88);">support@hotelbooking.com</p>
                                     </div>
                                 </div>
                                 <div class="info-item">
                                     <i class="bi bi-telephone-fill" aria-hidden="true"></i>
                                     <div>
                                         <h3 class="h6 mb-1 fw-bold">{{ __('contact.call_us') }}</h3>
-                                        <p class="text-white-50 mb-0" dir="ltr">+212 500 000 000</p>
+                                        <p class="mb-0" dir="ltr" style="color: rgba(255, 255, 255, 0.88);">+212 500 000 000</p>
                                     </div>
                                 </div>
                             </div>

@@ -301,7 +301,7 @@
                     <div class="brand-visual-content">
                         <div class="hb-logo">HB</div>
                         <div class="brand-line"></div>
-                        <div class="text-white-50 text-uppercase fw-semibold" style="letter-spacing: 3px; font-size: 0.9rem;">HotelBooking</div>
+                        <div class="text-uppercase fw-semibold" style="color: rgba(255, 255, 255, 0.9); letter-spacing: 3px; font-size: 0.9rem;">HotelBooking</div>
                     </div>
                 </div>
             </div>
@@ -427,7 +427,7 @@
 <section class="cta-section reveal">
     <div class="container">
         <h2 class="cta-title">{{ __('about.cta.title') }}</h2>
-        <p class="text-white-50 mb-5 fs-5">{{ __('about.cta.subtitle') }}</p>
+        <p class="mb-5 fs-5" style="color: rgba(255, 255, 255, 0.9);">{{ __('about.cta.subtitle') }}</p>
         <a href="{{ route('hotels.index') }}" class="btn btn-accent btn-lg px-5 py-3 fw-bold text-uppercase shadow" style="letter-spacing: 1px; border-radius: 0.5rem;">
             {{ __('about.cta.button') }} <i class="bi bi-arrow-right ms-2"></i>
         </a>

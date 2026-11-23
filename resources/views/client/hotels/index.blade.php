@@ -575,7 +575,7 @@
         </aside>
 
         <!-- ══════════════════ RESULTS COLUMN ══════════════════ -->
-        <section aria-label="Hotel results">
+        <section>
             <!-- Toolbar -->
             <div class="results-toolbar">
                 <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -625,7 +625,7 @@
                         $hotelUrl = route('hotels.show', $hotel) . (count($hotelParams) ? '?' . http_build_query($hotelParams) : '');
                     @endphp
                     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 reveal min-w-0" style="min-width: 0; transition-delay: {{ ($index % 3) * 0.1 }}s;">
-                        <article class="hotel-card" aria-label="{{ $hotel->name }}">
+                        <article class="hotel-card">
                             <!-- Image -->
                             <div class="hotel-img-wrap">
                                 @if($hotel->stars)
@@ -639,7 +639,7 @@
                                      height="210"
                                      loading="lazy"
                                      decoding="async"
-                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop'">
+                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=450&fit=crop&fm=webp&q=75'">
                             </div>
 
                             <!-- Body -->
