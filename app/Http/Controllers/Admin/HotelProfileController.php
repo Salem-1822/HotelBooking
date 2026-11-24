@@ -154,6 +154,7 @@ class HotelProfileController extends Controller
             'amenities.*'         => 'string|max:50',
             // Images
             'image'               => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'cover_image'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'latitude'            => 'nullable|numeric|between:-90,90',
             'longitude'           => 'nullable|numeric|between:-180,180',
         ], [
@@ -165,16 +166,22 @@ class HotelProfileController extends Controller
             'image.image'            => __('admin.val_cover_image_valid'),
             'image.max'              => __('admin.val_cover_image_max'),
             'image.mimes'            => __('admin.val_cover_image_mimes'),
+            'cover_image.image'      => __('admin.val_cover_image_valid'),
+            'cover_image.max'        => __('admin.val_cover_image_max'),
+            'cover_image.mimes'      => __('admin.val_cover_image_mimes'),
         ]);
 
-        // ── Cover Image (existing 'image' column) ─────────────────────────
-        if ($request->hasFile('image')) {
+        // ── Cover Image (supports either 'image' or 'cover_image') ────────
+        $coverFile = $request->file('image') ?? $request->file('cover_image');
+        if ($coverFile) {
             $hotel->deleteImageFile();
-            $validated['image'] = $request->file('image')->store('hotels/covers', 'public');
+            Storage::disk('public')->makeDirectory('hotels/covers');
+            $validated['image'] = $coverFile->store('hotels/covers', 'public');
         } else {
             // Do not overwrite image with null if no new file was uploaded
             unset($validated['image']);
         }
+        unset($validated['cover_image']);
 
         // ── Amenities ─────────────────────────────────────────────────────
         $validated['amenities'] = $request->input('amenities') ?: null;

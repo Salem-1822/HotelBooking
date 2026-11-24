@@ -93,9 +93,18 @@ class Hotel extends Model
     public function deleteImageFile(): void
     {
         if ($this->image && !\Illuminate\Support\Str::startsWith($this->image, ['http://', 'https://'])) {
-            $path = ltrim($this->image, '/');
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($path);
+            try {
+                $path = ltrim(str_replace('storage/', '', $this->image), '/');
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($path);
+                }
+
+                $publicFile = public_path('storage/' . $path);
+                if (file_exists($publicFile) && !is_dir($publicFile)) {
+                    @unlink($publicFile);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning("Could not delete hotel image file: " . $e->getMessage());
             }
         }
     }

@@ -816,7 +816,7 @@
     {{-- Background image --}}
     @if($hotel->image)
         <img class="hp-cover-img" id="hpCoverBg"
-             src="{{ asset('storage/' . $hotel->image) }}" alt="Cover"
+             src="{{ $hotel->image_url }}" alt="Cover"
              loading="lazy" decoding="async"
              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&q=70'; this.style.opacity='0.2';">
     @else
@@ -915,11 +915,10 @@
             @csrf
             @method('PUT')
 
-            {{-- Hidden cover input (triggered by label in banner) --}}
+            {{-- Hidden cover input (triggered by banner button and dropzone) --}}
             <input type="file" id="coverFileInput" name="image"
                    accept="image/jpeg,image/png,image/webp"
-                   class="d-none"
-                   onchange="hpPreviewCover(this)">
+                   class="d-none">
 
             {{-- ══ CARD 1: Basic Info ════════════════════════════ --}}
             <div class="hp-card">
@@ -1179,11 +1178,7 @@
                             {{ __('admin.main_hotel_photo') }}
                         </label>
                         <div class="hp-upload-zone" id="coverDropZone"
-                             onclick="document.getElementById('coverFileInput2').click()">
-                            <input type="file" id="coverFileInput2" name="image"
-                                   accept="image/jpeg,image/png,image/webp"
-                                   class="d-none"
-                                   onchange="hpPreviewCover(this)">
+                             role="button" tabindex="0" style="cursor:pointer;">
                             <i class="bi bi-cloud-arrow-up hp-upload-zone-icon"></i>
                             <div class="hp-upload-zone-text">
                                 <strong>{{ __('admin.click_to_upload') }}</strong> {{ __('admin.or_drag_drop') }}<br>
@@ -1197,9 +1192,12 @@
                         @endif
                         <img id="hpCoverPreview" class="hp-cover-preview
                             @if($hotel->image) show @endif"
-                            @if($hotel->image) src="{{ asset('storage/' . $hotel->image) }}" @endif
+                            @if($hotel->image) src="{{ $hotel->image_url }}" @endif
                             alt="Hotel photo preview">
                         @error('image')
+                            <div class="hp-field-error mt-1"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
+                        @enderror
+                        @error('cover_image')
                             <div class="hp-field-error mt-1"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
                         @enderror
                     </div>
@@ -1657,18 +1655,8 @@ function hpPreviewCover(input) {
         // Update card preview
         const prev = document.getElementById('hpCoverPreview');
         if (prev) { prev.src = src; prev.classList.add('show'); }
-        // Sync the other hidden input so only one file is submitted
-        syncCoverInputs(input);
     };
     reader.readAsDataURL(input.files[0]);
-}
-
-function syncCoverInputs(source) {
-    // There are two cover inputs (banner label + card upload zone).
-    // Sync them so the form only submits the chosen file once.
-    // We rely on the name="image" — only the last non-empty one counts.
-    // Actually both have name="image"; the browser sends the last filled one.
-    // Just update the other's label visually; no extra sync needed.
 }
 
 // ── Gallery: remove existing ──────────────────────────────────
@@ -1756,33 +1744,58 @@ document.querySelectorAll('.hp-amenity-chip input[type="checkbox"]').forEach(fun
     });
 })();
 
-// ── Cover drop zone: drag-over highlight ──────────────────────
+// ── Cover drop zone & file input: events & drag/drop ─────────
 (function() {
+    const fileInput = document.getElementById('coverFileInput');
     const zone = document.getElementById('coverDropZone');
-    if (!zone) return;
+
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            hpPreviewCover(this);
+        });
+    }
+
+    if (!zone || !fileInput) return;
+
+    zone.addEventListener('click', function() {
+        fileInput.click();
+    });
+
+    zone.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            fileInput.click();
+        }
+    });
+
     zone.addEventListener('dragover', function(e) {
         e.preventDefault();
         this.style.borderColor = 'var(--brand-primary)';
         this.style.background  = '#F1F5F9';
     });
+
     zone.addEventListener('dragleave', function() {
         this.style.borderColor = '';
         this.style.background  = '';
     });
+
     zone.addEventListener('drop', function(e) {
         e.preventDefault();
         this.style.borderColor = '';
         this.style.background  = '';
         const files = e.dataTransfer.files;
-        if (files.length) {
-            const fi = document.getElementById('coverFileInput2');
-            // Programmatic file setting via DataTransfer
+        if (files && files.length) {
             try {
                 const dt = new DataTransfer();
                 dt.items.add(files[0]);
-                fi.files = dt.files;
-                hpPreviewCover(fi);
-            } catch(err) {}
+                fileInput.files = dt.files;
+                hpPreviewCover(fileInput);
+            } catch(err) {
+                try {
+                    fileInput.files = files;
+                    hpPreviewCover(fileInput);
+                } catch(e2) {}
+            }
         }
     });
 })();
