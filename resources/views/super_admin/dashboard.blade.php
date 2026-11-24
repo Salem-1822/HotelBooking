@@ -230,8 +230,8 @@
 
 @push('scripts')
 @if($chartData->isNotEmpty())
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script>
+<script nonce="{{ $cspNonce }}" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script nonce="{{ $cspNonce }}">
 (function () {
     const ctx = document.getElementById('reservationsChart');
     if (!ctx) return;

@@ -28,6 +28,8 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
+
         $middleware->redirectTo(
             guests: function (\Illuminate\Http\Request $request) {
                 if (\Illuminate\Support\Facades\Auth::guard('web')->check() && ($request->is('admin*') || $request->is('super-admin*'))) {

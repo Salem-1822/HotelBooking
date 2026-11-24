@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+        \Illuminate\Support\Facades\View::share('cspNonce', '');
 
         // ── Email Delivery Observability & Safe Audit Logging ────────────────
         Event::listen(MessageSent::class, function (MessageSent $event) {

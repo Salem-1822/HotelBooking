@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Vite;
 use Symfony\Component\HttpFoundation\Response;
 
 class SecurityHeaders
@@ -13,6 +15,13 @@ class SecurityHeaders
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $nonce = base64_encode(random_bytes(16));
+        View::share('cspNonce', $nonce);
+
+        if (class_exists(Vite::class)) {
+            Vite::useCspNonce($nonce);
+        }
+
         $response = $next($request);
 
         $cspDirectives = [
@@ -22,7 +31,7 @@ class SecurityHeaders
             "frame-ancestors 'self'",
             "object-src 'none'",
             "upgrade-insecure-requests",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com",
+            "script-src 'self' 'nonce-{$nonce}' https://cdn.jsdelivr.net https://unpkg.com",
             "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.bunny.net https://unpkg.com",
             "img-src 'self' data: blob: https:",
             "font-src 'self' data: https:",

@@ -171,7 +171,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script nonce="{{ $cspNonce }}">
     document.addEventListener('DOMContentLoaded', function() {
         @if(session('password_section'))
             document.getElementById('password-section').scrollIntoView({ behavior: 'smooth' });

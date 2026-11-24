@@ -837,8 +837,8 @@
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+    <script nonce="{{ $cspNonce }}" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script nonce="{{ $cspNonce }}">
         document.addEventListener('click', function (event) {
             const sidebar = document.getElementById('sidebar');
             const toggle = event.target.closest('.btn.d-lg-none');
@@ -849,7 +849,7 @@
     </script>
     @stack('scripts')
 
-    <script>
+    <script nonce="{{ $cspNonce }}">
         /**
          * PAGE TRANSITION SYSTEM — HotelBooking Super Admin
          *

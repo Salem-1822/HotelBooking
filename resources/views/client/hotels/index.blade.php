@@ -795,7 +795,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script nonce="{{ $cspNonce }}">
 /* ── Date sync: check-in & check-out ────────────────────────── */
 const checkInInput = document.querySelector('input[name="check_in"]');
 const checkOutInput = document.querySelector('input[name="check_out"]');

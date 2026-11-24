@@ -658,7 +658,7 @@
     </div>
 
     @push('scripts')
-    <script>
+    <script nonce="{{ $cspNonce }}">
         document.addEventListener('DOMContentLoaded', () => {
             const statsSection = document.getElementById('stats-section');
             if (!statsSection) return;

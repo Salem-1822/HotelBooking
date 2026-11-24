@@ -469,7 +469,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script nonce="{{ $cspNonce }}">
 document.addEventListener('DOMContentLoaded', function() {
     // Colors based on requested palette
     const colorPrimary = '#0F172A';

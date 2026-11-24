@@ -289,7 +289,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script nonce="{{ $cspNonce }}">
     document.addEventListener('DOMContentLoaded', function () {
         // Animate table in
         setTimeout(() => document.getElementById('reviewsTable').classList.add('is-visible'), 100);

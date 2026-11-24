@@ -32,7 +32,13 @@ class SecurityHeadersTest extends TestCase
         $this->assertStringContainsString("frame-ancestors 'self'", $csp);
         $this->assertStringContainsString("object-src 'none'", $csp);
         $this->assertStringContainsString("upgrade-insecure-requests", $csp);
-        $this->assertStringContainsString("script-src 'self' 'unsafe-inline'", $csp);
+        $this->assertMatchesRegularExpression("/script-src 'self' 'nonce-[A-Za-z0-9+\/]+=*'/", $csp);
+
+        preg_match('/script-src [^;]+/', $csp, $scriptMatches);
+        $this->assertNotEmpty($scriptMatches);
+        $this->assertStringNotContainsString("'unsafe-inline'", $scriptMatches[0]);
+        $this->assertStringNotContainsString("'unsafe-eval'", $scriptMatches[0]);
+
         $this->assertStringContainsString("style-src 'self' 'unsafe-inline'", $csp);
         $this->assertStringContainsString("img-src 'self' data: blob: https:", $csp);
         $this->assertStringContainsString("font-src 'self' data: https:", $csp);
@@ -40,6 +46,7 @@ class SecurityHeadersTest extends TestCase
 
     public function test_session_cookie_secure_configuration(): void
     {
+        $this->assertTrue(config('session.secure'));
         $this->assertTrue(config('session.http_only'));
         $this->assertSame('lax', config('session.same_site'));
     }
