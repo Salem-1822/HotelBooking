@@ -40,6 +40,8 @@ class SecurityHeadersTest extends TestCase
         $this->assertStringNotContainsString("'unsafe-eval'", $scriptMatches[0]);
 
         $this->assertStringContainsString("style-src 'self' 'unsafe-inline'", $csp);
+        $this->assertStringContainsString("https://cdn.jsdelivr.net", $csp);
+        $this->assertStringContainsString("https://cdnjs.cloudflare.com", $csp);
         $this->assertStringContainsString("img-src 'self' data: blob: https:", $csp);
         $this->assertStringContainsString("font-src 'self' data: https:", $csp);
     }

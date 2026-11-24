@@ -32,9 +32,9 @@ class SecurityHeaders
             "object-src 'none'",
             "upgrade-insecure-requests",
             "script-src 'self' 'nonce-{$nonce}' https://cdn.jsdelivr.net https://unpkg.com",
-            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.bunny.net https://unpkg.com",
+            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.bunny.net https://unpkg.com",
             "img-src 'self' data: blob: https:",
-            "font-src 'self' data: https:",
+            "font-src 'self' data: https: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.gstatic.com https://fonts.bunny.net",
             "connect-src 'self' https:",
             "frame-src 'self'",
         ];

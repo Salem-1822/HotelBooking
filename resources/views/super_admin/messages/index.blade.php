@@ -167,7 +167,7 @@
 @endsection
 
 @push('scripts')
-<script nonce="{{ $cspNonce }}">
+<script nonce="{{ $cspNonce ?? '' }}">
     document.addEventListener('DOMContentLoaded', function () {
         const viewModals = document.querySelectorAll('.message-modal');
         

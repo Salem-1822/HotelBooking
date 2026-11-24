@@ -398,7 +398,7 @@
 @endsection
 
 @push('scripts')
-<script nonce="{{ $cspNonce }}">
+<script nonce="{{ $cspNonce ?? '' }}">
 (function () {
     const pricePerNight = {{ (float) $room->price_per_night }};
     const checkIn  = document.getElementById('check_in');

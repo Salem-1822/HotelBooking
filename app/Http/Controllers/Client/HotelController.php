@@ -24,6 +24,10 @@ class HotelController extends Controller
             'check_in'  => 'nullable|date',
             'check_out' => 'nullable|date',
             'guests'    => 'nullable|integer|min:1|max:20',
+            'min_price' => 'nullable|numeric|min:0',
+            'max_price' => 'nullable|numeric|min:0',
+            'price'     => 'nullable|numeric|min:0',
+            'sort'      => 'nullable|string|in:price_asc,price_desc,stars_asc,stars_desc,rating_desc,name_asc,latest',
         ]);
 
         // ── Date parsing and normalization ──────────────────────────────────
@@ -113,15 +117,28 @@ class HotelController extends Controller
             if ($cityModel) {
                 $query->where('hotels.city_id', $cityModel->id);
                 $validated['city_id'] = $cityModel->id;
+                $validated['city'] = $cityModel->slug;
             } else {
                 $query->whereRaw('1 = 0');
                 $validated['city_id'] = $cleanCity;
+                $validated['city'] = $cleanCity;
             }
         }
 
         // ── Star Rating Filter ───────────────────────────────────────────────
         if (!empty($validated['stars'])) {
             $query->where('hotels.stars', (int) $validated['stars']);
+        }
+
+        // ── Price Filter ─────────────────────────────────────────────────────
+        if (!empty($validated['min_price'])) {
+            $query->where('hotels.price_per_night', '>=', (float) $validated['min_price']);
+        }
+        if (!empty($validated['max_price'])) {
+            $query->where('hotels.price_per_night', '<=', (float) $validated['max_price']);
+        }
+        if (!empty($validated['price'])) {
+            $query->where('hotels.price_per_night', '<=', (float) $validated['price']);
         }
 
         // ── Date Availability / Fully Booked Filter ──────────────────────────
@@ -154,7 +171,14 @@ class HotelController extends Controller
             });
         }
 
-        $query->orderBy('hotels.id', 'desc');
+        match ($validated['sort'] ?? 'latest') {
+            'price_asc'  => $query->orderBy('hotels.price_per_night', 'asc'),
+            'price_desc' => $query->orderBy('hotels.price_per_night', 'desc'),
+            'stars_desc' => $query->orderBy('hotels.stars', 'desc'),
+            'stars_asc'  => $query->orderBy('hotels.stars', 'asc'),
+            'name_asc'   => $query->orderBy('hotels.name', 'asc'),
+            default      => $query->orderBy('hotels.id', 'desc'),
+        };
 
         $hotels = $query->paginate(12)->withQueryString();
 

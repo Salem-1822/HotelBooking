@@ -409,7 +409,7 @@
 @endif
 @endforeach
 
-<script nonce="{{ $cspNonce }}">
+<script nonce="{{ $cspNonce ?? '' }}">
     document.addEventListener('DOMContentLoaded', function() {
         const cities = @json($cities);
 

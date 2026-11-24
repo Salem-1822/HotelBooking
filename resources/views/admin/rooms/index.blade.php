@@ -508,7 +508,7 @@
 @endsection
 
 @push('scripts')
-<script nonce="{{ $cspNonce }}">
+<script nonce="{{ $cspNonce ?? '' }}">
     window.rooms = @json($roomsForJs);
     window.roomsBaseUrl = "{{ $routePrefix === 'admin.' ? url('/admin/rooms') : url('/super-admin/rooms') }}";
     window.isSuperAdminArea = {{ $routePrefix === 'super_admin.' ? 'true' : 'false' }};

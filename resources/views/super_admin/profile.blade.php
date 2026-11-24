@@ -127,7 +127,7 @@
 </style>
 
 @push('scripts')
-<script nonce="{{ $cspNonce }}">
+<script nonce="{{ $cspNonce ?? '' }}">
     function previewImage(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();

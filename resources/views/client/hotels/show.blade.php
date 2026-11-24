@@ -952,8 +952,8 @@
 @endsection
 
 @push('scripts')
-<script nonce="{{ $cspNonce }}" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
-<script nonce="{{ $cspNonce }}">
+<script nonce="{{ $cspNonce ?? '' }}" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+<script nonce="{{ $cspNonce ?? '' }}">
 /* ── Room selection feedback ───────────────────────────────── */
 function selectRoom(btn) {
     const title = btn.dataset.roomTitle;

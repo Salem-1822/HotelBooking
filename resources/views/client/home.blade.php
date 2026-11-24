@@ -537,25 +537,25 @@
             <div class="row g-4 text-center">
                 <div class="col-md-3 col-6 reveal delay-1">
                     <div class="stat-item">
-                        <div class="stat-number animated-counter" data-target="{{ $stats['total_hotels'] ?? 0 }}">0</div>
+                        <div class="stat-number animated-counter" data-target="{{ $stats['total_hotels'] ?? 0 }}">{{ $stats['total_hotels'] ?? 0 }}</div>
                         <div class="stat-label">{{ __('home.stats.total_hotels') }}</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6 reveal delay-2">
                     <div class="stat-item">
-                        <div class="stat-number animated-counter" data-target="{{ $stats['total_cities'] ?? 0 }}">0</div>
+                        <div class="stat-number animated-counter" data-target="{{ $stats['total_cities'] ?? 0 }}">{{ $stats['total_cities'] ?? 0 }}</div>
                         <div class="stat-label">{{ __('home.stats.destinations') }}</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6 reveal delay-3">
                     <div class="stat-item">
-                        <div class="stat-number animated-counter" data-target="{{ $stats['total_rooms'] ?? 0 }}">0</div>
+                        <div class="stat-number animated-counter" data-target="{{ $stats['total_rooms'] ?? 0 }}">{{ $stats['total_rooms'] ?? 0 }}</div>
                         <div class="stat-label">{{ __('home.stats.luxury_rooms') }}</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6 reveal delay-4">
                     <div class="stat-item">
-                        <div class="stat-number animated-counter" data-target="{{ $stats['total_guests'] ?? 0 }}">0</div>
+                        <div class="stat-number animated-counter" data-target="{{ $stats['total_guests'] ?? 0 }}">{{ $stats['total_guests'] ?? 0 }}</div>
                         <div class="stat-label">{{ __('home.stats.happy_guests') }}</div>
                     </div>
                 </div>
@@ -658,99 +658,102 @@
     </div>
 
     @push('scripts')
-    <script nonce="{{ $cspNonce }}">
+    <script nonce="{{ $cspNonce ?? '' }}">
         document.addEventListener('DOMContentLoaded', () => {
             const statsSection = document.getElementById('stats-section');
-            if (!statsSection) return;
+            if (statsSection) {
+                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const counters = statsSection.querySelectorAll('.animated-counter');
+                let hasAnimated = false;
 
-            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                // Immediately show final values without animation
+                const showFinalValues = () => {
+                    counters.forEach(counter => {
+                        const target = parseInt(counter.getAttribute('data-target'), 10) || 0;
+                        const suffix = counter.getAttribute('data-suffix') || '';
+                        counter.textContent = target + suffix;
+                    });
+                };
 
-            const counters = statsSection.querySelectorAll('.animated-counter');
-            let hasAnimated = false;
+                // Smooth count-up using requestAnimationFrame + easeOutExpo
+                const animateCounters = () => {
+                    if (hasAnimated) return;
+                    hasAnimated = true;
 
-            // Immediately show final values without animation
-            const showFinalValues = () => {
-                counters.forEach(counter => {
-                    const target = parseInt(counter.getAttribute('data-target'), 10) || 0;
-                    const suffix = counter.getAttribute('data-suffix') || '';
-                    counter.textContent = target + suffix;
-                });
-            };
+                    const DURATION = 1200; // ms
+                    const easeOutExpo = (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
 
-            // Smooth count-up using requestAnimationFrame + easeOutExpo
-            const animateCounters = () => {
-                if (hasAnimated) return;
-                hasAnimated = true;
+                    counters.forEach(counter => {
+                        const target = parseInt(counter.getAttribute('data-target'), 10) || 0;
+                        const suffix = counter.getAttribute('data-suffix') || '';
 
-                const DURATION = 1500; // ms
-
-                const easeOutExpo = (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-
-                counters.forEach(counter => {
-                    const target = parseInt(counter.getAttribute('data-target'), 10) || 0;
-                    const suffix = counter.getAttribute('data-suffix') || '';
-
-                    if (target === 0) {
-                        counter.textContent = '0' + suffix;
-                        return;
-                    }
-
-                    const startTime = performance.now();
-
-                    const tick = (now) => {
-                        const elapsed = now - startTime;
-                        const progress = Math.min(elapsed / DURATION, 1);
-                        const easedProgress = easeOutExpo(progress);
-                        const current = Math.round(target * easedProgress);
-
-                        counter.textContent = current + suffix;
-
-                        if (progress < 1) {
-                            requestAnimationFrame(tick);
-                        } else {
-                            counter.textContent = target + suffix;
+                        if (target === 0) {
+                            counter.textContent = '0' + suffix;
+                            return;
                         }
-                    };
 
-                    requestAnimationFrame(tick);
-                });
-            };
+                        counter.textContent = '0' + suffix;
+                        const startTime = performance.now();
 
-            if (prefersReducedMotion) {
-                // Skip animation — show final values immediately
-                showFinalValues();
-                return;
+                        const tick = (now) => {
+                            const elapsed = now - startTime;
+                            const progress = Math.min(elapsed / DURATION, 1);
+                            const easedProgress = easeOutExpo(progress);
+                            const current = Math.round(target * easedProgress);
+
+                            counter.textContent = current + suffix;
+
+                            if (progress < 1) {
+                                requestAnimationFrame(tick);
+                            } else {
+                                counter.textContent = target + suffix;
+                            }
+                        };
+
+                        requestAnimationFrame(tick);
+                    });
+                };
+
+                if (prefersReducedMotion) {
+                    showFinalValues();
+                } else if ('IntersectionObserver' in window) {
+                    const sectionObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting && !hasAnimated) {
+                                animateCounters();
+                                sectionObserver.unobserve(statsSection);
+                            }
+                        });
+                    }, { threshold: 0.05 });
+
+                    sectionObserver.observe(statsSection);
+                } else {
+                    animateCounters();
+                }
+
+                // Fallback guarantee: ensure real values are rendered
+                setTimeout(showFinalValues, 2000);
             }
 
-            // Observe the stats section entering the viewport.
-            // Delay start by ~1.2s to let the reveal fade-in (delay-4 = 0.4s + 0.8s transition)
-            // finish before counting begins, so numbers appear after elements are visible.
-            const sectionObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && !hasAnimated) {
-                        // The last stat column has delay-4 (0.4s) + 0.8s transition = 1.2s
-                        setTimeout(animateCounters, 1200);
-                        sectionObserver.unobserve(statsSection);
+            // Date sync on Home search widget
+            const homeCheckIn = document.querySelector('.search-widget input[name="check_in"]');
+            const homeCheckOut = document.querySelector('.search-widget input[name="check_out"]');
+            if (homeCheckIn && homeCheckOut) {
+                homeCheckIn.addEventListener('change', function () {
+                    if (this.value) {
+                        homeCheckOut.min = this.value;
+                        if (homeCheckOut.value && homeCheckOut.value <= this.value) {
+                            homeCheckOut.value = '';
+                        }
                     }
                 });
-            }, { threshold: 0.2 });
-
-            sectionObserver.observe(statsSection);
-        });
-
-        // Date sync on Home search widget
-        const homeCheckIn = document.querySelector('.search-widget input[name="check_in"]');
-        const homeCheckOut = document.querySelector('.search-widget input[name="check_out"]');
-        if (homeCheckIn && homeCheckOut) {
-            homeCheckIn.addEventListener('change', function () {
-                if (this.value) {
-                    homeCheckOut.min = this.value;
-                    if (homeCheckOut.value && homeCheckOut.value <= this.value) {
-                        homeCheckOut.value = '';
+                homeCheckOut.addEventListener('change', function () {
+                    if (this.value && homeCheckIn.value && this.value < homeCheckIn.value) {
+                        homeCheckIn.value = this.value;
                     }
-                }
-            });
-        }
+                });
+            }
+        });
     </script>
     @endpush
 @endsection

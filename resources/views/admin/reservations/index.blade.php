@@ -534,7 +534,7 @@
 @endsection
 
 @push('scripts')
-<script nonce="{{ $cspNonce }}">
+<script nonce="{{ $cspNonce ?? '' }}">
     document.addEventListener("DOMContentLoaded", function() {
         // Handle Customer Select changes
         document.querySelectorAll('.customer-select').forEach(select => {

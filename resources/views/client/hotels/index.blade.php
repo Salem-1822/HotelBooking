@@ -417,7 +417,7 @@
                     <select id="header_city_id" name="city_id" class="form-select" aria-label="{{ __('hotel.destination') }}">
                         <option value="">{{ __('hotel.all_destinations') }}</option>
                         @foreach($cities as $city)
-                            <option value="{{ $city->id }}" {{ ($validated['city_id'] ?? '') == $city->id ? 'selected' : '' }}>
+                            <option value="{{ $city->id }}" {{ (($validated['city_id'] ?? '') == $city->id || ($validated['city'] ?? '') == $city->slug || ($validated['city'] ?? '') == $city->id) ? 'selected' : '' }}>
                                 {{ $city->name }}
                             </option>
                         @endforeach
@@ -535,8 +535,7 @@
                         <input class="form-check-input" type="radio" name="city_id"
                                 id="city_{{ $city->id }}"
                                 value="{{ $city->id }}"
-                                {{ ($validated['city_id'] ?? '') == $city->id ? 'checked' : '' }}
-                                onchange="document.getElementById('filterForm').submit()">
+                                {{ (($validated['city_id'] ?? '') == $city->id || ($validated['city'] ?? '') == $city->slug || ($validated['city'] ?? '') == $city->id) ? 'checked' : '' }}>
                         <label class="form-check-label" for="city_{{ $city->id }}">
                             {{ $city->name }}
                             <span class="text-muted" style="font-size:0.8rem;">({{ $city->hotels_count }})</span>
@@ -558,8 +557,7 @@
                     <div class="form-check star-radio mb-1">
                         <input class="form-check-input" type="radio" name="stars"
                                 id="stars_{{ $s }}" value="{{ $s }}"
-                                {{ ($validated['stars'] ?? '') == $s ? 'checked' : '' }}
-                                onchange="document.getElementById('filterForm').submit()">
+                                {{ ($validated['stars'] ?? '') == $s ? 'checked' : '' }}>
                         <label class="form-check-label" for="stars_{{ $s }}">
                             @for($i = 1; $i <= 5; $i++)
                                 <i class="bi bi-star{{ $i <= $s ? '-fill text-warning' : '' }}" style="font-size:0.8rem;"></i>
@@ -795,7 +793,32 @@
 @endsection
 
 @push('scripts')
-<script nonce="{{ $cspNonce }}">
+<script nonce="{{ $cspNonce ?? '' }}">
+/* ── Filter Form auto-submit on radio change ────────────────── */
+const filterForm = document.getElementById('filterForm');
+if (filterForm) {
+    filterForm.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            filterForm.submit();
+        });
+    });
+}
+
+const mobileFilterForm = document.getElementById('mobileFilterForm');
+if (mobileFilterForm) {
+    const mobileCitySelect = document.getElementById('m_city_id');
+    if (mobileCitySelect) {
+        mobileCitySelect.addEventListener('change', function () {
+            mobileFilterForm.submit();
+        });
+    }
+    mobileFilterForm.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            mobileFilterForm.submit();
+        });
+    });
+}
+
 /* ── Date sync: check-in & check-out ────────────────────────── */
 const checkInInput = document.querySelector('input[name="check_in"]');
 const checkOutInput = document.querySelector('input[name="check_out"]');
