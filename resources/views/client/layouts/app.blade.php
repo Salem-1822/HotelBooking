@@ -20,7 +20,6 @@
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
 
     <!-- Fonts: Poppins + Inter (Non-blocking) -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"></noscript>
 
@@ -42,7 +41,7 @@
             --brand-accent-dark: #B8860B;
             --bg-body: #F8FAFC;
             --text-primary: #1E293B;
-            --text-muted: #64748B;
+            --text-muted: #475569;
             --border-color: #E2E8F0;
             --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             --card-shadow-hover: 0 10px 25px -5px rgba(15, 23, 42, 0.1);
@@ -168,7 +167,7 @@
         /* Footer */
         .footer {
             background-color: var(--brand-primary);
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.92);
             padding: 4rem 0 2rem;
             margin-top: auto;
         }
@@ -180,7 +179,7 @@
         }
 
         .footer-link {
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.92);
             text-decoration: none;
             transition: color 0.2s;
             display: block;
@@ -188,7 +187,11 @@
         }
 
         .footer-link:hover {
-            color: var(--brand-accent);
+            color: #FDE047 !important;
+        }
+
+        #footer_newsletter_email::placeholder {
+            color: rgba(255, 255, 255, 0.8) !important;
         }
 
         /* Forms */
@@ -272,7 +275,7 @@
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #9CA3AF;
+            color: #64748B;
             font-size: 1rem;
             pointer-events: none;
             z-index: 2;
@@ -295,7 +298,7 @@
             transform: translateY(-50%);
             background: transparent;
             border: none;
-            color: #9CA3AF;
+            color: #64748B;
             padding: 0.25rem;
             display: inline-flex;
             align-items: center;
@@ -438,14 +441,14 @@
                     <div class="dropdown">
                         <button class="btn lang-dropdown-btn d-flex align-items-center gap-2" type="button"
                             data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language">
-                            <i class="bi bi-globe" style="font-size: 1.1rem; color: rgba(255,255,255,0.85);" aria-hidden="true"></i>
+                            <i class="bi bi-globe" style="font-size: 1.1rem; color: #FFFFFF;" aria-hidden="true"></i>
                             <span style="font-size: 0.85rem; font-weight: 500;">
                                 @if(app()->getLocale() === 'fr') Français
                                 @elseif(app()->getLocale() === 'ar') العربية
                                 @else English
                                 @endif
                             </span>
-                            <i class="bi bi-chevron-expand" style="font-size: 0.8rem; color: rgba(255,255,255,0.7);" aria-hidden="true"></i>
+                            <i class="bi bi-chevron-expand" style="font-size: 0.8rem; color: #FFFFFF;" aria-hidden="true"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-sm"
                             style="border-radius: 0.625rem; border: 1px solid rgba(255,255,255,0.1); background: #1E293B; padding: 0.5rem; min-width: 150px;">
@@ -509,7 +512,7 @@
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
                     <div class="navbar-brand mb-3" style="font-size: 1.8rem;">HotelBooking</div>
-                    <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">{{ __('navigation.footer_tagline') }}</p>
+                    <p style="color: rgba(255,255,255,0.92); font-size: 0.95rem;">{{ __('navigation.footer_tagline') }}</p>
                     <div class="d-flex gap-3 mt-4">
                         <a href="#" class="text-white text-decoration-none fs-5" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
                         <a href="#" class="text-white text-decoration-none fs-5" aria-label="Twitter / X"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
@@ -531,7 +534,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <h5 class="footer-heading">{{ __('navigation.newsletter') }}</h5>
-                    <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">{{ __('navigation.newsletter_desc') }}</p>
+                    <p style="color: rgba(255,255,255,0.92); font-size: 0.95rem;">{{ __('navigation.newsletter_desc') }}</p>
                     <div class="input-group mt-3">
                         <label for="footer_newsletter_email" class="visually-hidden">{{ __('navigation.email_placeholder') }}</label>
                         <input type="email" id="footer_newsletter_email" class="form-control bg-transparent text-white" placeholder="{{ __('navigation.email_placeholder') }}" aria-label="{{ __('navigation.email_placeholder') }}"
@@ -541,7 +544,7 @@
                 </div>
             </div>
             <div class="border-top mt-5 pt-4 text-center" style="border-color: rgba(255,255,255,0.1) !important;">
-                <p class="mb-0" style="color: rgba(255,255,255,0.8); font-size: 0.85rem;">{!! __('navigation.all_rights_reserved', ['year' => date('Y')]) !!}</p>
+                <p class="mb-0" style="color: rgba(255,255,255,0.92); font-size: 0.85rem;">{!! __('navigation.all_rights_reserved', ['year' => date('Y')]) !!}</p>
             </div>
         </div>
     </footer>

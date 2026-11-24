@@ -294,7 +294,7 @@
     display: flex; align-items: center; gap: 0.2rem;
     font-size: 0.82rem; font-weight: 600; color: #475569;
 }
-.hotel-rating .star-filled { color: #F59E0B; }
+.hotel-rating .star-filled { color: #B45309; }
 .btn-view-hotel {
     background: var(--brand-primary);
     color: #fff;

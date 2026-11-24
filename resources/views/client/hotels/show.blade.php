@@ -342,6 +342,7 @@
              width="1200"
              height="480"
              fetchpriority="high"
+             loading="eager"
              decoding="async"
              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop&fm=webp&q=75'">
         <div class="hero-overlay"></div>

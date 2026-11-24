@@ -8,7 +8,9 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" media="print" onload="this.media='all'" />
+        <noscript><link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" /></noscript>
 
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -26,14 +28,14 @@
                     @auth
                         <a
                             href="{{ url('/dashboard') }}"
-                            class="inline-block px-5 py-1.5 text-white bg-[#f97316] hover:bg-[#ea580c] rounded-sm text-sm leading-normal shadow-sm"
+                            class="inline-block px-5 py-1.5 text-white bg-[#c2410c] hover:bg-[#9a3412] rounded-sm text-sm leading-normal shadow-sm"
                         >
                             Dashboard
                         </a>
                     @else
                         <a
                             href="{{ route('login') }}"
-                            class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-transparent hover:border-[#f97316] rounded-sm text-sm leading-normal transition-all"
+                            class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-transparent hover:border-[#c2410c] rounded-sm text-sm leading-normal transition-all"
                         >
                             Log in
                         </a>
@@ -41,7 +43,7 @@
                         @if (Route::has('register'))
                             <a
                                 href="{{ route('register') }}"
-                                class="inline-block px-5 py-1.5 text-white bg-[#f97316] hover:bg-[#ea580c] rounded-sm text-sm leading-normal shadow-sm transition-all">
+                                class="inline-block px-5 py-1.5 text-white bg-[#c2410c] hover:bg-[#9a3412] rounded-sm text-sm leading-normal shadow-sm transition-all">
                                 Register
                             </a>
                         @endif
@@ -52,8 +54,8 @@
         <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
             <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
                 <div class="text-[13px] leading-[20px] flex-1 p-6 pb-12 lg:p-20 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-bl-lg rounded-br-lg lg:rounded-tl-lg lg:rounded-br-none">
-                    <h1 class="mb-1 font-bold text-2xl text-[#f97316]">HotelBooking</h1>
-                    <p class="mb-2 text-[#706f6c] dark:text-[#A1A09A]">Welcome to the next generation of hotel management. <br>Manage your properties, bookings, and cities with ease.</p>
+                    <h1 class="mb-1 font-bold text-2xl text-[#c2410c]">HotelBooking</h1>
+                    <p class="mb-2 text-[#374151] dark:text-[#E2E8F0]">Welcome to the next generation of hotel management. <br>Manage your properties, bookings, and cities with ease.</p>
                     <ul class="flex flex-col mb-4 lg:mb-6">
                         <li class="flex items-center gap-4 py-2 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:top-1/2 before:bottom-0 before:left-[0.4rem] before:absolute">
                             <span class="relative py-1 bg-white dark:bg-[#161615]">
@@ -63,7 +65,7 @@
                             </span>
                             <span>
                                 Read the
-                                <a href="https://laravel.com/docs" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
+                                <a href="https://laravel.com/docs" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#b91c1c] dark:text-[#f87171] ml-1">
                                     <span>Documentation</span>
                                     <svg
                                         width="10"
@@ -90,7 +92,7 @@
                             </span>
                             <span>
                                 Watch video tutorials at
-                                <a href="https://laracasts.com" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
+                                <a href="https://laracasts.com" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#b91c1c] dark:text-[#f87171] ml-1">
                                     <span>Laracasts</span>
                                     <svg
                                         width="10"

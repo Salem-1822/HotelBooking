@@ -95,8 +95,8 @@
     }
     
     .search-input::placeholder {
-        font-weight: 400;
-        color: #94A3B8;
+        font-weight: 500;
+        color: #475569;
     }
 
     /* Section Titles */
@@ -166,8 +166,8 @@
     
     .destination-count {
         font-size: 0.9rem;
-        color: var(--brand-accent);
-        font-weight: 500;
+        color: #FDE047;
+        font-weight: 600;
     }
 
     .fallback-img-bg {
@@ -312,8 +312,8 @@
     .feature-icon {
         width: 64px;
         height: 64px;
-        background: rgba(212, 175, 55, 0.1);
-        color: var(--brand-accent);
+        background: #0F172A;
+        color: #D4AF37;
         border-radius: 1rem;
         display: flex;
         align-items: center;
@@ -325,7 +325,7 @@
 
     .feature-card:hover .feature-icon {
         background: var(--brand-accent);
-        color: #fff;
+        color: #0F172A;
         transform: translateY(-5px);
     }
 
@@ -374,9 +374,9 @@
     <!-- Hero Section -->
     <section class="hero-section text-center">
         <picture class="hero-bg-picture">
-            <source media="(max-width: 768px)" srcset="{{ asset('images/hero-bg-mobile.webp') }}" type="image/webp">
-            <source srcset="{{ asset('images/hero-bg.webp') }}" type="image/webp">
-            <img src="{{ asset('images/hero-bg.webp') }}" alt="Luxury Hotel Resort" class="hero-bg-img" width="1600" height="900" fetchpriority="high" decoding="sync">
+            <source media="(max-width: 768px)" srcset="{{ asset('images/hero-bg-mobile.webp') }}" type="image/webp" width="640" height="427">
+            <source srcset="{{ asset('images/hero-bg.webp') }}" type="image/webp" width="1200" height="800">
+            <img src="{{ asset('images/hero-bg.webp') }}" alt="Luxury Hotel Resort" class="hero-bg-img" width="1200" height="800" fetchpriority="high" loading="eager" decoding="sync">
         </picture>
         <div class="hero-overlay"></div>
         <div class="container">
@@ -458,7 +458,7 @@
                 </div>
             @else
                 <div class="text-center py-5 bg-white" style="border-radius: 1rem; border: 1px dashed var(--border-color);">
-                    <i class="bi bi-map text-muted" style="font-size: 3rem;"></i>
+                    <i class="bi bi-map text-muted" style="font-size: 3rem;" aria-hidden="true"></i>
                     <h5 class="mt-3 text-muted">{{ __('home.destinations.subtitle') }}</h5>
                 </div>
             @endif
@@ -501,8 +501,8 @@
                                     <div class="d-flex justify-content-between align-items-start mb-2">
                                         <h3 class="h5 mb-0"><a href="{{ route('hotels.show', $hotel) }}" class="hotel-title">{{ $hotel->name }}</a></h3>
                                         @if($hotel->avg_rating)
-                                            <div class="d-flex align-items-center bg-light px-2 py-1 rounded" style="font-size: 0.85rem; font-weight: 600;">
-                                                <i class="bi bi-star-fill text-warning me-1"></i> {{ number_format($hotel->avg_rating, 1) }}
+                                            <div class="d-flex align-items-center px-2 py-1 rounded" style="background-color: #0F172A !important; color: #FFFFFF !important; font-size: 0.85rem; font-weight: 700;">
+                                                <i class="bi bi-star-fill me-1" style="color:#F59E0B !important;" aria-hidden="true"></i> {{ number_format($hotel->avg_rating, 1) }}
                                             </div>
                                         @endif
                                     </div>
@@ -524,7 +524,7 @@
                 </div>
             @else
                 <div class="text-center py-5 bg-light" style="border-radius: 1rem; border: 1px dashed var(--border-color);">
-                    <i class="bi bi-building text-muted" style="font-size: 3rem;"></i>
+                    <i class="bi bi-building text-muted" style="font-size: 3rem;" aria-hidden="true"></i>
                     <h5 class="mt-3 text-muted">{{ __('home.featured.no_hotels') }}</h5>
                 </div>
             @endif
@@ -611,13 +611,13 @@
                 @forelse($guestReviews as $index => $review)
                     <div class="col-lg-4 col-md-6 reveal" style="transition-delay: {{ $index * 0.1 }}s;">
                         <div class="review-card">
-                            <i class="bi bi-quote review-quote"></i>
-                            <div class="mb-3 text-warning">
+                            <i class="bi bi-quote review-quote" aria-hidden="true"></i>
+                            <div class="mb-3" style="color: #B45309 !important;" aria-label="{{ $review->rating }} out of 5 stars">
                                 @for($i = 1; $i <= 5; $i++)
                                     @if($i <= $review->rating)
-                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill" aria-hidden="true"></i>
                                     @else
-                                        <i class="bi bi-star"></i>
+                                        <i class="bi bi-star" style="color: #94A3B8 !important;" aria-hidden="true"></i>
                                     @endif
                                 @endfor
                             </div>
@@ -634,7 +634,7 @@
                 @empty
                     <div class="col-12 reveal delay-1">
                         <div class="text-center py-5" style="border-radius: 1rem; border: 1px dashed var(--border-color); background: #fff;">
-                            <i class="bi bi-chat-square-quote" style="font-size: 3rem; color: var(--brand-accent); opacity: 0.5;"></i>
+                            <i class="bi bi-chat-square-quote" style="font-size: 3rem; color: var(--brand-accent); opacity: 0.5;" aria-hidden="true"></i>
                             <h5 class="mt-3 mb-2" style="color: var(--brand-primary); font-weight: 700;">{{ __('home.reviews.no_reviews_title') }}</h5>
                             <p class="text-muted mb-0" style="max-width: 380px; margin: 0 auto;">{{ __('home.reviews.no_reviews_desc') }}</p>
                         </div>
@@ -650,7 +650,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <h2 class="fw-bold mb-4" style="font-family: 'Poppins', sans-serif;">{{ __('home.cta.title') }}</h2>
-                    <p class="lead mb-5 mx-auto" style="color: rgba(255,255,255,0.8); max-width: 500px;">{{ __('home.cta.subtitle') }}</p>
+                    <p class="lead mb-5 mx-auto" style="color: rgba(255,255,255,0.95); max-width: 500px;">{{ __('home.cta.subtitle') }}</p>
                     <a href="{{ route('hotels.index') }}" class="btn btn-accent btn-lg px-5 py-3" style="border-radius: 0.875rem;">{{ __('home.cta.button') }}</a>
                 </div>
             </div>

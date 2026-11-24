@@ -33,14 +33,14 @@
             margin-bottom: 1.5rem;
         }
         .btn-primary {
-            background-color: #f97316;
+            background-color: #c2410c;
             border: none;
             padding: 0.75rem 2rem;
             border-radius: 0.75rem;
             font-weight: 600;
         }
         .btn-primary:hover {
-            background-color: #ea580c;
+            background-color: #9a3412;
         }
     </style>
 </head>
